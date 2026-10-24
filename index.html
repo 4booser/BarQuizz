@@ -4,49 +4,50 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>BarQuizz</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Тренажер по меню бару: техкарти, картки, тести та збірка напоїв">
+<meta name="description" content="Тренажер по меню бару: техкарти, схеми, картки, тести та збірка напоїв">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap">
 <style>
-/* Layout: app shell — sticky header, one working view at a time, bottom tab bar; a recipe opens as a sheet over the view */
+/* Layout: app shell — sticky header, one working view, bottom tab bar; a recipe opens as a sheet.
+   Every drink carries its own liquid colour (--dc) so tiles, cards and schemes read by colour first. */
 :root{
-  --bg:#0f1513; --surface:#161e1b; --surface-2:#1f2925; --line:#2b3732;
-  --fg:#ece5d3; --muted:#97a39c; --accent:#d4a24c; --accent-ink:#1c1405;
-  --good:#72c08d; --bad:#e3806f; --glass:#c9d3ce; --glass-fill:rgba(201,211,206,.06);
-  --shadow:0 18px 40px rgba(0,0,0,.4);
+  --bg:#0e1311; --surface:#151c19; --surface-2:#1e2724; --raise:#222c28; --line:#2a3530;
+  --fg:#efe8d6; --muted:#939f98; --accent:#d9a548; --accent-ink:#1c1405;
+  --good:#74c38f; --bad:#e58371; --glass:#d3dcd7; --glass-fill:rgba(211,220,215,.07);
+  --shadow:0 20px 44px rgba(0,0,0,.45);
   --f-display:"Prata","Georgia","Times New Roman",serif;
   --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
-  --c-spirit:#c98a3a; --c-liqueur:#b5578a; --c-bitter:#c4473d; --c-syrup:#e7a0b8;
-  --c-cordial:#a68ad8; --c-citrus:#dccb4e; --c-juice:#e8894a; --c-soda:#8cc3d8;
-  --c-dairy:#eadfc4; --c-foam:#f4f2ec; --c-tea:#9a7444; --c-premix:#d4a24c; --c-other:#7f8c86;
+  --c-spirit:#d08f3c; --c-liqueur:#b9588d; --c-bitter:#c9463c; --c-syrup:#e9a3bb;
+  --c-cordial:#a98dde; --c-citrus:#e0cf52; --c-juice:#ec8c4b; --c-soda:#8fc6db;
+  --c-dairy:#ece1c6; --c-foam:#f5f2ea; --c-tea:#a07a48; --c-premix:#d9a548; --c-other:#84918b;
   color-scheme:dark;
 }
 @media (prefers-color-scheme: light){
   :root:not([data-theme="dark"]){
-    --bg:#edf1ec; --surface:#fbfcfa; --surface-2:#e2e9e3; --line:#c9d4cb;
-    --fg:#15201b; --muted:#55645c; --accent:#94640f; --accent-ink:#fff8ea;
-    --good:#2b8550; --bad:#b4473b; --glass:#4f5f58; --glass-fill:rgba(79,95,88,.06);
-    --shadow:0 18px 40px rgba(20,40,30,.14);
-    --c-citrus:#cdb92c; --c-foam:#fffefa; --c-dairy:#e6d6ae; --c-soda:#7db8cf;
+    --bg:#eef1ed; --surface:#fbfcfa; --surface-2:#e5ebe6; --raise:#ffffff; --line:#cdd7cf;
+    --fg:#16201b; --muted:#56655d; --accent:#94640f; --accent-ink:#fff8ea;
+    --good:#2b8550; --bad:#b4473b; --glass:#46564f; --glass-fill:rgba(70,86,79,.06);
+    --shadow:0 20px 44px rgba(20,40,30,.14);
+    --c-citrus:#d2bd2e; --c-foam:#fffefa; --c-dairy:#e7d7af; --c-soda:#7db8cf;
     color-scheme:light;
   }
 }
 :root[data-theme="light"]{
-  --bg:#edf1ec; --surface:#fbfcfa; --surface-2:#e2e9e3; --line:#c9d4cb;
-  --fg:#15201b; --muted:#55645c; --accent:#94640f; --accent-ink:#fff8ea;
-  --good:#2b8550; --bad:#b4473b; --glass:#4f5f58; --glass-fill:rgba(79,95,88,.06);
-  --shadow:0 18px 40px rgba(20,40,30,.14);
-  --c-citrus:#cdb92c; --c-foam:#fffefa; --c-dairy:#e6d6ae; --c-soda:#7db8cf;
+  --bg:#eef1ed; --surface:#fbfcfa; --surface-2:#e5ebe6; --raise:#ffffff; --line:#cdd7cf;
+  --fg:#16201b; --muted:#56655d; --accent:#94640f; --accent-ink:#fff8ea;
+  --good:#2b8550; --bad:#b4473b; --glass:#46564f; --glass-fill:rgba(70,86,79,.06);
+  --shadow:0 20px 44px rgba(20,40,30,.14);
+  --c-citrus:#d2bd2e; --c-foam:#fffefa; --c-dairy:#e7d7af; --c-soda:#7db8cf;
   color-scheme:light;
 }
 :root[data-theme="dark"]{
-  --bg:#0f1513; --surface:#161e1b; --surface-2:#1f2925; --line:#2b3732;
-  --fg:#ece5d3; --muted:#97a39c; --accent:#d4a24c; --accent-ink:#1c1405;
-  --good:#72c08d; --bad:#e3806f; --glass:#c9d3ce; --glass-fill:rgba(201,211,206,.06);
-  --shadow:0 18px 40px rgba(0,0,0,.4);
-  --c-citrus:#dccb4e; --c-foam:#f4f2ec; --c-dairy:#eadfc4; --c-soda:#8cc3d8;
+  --bg:#0e1311; --surface:#151c19; --surface-2:#1e2724; --raise:#222c28; --line:#2a3530;
+  --fg:#efe8d6; --muted:#939f98; --accent:#d9a548; --accent-ink:#1c1405;
+  --good:#74c38f; --bad:#e58371; --glass:#d3dcd7; --glass-fill:rgba(211,220,215,.07);
+  --shadow:0 20px 44px rgba(0,0,0,.45);
+  --c-citrus:#e0cf52; --c-foam:#f5f2ea; --c-dairy:#ece1c6; --c-soda:#8fc6db;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -57,191 +58,281 @@ body.locked{overflow:hidden}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
-.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.dc-glow{background:radial-gradient(120% 90% at 50% 18%,color-mix(in srgb,var(--dc) 34%,transparent) 0%,transparent 62%)}
 
 /* header */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;gap:16px;padding-block:12px}
-.brand{font-family:var(--f-display);font-size:24px;letter-spacing:.01em;line-height:1;margin:0}
+.brand{font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1;margin:0}
 .brand span{color:var(--accent)}
 .top-progress{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
 .top-progress b{color:var(--fg);font-family:var(--f-mono);font-weight:600}
 .meter{width:96px;height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden}
 .meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
 
-main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
-.view{padding-block:20px 8px}
-.view-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px;margin-bottom:16px}
-.view-head h2{font-family:var(--f-display);font-weight:400;font-size:clamp(26px,5vw,36px);line-height:1.1;margin:0;text-wrap:balance}
-.view-head p{margin:4px 0 0;color:var(--muted);max-width:60ch}
+main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+.view{padding-block:22px 8px}
+.view-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:14px;margin-bottom:18px}
+.view-head h2{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,5.4vw,40px);line-height:1.05;margin:0;text-wrap:balance}
+.view-head p{margin:6px 0 0;color:var(--muted);max-width:60ch}
 .lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
 .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 6px}
+.missing{color:var(--muted);font-weight:500;font-style:italic}
 
-/* chips */
+/* chips & segmented */
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:7px 13px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:7px 13px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:7px;transition:background .15s,border-color .15s}
 .chip small{font-family:var(--f-mono);font-size:11px;color:var(--muted);font-weight:500}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .chip[aria-pressed="true"] small{color:var(--accent-ink);opacity:.75}
-.chip:hover{border-color:var(--accent)}
-
-/* menu */
-.toolbar{display:grid;gap:12px;margin-bottom:18px}
-.search{position:relative}
-.search input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px 40px;font-size:15px}
-.search input::placeholder{color:var(--muted)}
-.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2}
-.note{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:12px 14px;color:var(--muted);font-size:13.5px;margin-bottom:16px}
-.note b{color:var(--fg)}
-.group{margin-bottom:26px}
-.group h3{font-family:var(--f-display);font-weight:400;font-size:21px;margin:0 0 12px;display:flex;align-items:baseline;gap:10px}
-.group h3 small{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 12px 12px;text-align:left;display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:center;min-width:0;transition:transform .15s,border-color .15s}
-.tile:hover{border-color:var(--accent);transform:translateY(-1px)}
-.tile .mini{width:44px;height:58px}
-.tile-name{font-weight:700;font-size:14.5px;line-height:1.25;overflow-wrap:anywhere}
-.tile-meta{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.3}
-.dots{display:flex;gap:3px;margin-top:6px}
-.dots i{width:6px;height:6px;border-radius:50%;background:var(--surface-2)}
-.dots i.on{background:var(--accent)}
-.empty{color:var(--muted);padding:30px 0;text-align:center}
+.chip:hover:not(:disabled){border-color:var(--accent)}
+.chip .sw{width:10px;height:10px}
+.seg{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:1 0 auto;border:0;background:none;border-radius:10px;padding:9px 14px;font-weight:700;font-size:13.5px;color:var(--muted);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--raise);color:var(--fg);box-shadow:0 1px 0 var(--line),0 4px 14px rgba(0,0,0,.18)}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 11px 7px 9px;font-weight:600;font-size:13.5px;text-align:left}
+.pill i{width:12px;height:12px;border-radius:50%;background:var(--dc);box-shadow:0 0 0 3px color-mix(in srgb,var(--dc) 25%,transparent);flex:none}
+.pill:hover{border-color:var(--dc)}
+.sw{display:inline-block;width:12px;height:12px;border-radius:4px;background:var(--c);border:1px solid color-mix(in srgb,var(--fg) 18%,transparent);flex:none}
 
 /* glass */
 .glass{display:block;width:100%;height:auto;overflow:visible}
 
+/* menu */
+.toolbar{display:grid;gap:12px;margin-bottom:22px}
+.search{position:relative}
+.search input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 14px 13px 42px;font-size:15px}
+.search input::placeholder{color:var(--muted)}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2}
+.note{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:12px 14px;color:var(--muted);font-size:13.5px}
+.note b{color:var(--fg)}
+.group{margin-bottom:30px}
+.group-h{display:flex;align-items:baseline;gap:10px;margin:0 0 14px}
+.group-h h3{font-family:var(--f-display);font-weight:400;font-size:24px;margin:0}
+.group-h small{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.group .note{margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
+.tile{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:10px 12px 14px;text-align:left;display:grid;grid-template-rows:auto 1fr;gap:6px;min-width:0;overflow:hidden;transition:transform .18s,border-color .18s,box-shadow .18s}
+.tile:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--dc) 70%,var(--line));box-shadow:0 12px 28px color-mix(in srgb,var(--dc) 18%,transparent)}
+.tile-art{height:128px;margin:-10px -12px 0;display:grid;place-items:center;padding-top:10px}
+.tile-art svg{width:auto;height:112px}
+.tile-name{font-family:var(--f-display);font-size:18px;line-height:1.15;overflow-wrap:anywhere}
+.tile-meta{display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:6px;font-size:11.5px;color:var(--muted);font-weight:600}
+.tile-meta span{display:inline-flex;align-items:center;gap:4px}
+.tile-meta svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ring{position:absolute;top:10px;right:10px;width:24px;height:24px}
+.ring circle{fill:none;stroke-width:3}
+.empty{color:var(--muted);padding:30px 0;text-align:center}
+
 /* sheet */
 .sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center}
-.sheet-bg{position:absolute;inset:0;background:rgba(5,9,7,.6);animation:fade .2s}
-.sheet-panel{position:relative;width:min(780px,100%);max-height:calc(100% - 24px - env(safe-area-inset-top,0px));overflow:auto;background:var(--bg);border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;box-shadow:var(--shadow);padding:20px max(18px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));animation:rise .25s cubic-bezier(.2,.8,.2,1)}
-@media (min-width:820px){.sheet{align-items:center}.sheet-panel{border-radius:22px;border-bottom:1px solid var(--line);max-height:88vh;padding:28px 32px}}
-@keyframes rise{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
+.sheet-bg{position:absolute;inset:0;background:rgba(4,8,6,.62);animation:fade .2s}
+.sheet-panel{position:relative;width:min(820px,100%);max-height:calc(100% - 20px - env(safe-area-inset-top,0px));overflow:auto;background:var(--bg);border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;box-shadow:var(--shadow);padding:0 0 calc(24px + env(safe-area-inset-bottom,0px));animation:rise .26s cubic-bezier(.2,.8,.2,1)}
+@media (min-width:860px){.sheet{align-items:center}.sheet-panel{border-radius:24px;border-bottom:1px solid var(--line);max-height:90vh}}
+@keyframes rise{from{transform:translateY(36px);opacity:.4}to{transform:none;opacity:1}}
 @keyframes fade{from{opacity:0}}
-.d-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
-.d-head h2{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,6vw,40px);line-height:1.05;margin:0;text-wrap:balance}
-.icon-btn{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;font-size:22px;line-height:1}
-.d-top{display:grid;grid-template-columns:170px minmax(0,1fr);gap:24px;align-items:start}
-.d-glass{margin:0;text-align:center}
-.d-glass svg{max-width:170px;margin:0 auto}
-.d-glass figcaption{font-size:12.5px;color:var(--muted);margin-top:6px}
-@media (max-width:600px){.d-top{grid-template-columns:1fr}.d-glass svg{max-width:140px}}
-.ing-list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
-.ing{display:grid;grid-template-columns:12px minmax(0,1fr) auto;column-gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.sheet-in{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+@media (min-width:860px){.sheet-in{padding-left:32px;padding-right:32px}}
+.close{position:absolute;top:14px;right:14px;z-index:2;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 85%,transparent);display:grid;place-items:center;font-size:22px;line-height:1}
+.hero{display:grid;grid-template-columns:220px minmax(0,1fr);gap:22px;align-items:center;padding-block:26px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,color-mix(in srgb,var(--dc) 20%,var(--bg)) 0%,var(--bg) 100%)}
+.hero-art{display:grid;place-items:center}
+.hero-art svg{width:200px}
+.hero h2{font-family:var(--f-display);font-weight:400;font-size:clamp(32px,7vw,46px);line-height:1.02;margin:0 0 14px;text-wrap:balance;padding-right:44px}
+@media (max-width:640px){.hero{grid-template-columns:1fr;text-align:left;padding-top:18px}.hero-art svg{width:150px}}
+.keys{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.key{display:flex;gap:10px;align-items:center;background:color-mix(in srgb,var(--surface) 82%,transparent);border:1px solid var(--line);border-radius:14px;padding:8px 10px;min-width:0}
+.key-ic{flex:none;width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background:var(--surface-2)}
+.key-ic svg{width:34px;height:34px}
+.key-ic svg.ico{width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.key .lbl{margin:0 0 1px;font-size:10px}
+.key p{margin:0;font-weight:700;font-size:13.5px;line-height:1.25;overflow-wrap:anywhere}
+.key p small{display:block;font-weight:500;color:var(--muted);font-size:11.5px}
+.key.miss p{color:var(--muted);font-style:italic;font-weight:500}
+.methods-ic{display:flex;gap:2px}
+.methods-ic svg{width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.block{margin-top:24px}
+.ribbon{display:flex;gap:2px;height:44px;border-radius:12px;overflow:hidden;margin-bottom:6px}
+.ribbon span{flex-basis:0;background:var(--c);display:grid;place-items:center;min-width:0;color:var(--ink);font-family:var(--f-mono);font-weight:700;font-size:13px;position:relative}
+.ribbon span em{font-style:normal;font-size:9.5px;opacity:.75;position:absolute;bottom:3px;left:0;right:0;text-align:center;font-family:var(--f-body);font-weight:700;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 3px}
+.ribbon-cap{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:12px}
+.ribbon-cap b{font-family:var(--f-mono);color:var(--fg)}
+.ing-list{list-style:none;margin:0;padding:0;display:grid}
+.ing{display:grid;grid-template-columns:14px minmax(0,1fr) auto;column-gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
 .ing:last-child{border-bottom:0}
-.sw{width:12px;height:12px;border-radius:4px;background:var(--c);border:1px solid color-mix(in srgb,var(--fg) 18%,transparent)}
-.ing-name{font-weight:600;min-width:0;overflow-wrap:anywhere}
+.ing .sw{width:14px;height:14px;border-radius:5px}
+.ing-name{font-weight:650;min-width:0;overflow-wrap:anywhere}
 .ing-name small{display:block;font-weight:500;font-size:11px;color:var(--muted);letter-spacing:.04em}
-.ing-amt{font-family:var(--f-mono);font-weight:600;font-size:14px;text-align:right;white-space:nowrap}
-.ing-amt u{text-decoration:none;color:var(--muted);font-size:11px;margin-left:3px}
-.ing-bar{grid-column:2 / 4;height:3px;background:var(--surface-2);border-radius:99px;margin-top:6px;overflow:hidden}
-.ing-bar i{display:block;height:100%;background:var(--c);border-radius:99px}
-.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);border-radius:5px;padding:0 5px;margin-left:6px;vertical-align:2px}
+.ing-amt{font-family:var(--f-mono);font-weight:700;font-size:16px;text-align:right;white-space:nowrap}
+.ing-amt u{text-decoration:none;color:var(--muted);font-size:11px;margin-left:3px;font-weight:500}
+.tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);border-radius:5px;padding:0 5px;margin-left:6px;vertical-align:2px}
 .link{background:none;border:0;padding:0;color:inherit;font-weight:inherit;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px;text-align:left}
-.total{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);padding-top:10px}
-.total b{font-family:var(--f-mono);color:var(--fg)}
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:22px}
-.fact{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0}
-.fact p{margin:0;font-weight:600}
-.fact .lbl{margin-bottom:6px}
-.method{display:flex;gap:10px;align-items:flex-start}
-.method + .method{margin-top:10px}
-.method svg{flex:none;width:26px;height:26px;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.method small{display:block;color:var(--muted);font-weight:500;font-size:12px;line-height:1.35}
-.missing{color:var(--muted);font-weight:500;font-style:italic}
-.block{margin-top:22px}
 .split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media (max-width:520px){.split{grid-template-columns:1fr}}
-.split .fact ul{margin:6px 0 0;padding-left:18px}
-.split .fact li{margin:2px 0}
-.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:10px}
-.steps li{counter-increment:s;display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start}
-.steps li::before{content:counter(s);font-family:var(--f-mono);font-size:12px;font-weight:600;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);color:var(--accent)}
-.used{display:flex;flex-wrap:wrap;gap:6px}
-.d-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;min-width:0}
+.box h4{margin:0 0 8px;font-size:14px}
+.box ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.box li{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.box li b{font-family:var(--f-mono)}
+.box.bat{border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}
+.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:12px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.steps li::before{content:counter(s);font-family:var(--f-mono);font-size:12px;font-weight:700;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);color:var(--accent)}
+.used{display:flex;flex-wrap:wrap;gap:8px}
+.sim{display:grid;gap:10px}
+.sim-row{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px 12px;text-align:left}
+.sim-row:hover{border-color:var(--dc)}
+.sim-row svg{height:56px;width:auto}
+.sim-row h5{margin:0 0 6px;font-family:var(--f-display);font-weight:400;font-size:18px}
+.diff{display:flex;flex-wrap:wrap;gap:5px}
+.diff span{font-size:11.5px;font-weight:650;border-radius:6px;padding:2px 7px;background:var(--surface-2)}
+.diff .same{color:var(--muted)}
+.diff .here{background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--fg)}
+.diff .there{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--fg)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--muted);margin-bottom:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:3px}
+.d-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
 
 /* buttons */
 .btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 16px;font-weight:700;font-size:14px}
-.btn:hover{border-color:var(--accent)}
+.btn:hover:not(:disabled){border-color:var(--accent)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.btn.primary:disabled{opacity:.45;cursor:default}
+.btn:disabled{opacity:.45;cursor:default}
 .btn.ghost{background:transparent}
+
+/* schemes */
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.board-col{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px}
+.board-top{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;margin-bottom:12px}
+.board-top svg{height:72px;width:auto}
+.board-top svg.ico{height:40px;stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.board-top h4{margin:0;font-family:var(--f-display);font-weight:400;font-size:21px;line-height:1.1}
+.board-top p{margin:2px 0 0;color:var(--muted);font-size:12.5px}
+.board-list{display:flex;flex-wrap:wrap;gap:6px}
+.irow{display:grid;grid-template-columns:30px minmax(0,1fr) minmax(70px,1.2fr) 54px;gap:10px;align-items:center;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px 8px 8px;text-align:left}
+.irow + .irow{margin-top:6px}
+.irow:hover{border-color:var(--dc)}
+.irow svg{height:38px;width:auto}
+.irow-name{font-weight:700;min-width:0;overflow-wrap:anywhere;line-height:1.2}
+.irow-name small{display:block;color:var(--muted);font-weight:500;font-size:11px}
+.irow-bar{height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.irow-bar i{display:block;height:100%;border-radius:99px;background:var(--c)}
+.irow b{font-family:var(--f-mono);text-align:right;font-size:14px}
+.mx-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.mx{border-collapse:separate;border-spacing:0;min-width:100%;font-size:13px}
+.mx th,.mx td{padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.mx thead th{vertical-align:bottom;background:var(--surface);position:sticky;top:0}
+.mx tbody th{position:sticky;left:0;z-index:1;background:var(--surface);text-align:left;font-weight:650;display:flex;gap:8px;align-items:center;border-right:1px solid var(--line);min-width:150px;max-width:210px;white-space:normal;line-height:1.2}
+.mx thead th:first-child{position:sticky;left:0;z-index:2}
+.mx-h{display:grid;justify-items:center;gap:4px;background:none;border:0;padding:0;font-weight:700;font-size:12.5px;width:84px;white-space:normal;line-height:1.15}
+.mx-h svg{height:52px;width:auto}
+.mx td{text-align:center;font-family:var(--f-mono);font-weight:700}
+.mx td.has{background:color-mix(in srgb,var(--c) 22%,transparent)}
+.mx td.no{color:var(--line)}
+.mx tr.all th{color:var(--accent)}
+.mx tr.meta td{font-family:var(--f-body);font-weight:600;font-size:12px;white-space:normal;min-width:84px;color:var(--muted)}
+.mx tr:last-child th,.mx tr:last-child td{border-bottom:0}
 
 /* flashcards */
 .deck-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
 .counts{display:flex;gap:16px;font-size:13px;color:var(--muted)}
 .counts b{font-family:var(--f-mono);color:var(--fg);margin-right:4px}
-.stage{perspective:1400px;max-width:560px;margin:0 auto}
-.card{position:relative;height:min(64vh,520px);min-height:380px;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.3,.7,.2,1);cursor:pointer}
+.stage{perspective:1400px;max-width:580px;margin:0 auto}
+.card{position:relative;height:min(66vh,560px);min-height:420px;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.7,.2,1);cursor:pointer}
 .card.flipped{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:22px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
-.front{display:grid;place-items:center;text-align:center;padding:28px;background:radial-gradient(120% 80% at 50% 0%,color-mix(in srgb,var(--accent) 14%,var(--surface)) 0%,var(--surface) 60%)}
-.front h3{font-family:var(--f-display);font-weight:400;font-size:clamp(32px,8vw,48px);line-height:1.05;margin:8px 0 14px;text-wrap:balance}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+.front{display:grid;grid-template-rows:1fr auto;text-align:center;padding:26px;background:radial-gradient(110% 70% at 50% 0%,color-mix(in srgb,var(--dc) 30%,var(--surface)) 0%,var(--surface) 65%)}
+.front-main{display:grid;place-items:center;align-content:center;gap:10px}
+.front h3{font-family:var(--f-display);font-weight:400;font-size:clamp(34px,8.4vw,52px);line-height:1.02;margin:0;text-wrap:balance}
 .front p{color:var(--muted);margin:0;font-size:14px}
-.front .hint{position:absolute;bottom:18px;left:0;right:0;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
-.back{transform:rotateY(180deg);overflow:auto;padding:20px 20px 24px}
-.back h3{font-family:var(--f-display);font-weight:400;font-size:24px;margin:0 0 12px}
-.back-grid{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;align-items:start}
+.front .silhouette svg{height:150px;width:auto}
+.front-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.back{transform:rotateY(180deg);overflow:auto}
+.back-hero{display:grid;grid-template-columns:110px minmax(0,1fr);gap:14px;align-items:center;padding:18px 18px 14px;background:linear-gradient(180deg,color-mix(in srgb,var(--dc) 24%,var(--surface)) 0%,var(--surface) 100%)}
+.back-hero svg{width:110px}
+.back-hero h3{font-family:var(--f-display);font-weight:400;font-size:26px;line-height:1.05;margin:0 0 8px}
+.back-body{padding:4px 18px 20px}
 .back .ing{padding:6px 0}
-.mini-facts{display:grid;gap:6px;margin-top:14px;font-size:13.5px}
-.mini-facts div{display:flex;gap:8px}
-.mini-facts span{color:var(--muted);min-width:76px}
-.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:560px;margin:16px auto 0}
+.back .ing-amt{font-size:14px}
+.mini-keys{display:flex;flex-wrap:wrap;gap:6px}
+.mini-keys span{font-size:12px;font-weight:700;border-radius:8px;padding:3px 8px;background:color-mix(in srgb,var(--surface) 70%,transparent);border:1px solid var(--line)}
+.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:580px;margin:16px auto 0}
 .rate .btn{display:grid;gap:2px;padding:12px 8px;text-align:center}
 .rate .btn small{font-weight:500;color:var(--muted);font-size:11.5px}
 .rate .bad{border-color:color-mix(in srgb,var(--bad) 60%,var(--line))}
-.rate .mid{border-color:var(--line)}
 .rate .ok{border-color:color-mix(in srgb,var(--good) 60%,var(--line))}
 .kbd{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-align:center;margin-top:10px}
 
 /* quiz */
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px}
-.qz-setup{display:grid;gap:18px;max-width:640px}
-.qz-progress{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;min-width:0}
+.qz-setup{display:grid;gap:18px;max-width:660px}
+.qz-progress{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
 .qz-progress .meter{flex:1;width:auto}
-.qz-q{font-size:clamp(19px,4vw,24px);line-height:1.35;margin:0 0 14px;text-wrap:balance}
+.qz-main{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.qz-main.has-art{grid-template-columns:120px minmax(0,1fr);align-items:center}
+.qz-art{border-radius:16px;padding:8px 4px;display:grid;place-items:center}
+.qz-art svg{width:108px}
+.qz-art.dc-glow{background:radial-gradient(closest-side,color-mix(in srgb,var(--dc) 34%,transparent),transparent)}
+.qz-main.big-art{grid-template-columns:1fr;justify-items:center}
+.qz-main.big-art .qz-art{width:100%;padding:16px}
+.qz-main.big-art .qz-art svg{width:170px}
+@media (max-width:480px){.qz-main.has-art{grid-template-columns:84px minmax(0,1fr)}.qz-art svg{width:80px}}
+.qz-q{font-size:clamp(19px,4.2vw,24px);line-height:1.35;margin:0;text-wrap:balance}
 .qz-q b{font-family:var(--f-display);font-weight:400;color:var(--accent)}
-.qz-sub{margin-bottom:14px}
+.qz-sub{margin-top:12px}
 .qz-sub .chip{cursor:default}
-.opts{display:grid;gap:10px}
-.opt{text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:13px 14px;font-weight:600;display:flex;gap:12px;align-items:center}
+.opts{display:grid;gap:10px;margin-top:18px}
+@media (min-width:640px){.opts{grid-template-columns:1fr 1fr}}
+.opt{text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:14px;padding:14px;font-weight:650;display:flex;gap:12px;align-items:center}
 .opt:hover:not(:disabled){border-color:var(--accent)}
-.opt .k{font-family:var(--f-mono);font-size:12px;color:var(--muted);width:20px;height:20px;border-radius:6px;border:1px solid var(--line);display:grid;place-items:center;flex:none}
-.opt.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--bg))}
-.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--bg))}
+.opt .k{font-family:var(--f-mono);font-size:12px;color:var(--muted);width:22px;height:22px;border-radius:7px;border:1px solid var(--line);display:grid;place-items:center;flex:none}
+.opt.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 15%,var(--bg))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 15%,var(--bg))}
 .opt:disabled{cursor:default}
 .qz-foot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:16px}
-.verdict{font-weight:700}
+.verdict{font-weight:800}
 .verdict.good{color:var(--good)}
 .verdict.bad{color:var(--bad)}
-.score{font-family:var(--f-display);font-size:64px;line-height:1;margin:6px 0}
+.score{font-family:var(--f-display);font-size:68px;line-height:1;margin:6px 0}
 .mist{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:8px}
 .mist li{border-top:1px solid var(--line);padding-top:8px;font-size:14px}
 .mist li span{color:var(--good);font-weight:700}
 
 /* builder */
-.bd-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start}
-@media (max-width:760px){.bd-grid{grid-template-columns:1fr}}
+.bd-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.bd-head h3{font-family:var(--f-display);font-weight:400;font-size:32px;margin:0;line-height:1.05}
+.bd-head select,.field select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;max-width:220px}
+.bd-grid{display:grid;grid-template-columns:230px minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:960px){.bd-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.bd-live{grid-column:1 / -1}}
+@media (max-width:640px){.bd-grid{grid-template-columns:1fr}}
+.bd-live{display:grid;gap:10px;justify-items:center;text-align:center}
+.bd-live .pair{display:flex;gap:14px;justify-content:center;width:100%}
+.bd-live figure{margin:0;display:grid;gap:4px;justify-items:center;font-size:12px;color:var(--muted);font-weight:600}
+.bd-live svg{width:120px}
+@media (max-width:960px){.bd-live svg{width:100px}}
 .pool .chip{cursor:pointer}
 .pool .chip[aria-pressed="true"]::before{content:"✓"}
 .mine{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.mine li{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:10px;align-items:center;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:8px 8px 8px 12px}
+.mine li{display:grid;grid-template-columns:14px minmax(0,1fr) 88px;gap:10px;align-items:center;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:8px 8px 8px 12px}
 .mine li.ok{border-color:var(--good)}
 .mine li.half{border-color:var(--accent)}
 .mine li.no{border-color:var(--bad)}
-.mine li .res{grid-column:1 / -1;font-size:12.5px;color:var(--muted)}
+.mine li .res{grid-column:2 / -1;font-size:12.5px;color:var(--muted)}
 .mine li.ok .res{color:var(--good)}
 .mine li.no .res{color:var(--bad)}
 .mine input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-family:var(--f-mono);text-align:right}
 .field{display:grid;gap:6px;margin-top:12px}
 .field label{font-size:12px;color:var(--muted);font-weight:600}
-.field select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-.bd-result{margin-top:14px;font-weight:700}
+.field select{max-width:none}
+.bd-result{margin-top:14px;font-weight:800;font-size:18px}
 
 /* nav */
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
-.nav-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
-.nav button{background:none;border:0;border-radius:12px;padding:7px 4px;display:grid;justify-items:center;gap:3px;font-size:11.5px;font-weight:700;color:var(--muted)}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.nav-in{max-width:600px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
+.nav button{background:none;border:0;border-radius:12px;padding:7px 2px;display:grid;justify-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--muted)}
 .nav svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .nav button[aria-current="page"]{color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
 
@@ -262,6 +353,7 @@ main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 
 <main class="wrap">
   <section id="v-menu" class="view"></section>
+  <section id="v-schemes" class="view" hidden></section>
   <section id="v-cards" class="view" hidden></section>
   <section id="v-quiz" class="view" hidden></section>
   <section id="v-build" class="view" hidden></section>
@@ -270,6 +362,7 @@ main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 <nav class="nav" aria-label="Розділи">
   <div class="nav-in">
     <button data-nav="menu"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/><path d="M9 8h6"/></svg>Меню</button>
+    <button data-nav="schemes"><svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="7" height="7" rx="1.5"/><rect x="13.5" y="4" width="7" height="4.5" rx="1.5"/><rect x="13.5" y="11.5" width="7" height="8.5" rx="1.5"/><rect x="3.5" y="14" width="7" height="6" rx="1.5"/></svg>Схеми</button>
     <button data-nav="cards"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="13" height="15" rx="2.5"/><path d="M8 3h9.5A2.5 2.5 0 0 1 20 5.5V17"/></svg>Картки</button>
     <button data-nav="quiz"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.6V14"/><path d="M12 17.2v.1"/></svg>Тест</button>
     <button data-nav="build"><svg viewBox="0 0 24 24"><path d="M7.5 10h9l-1.3 11H8.8z"/><path d="M8.5 10V7h7v3"/><path d="M10.5 7V4.5h3V7"/></svg>Збірка</button>
@@ -400,10 +493,24 @@ facts: [
 ],
 };
 
+/* Колір рідини кожної позиції — для плиток, карток і схем (приблизний вигляд напою) */
+const DC = {
+  negroni:'#b8202a','blood-vial':'#7d1022',boulevardier:'#8a2a1c',mc:'#9a3a22',champloo:'#b9d38a',aperitivo:'#f0782a',
+  french:'#eadc98',lebowski:'#d9c3a0',clover:'#e48aa0','whiskey-sour':'#e8cf7a',pornstar:'#f2b13c',bloody:'#b8321e',
+  'gin-tonic':'#d6ebe4',kafka:'#e6cf94',oli:'#ee8b8b','pink-panther':'#f3a6c2',jojo:'#f5a04a','soju-tonic':'#f1e7a6',
+  midori:'#8ccf62',muzyka:'#cfe5a6',mcfly:'#e9e2b0',kabocha:'#e88a2e',monkey:'#f0d46a','purple-haze':'#7d3f8f','irish-velvet':'#d9a047',
+  'raspberry-coconut':'#ea6f8f','soda-punch':'#e7c58a','lemongrass-lychee':'#e5eaa8','passion-bergamot':'#f4b844','kiwi-aloe':'#a9d36a',
+  'tea-raspberry':'#c8465a','tea-oblepikha':'#f08a24','tea-tropical':'#f2b83a','tea-citrus':'#f0a23a','tea-moroccan':'#8a5a2e',
+  'americano-mix':'#a52a2a','drago-mix':'#e2558a',
+  'simple-syrup':'#f1ece0','vanilla-syrup':'#efe2c0','sj-lemon':'#f2e27a','sj-lime':'#cfe27a','passion-puree':'#f2b13c',
+  'raspberry-cordial':'#c8304e','oblepiha-puree':'#f08a24','oolong-cordial':'#c99a52','lemongrass-cordial':'#e3e2a0',
+  'raspberry-gin':'#d23a5c','strawberry-rum':'#e0485a','fresh-ginger':'#e9d58a','kafka-punch':'#ecdcae','pink-punch':'#f2b6c6',
+  'cream-soda-punch':'#efe0bc',sangrita:'#c0391f',
+};
+
 /* ============================================================ */
 const CATS = {cocktail:'Коктейлі', lemonade:'Лимонади', tea:'Чаї', premix:'Премікси', prep:'Заготовки'};
 const CAT_ORDER = ['cocktail','lemonade','tea','premix','prep'];
-
 const FAM = [
   ['foam',/ізіфоам/],
   ['soda',/содов|тонік|garda|брют|ігрист/],
@@ -419,8 +526,8 @@ const FAM = [
   ['tea',/чай|улун|еспресо/],
 ];
 const FAM_LBL = {spirit:'міцне', liqueur:'лікер', bitter:'вермут / біттер', syrup:'сироп', cordial:'кордіал', citrus:'кисле', juice:'сік / пюре', soda:'газоване', dairy:'молочне', foam:'піна', tea:'чай / кава', premix:'премікс', other:'інше'};
+const FAM_INK = {spirit:'#1d1408', liqueur:'#fff', bitter:'#fff', syrup:'#2a0f18', cordial:'#fff', citrus:'#262005', juice:'#2a1405', soda:'#0d2430', dairy:'#2a2414', foam:'#2a2a24', tea:'#fff', premix:'#1d1408', other:'#fff'};
 const NONLIQ = /ізіфоам|чіпс|бамбук|лист|м.ята|огірок|попкорн|вата|пудра|троянд|оливк|паприк|сіль|сублім|лайм\/|гвоздик|кориц|бадьян/;
-
 const PREP_LINK = [
   [/суперджус\s*лимон|^с\.\s*лимон/i,'sj-lemon'], [/суперджус\s*лайм/i,'sj-lime'],
   [/кордіал\s*малин/i,'raspberry-cordial'], [/кордіал\s*улун/i,'oolong-cordial'], [/кордіал\s*лемонгра/i,'lemongrass-cordial'],
@@ -429,7 +536,6 @@ const PREP_LINK = [
   [/імбир\s*фреш|фреш\s*імбир/i,'fresh-ginger'], [/сангріт/i,'sangrita'],
   [/цукровий сироп/i,'simple-syrup'], [/^сироп ваніль/i,'vanilla-syrup'],
 ];
-
 const METHODS = {
   'білд':{d:'Збирається одразу в посуді подачі', i:'<path d="M7 10h10l-1.2 11H8.2z"/><path d="M12 2.5v5"/><path d="M9.5 5.5 12 8l2.5-2.5"/>'},
   'стір':{d:'Перемішування з льодом у змішувальному стакані', i:'<path d="M6 9h12l-1.5 12h-9z"/><path d="M15 3 10 17"/><path d="M9 14.5c1.6 1 4.4 1 6 0"/>'},
@@ -437,8 +543,18 @@ const METHODS = {
   'драй шейк':{d:'Збивання без льоду — для піни', i:'<path d="M8 10h8l-1 11H9z"/><path d="M9 10V7h6v3"/><path d="M10.5 7V4.5h3V7"/><path d="M18.5 3.5l2 2m0-2-2 2"/>'},
   'ролл':{d:'Переливання між двома частинами шейкера', i:'<path d="M4 9h6l-1 11H5z"/><path d="M14 9h6l-1 11h-4z"/><path d="M7 6c2.5-2.5 7.5-2.5 10 0"/><path d="M17 6l-2.3.4M17 6l-.4-2.3"/>'},
 };
+const ICO = {
+  foam:'<path d="M5 14a3.5 3.5 0 0 1 1.5-6.7A4.5 4.5 0 0 1 15 6.5a3.8 3.8 0 0 1 4 7.5z"/><path d="M6 14l1 6h10l1-6"/>',
+  top:'<path d="M8 3h8l-1 9a3 3 0 0 1-6 0z"/><path d="M12 15v6M9 21h6"/><circle cx="11" cy="8" r=".6"/><circle cx="13.5" cy="10" r=".6"/><circle cx="12.5" cy="6" r=".6"/>',
+  bat:'<path d="M9 3h6v3l2 3v12H7V9l2-3z"/><path d="M7 13h10"/>',
+  price:'<path d="M3.5 12.5 11 5h8v8l-7.5 7.5z"/><circle cx="15.5" cy="8.5" r="1.3"/>',
+  yield:'<path d="M9 3h6v3l2 3v12H7V9l2-3z"/><path d="M7 15h10"/><path d="M10 18h4"/>',
+  portion:'<path d="M6 4h12l-1.5 16h-9z"/><path d="M6.6 10h10.8"/>',
+};
+const ico = k => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICO[k]}</svg>`;
+const famOf = name => { const low = name.toLowerCase(); for (const [k,re] of FAM) if (re.test(low)) return k; return 'other'; };
 
-/* ---------- build model ---------- */
+/* ---------- model ---------- */
 function parseIng(s){
   let inPremix = false;
   if (s.startsWith('•')) { inPremix = true; s = s.slice(1); }
@@ -446,23 +562,19 @@ function parseIng(s){
   const name = m ? m[1].trim() : s.trim();
   const amt = m ? m[2].trim() : '';
   const num = /^\d+([.,]\d+)?$/.test(amt) ? parseFloat(amt.replace(',','.')) : null;
-  const low = name.toLowerCase();
-  let fam = 'other';
-  for (const [k,re] of FAM) if (re.test(low)) { fam = k; break; }
   let link = null;
   for (const [re,id] of PREP_LINK) if (re.test(name)) { link = id; break; }
-  return {name, amt, num, inPremix, fam, link};
+  return {name, amt, num, inPremix, fam:famOf(name), link};
 }
 const ITEMS = [], BY = {};
 function add(it){ it.ing = it.ing.map(parseIng); ITEMS.push(it); BY[it.id] = it; }
 RAW.drinks.forEach(d => add({...d}));
 RAW.premixes.forEach(p => add({...p, cat:'premix'}));
 RAW.preps.forEach(p => add({...p, cat:'prep'}));
-// Премікс-рядок у Kafka / Pink Panther веде на milk punch
 ITEMS.forEach(it => { if (it.prep) it.ing.forEach(g => { if (g.fam === 'premix') g.link = it.prep; }); });
-// де використовується заготовка
 const USED = {};
 ITEMS.forEach(it => it.ing.forEach(g => { if (g.link && g.link !== it.id) (USED[g.link] ||= new Set()).add(it.id); }));
+const dcOf = it => DC[it.id] || (it.for && DC[it.for[0]]) || '#c9a35a';
 
 const isLiquid = (it,g) => ['cocktail','lemonade','premix'].includes(it.cat) && g.num != null && !NONLIQ.test(g.name.toLowerCase());
 const fmt = n => String(n).replace('.', ',');
@@ -472,6 +584,8 @@ const shuffle = a => { for (let i=a.length-1;i>0;i--){ const j=Math.random()*(i+
 const sample = (a,n) => shuffle([...a]).slice(0,n);
 const uniq = a => [...new Set(a)];
 const pick = a => a[Math.random()*a.length|0];
+const isDrink = it => it.cat === 'cocktail' || it.cat === 'lemonade';
+const hasFoam = it => it.ing.some(g => g.fam === 'foam');
 
 /* ---------- storage (per viewer) ---------- */
 const KEY = 'barquizz.v1';
@@ -487,91 +601,191 @@ function updateTop(){
   document.getElementById('meter').style.width = (known / ITEMS.length * 100) + '%';
 }
 
-/* ---------- glass drawings ---------- */
+/* ---------- glassware ---------- */
 const GL = {
-  highball:{o:'M32 16 L36 144 Q36.5 150 42 150 L78 150 Q83.5 150 84 144 L88 16', i:'M35.5 18 L39 141 Q39.3 145 43 145 L77 145 Q80.7 145 81 141 L84.5 18 Z', b:145, t:18, cap:300},
-  rocks:{o:'M20 60 L25 144 Q25.5 150 31 150 L89 150 Q94.5 150 95 144 L100 60 M27.8 136 L92.2 136', i:'M23.5 62 L27.8 136 L92.2 136 L96.5 62 Z', b:136, t:62, cap:240},
-  coupe:{o:'M12 38 Q13 92 60 95 Q107 92 108 38 M60 95 L60 145 M36 149 Q60 141 84 149', i:'M15.5 40 Q17 89 60 91.5 Q103 89 104.5 40 Z', b:91.5, t:40, cap:170},
-  nick:{o:'M27 26 Q25 98 60 102 Q95 98 93 26 M60 102 L60 145 M38 149 Q60 141 82 149', i:'M30.5 28 Q29 95 60 98.5 Q91 95 89.5 28 Z', b:98.5, t:28, cap:150},
-  wine:{o:'M31 14 Q20 66 32 86 Q44 104 60 104 Q76 104 88 86 Q100 66 89 14 M60 104 L60 145 M36 149 Q60 141 84 149', i:'M34 16 Q24 66 35 84 Q46 100.5 60 100.5 Q74 100.5 85 84 Q96 66 86 16 Z', b:100.5, t:16, cap:360},
-  flute:{o:'M45 10 Q40 78 51 102 Q60 113 69 102 Q80 78 75 10 M60 109 L60 145 M40 149 Q60 142 80 149', i:'M48 12 Q43.5 78 54 100 Q60 107.5 66 100 Q76.5 78 72 12 Z', b:107, t:12, cap:200},
-  bottle:{o:'M38 150 L38 72 Q38 56 52 50 L52 20 L68 20 L68 50 Q82 56 82 72 L82 150 Z M50 13 L70 13 L70 20 L50 20 Z', i:'M41.5 146.5 L41.5 73 Q41.5 59 55 53 L55 30 L65 30 L65 53 Q78.5 59 78.5 73 L78.5 146.5 Z', b:146.5, t:30, cap:0},
-  cup:{o:'M22 66 L29 130 Q31 142 45 142 L75 142 Q89 142 91 130 L98 66 M95 82 Q114 84 110 102 Q106 118 89 116 M14 148 L106 148', i:'M25.5 68 L32.4 129 Q34 138.5 46 138.5 L74 138.5 Q86 138.5 87.6 129 L94.5 68 Z', b:138.5, t:68, cap:0},
+  highball:{o:'M32 16 L36 144 Q36.5 150 42 150 L78 150 Q83.5 150 84 144 L88 16', i:'M35.5 18 L39 141 Q39.3 145 43 145 L77 145 Q80.7 145 81 141 L84.5 18 Z', b:145, t:18, cap:300, rx:88, lx:40, hw:22, f:.82},
+  rocks:{o:'M20 60 L25 144 Q25.5 150 31 150 L89 150 Q94.5 150 95 144 L100 60 M27.8 136 L92.2 136', i:'M23.5 62 L27.8 136 L92.2 136 L96.5 62 Z', b:136, t:62, cap:240, rx:100, lx:29, hw:33, f:.64},
+  coupe:{o:'M12 38 Q13 92 60 95 Q107 92 108 38 M60 95 L60 145 M36 149 Q60 141 84 149', i:'M15.5 40 Q17 89 60 91.5 Q103 89 104.5 40 Z', b:91.5, t:40, cap:170, rx:108, lx:22, hw:40, f:.84},
+  nick:{o:'M27 26 Q25 98 60 102 Q95 98 93 26 M60 102 L60 145 M38 149 Q60 141 82 149', i:'M30.5 28 Q29 95 60 98.5 Q91 95 89.5 28 Z', b:98.5, t:28, cap:150, rx:93, lx:34, hw:28, f:.8},
+  wine:{o:'M31 14 Q20 66 32 86 Q44 104 60 104 Q76 104 88 86 Q100 66 89 14 M60 104 L60 145 M36 149 Q60 141 84 149', i:'M34 16 Q24 66 35 84 Q46 100.5 60 100.5 Q74 100.5 85 84 Q96 66 86 16 Z', b:100.5, t:16, cap:360, rx:89, lx:37, hw:26, f:.6},
+  flute:{o:'M45 10 Q40 78 51 102 Q60 113 69 102 Q80 78 75 10 M60 109 L60 145 M40 149 Q60 142 80 149', i:'M48 12 Q43.5 78 54 100 Q60 107.5 66 100 Q76.5 78 72 12 Z', b:107, t:12, cap:200, rx:75, lx:51, hw:11, f:.84},
+  bottle:{o:'M38 150 L38 72 Q38 56 52 50 L52 20 L68 20 L68 50 Q82 56 82 72 L82 150 Z M50 13 L70 13 L70 20 L50 20 Z', i:'M41.5 146.5 L41.5 73 Q41.5 59 55 53 L55 30 L65 30 L65 53 Q78.5 59 78.5 73 L78.5 146.5 Z', b:146.5, t:30, cap:0, rx:68, lx:46, hw:15, f:.8},
+  cup:{o:'M22 66 L29 130 Q31 142 45 142 L75 142 Q89 142 91 130 L98 66 M95 82 Q114 84 110 102 Q106 118 89 116 M14 148 L106 148', i:'M25.5 68 L32.4 129 Q34 138.5 46 138.5 L74 138.5 Q86 138.5 87.6 129 L94.5 68 Z', b:138.5, t:68, cap:0, rx:98, lx:33, hw:30, f:.8},
 };
-const GLASS_NAMES = {highball:'Хайбол', rocks:'Олд Фешн', coupe:'Купе', nick:'Ніка Нора', wine:'Винний бокал', flute:'Флюте'};
-function glassKey(it){
-  if (it.cat === 'tea') return 'cup';
-  if (it.cat === 'premix' || it.cat === 'prep') return 'bottle';
-  const g = (it.glass || '').toLowerCase();
-  if (!g) return 'rocks';
+const GLASS_NAMES = {rocks:'Олд Фешн', highball:'Хайбол', coupe:'Купе', nick:'Ніка Нора', wine:'Вінка / винний бокал', flute:'Флюте'};
+function glassKeyOf(str){
+  const g = (str || '').toLowerCase();
   if (/^олд|фешн/.test(g)) return 'rocks';
   if (/хайбол/.test(g)) return 'highball';
   if (/купе/.test(g)) return 'coupe';
   if (/нік|нора/.test(g)) return 'nick';
   if (/вин|вінк/.test(g)) return 'wine';
   if (/флют/.test(g)) return 'flute';
-  return 'rocks';
+  return null;
 }
-let gid = 0;
-function svgGlass(it, big){
-  const k = glassKey(it), G = GL[k], id = 'cp' + (++gid);
-  let layers = [];
-  if (it.cat === 'tea') layers = [{fam:'tea', v:1}];
-  else if (it.cat === 'prep') layers = [{fam: it.ing[0]?.fam || 'other', v:1}];
-  else layers = it.ing.filter(g => isLiquid(it,g)).map(g => ({fam:g.fam, v:g.num}));
-  const total = layers.reduce((s,l) => s + l.v, 0) || 1;
-  let f = G.cap ? Math.min(.9, Math.max(.45, total / G.cap)) : (it.cat === 'tea' ? .78 : .82);
-  if (!it.glass && ['cocktail','lemonade'].includes(it.cat)) f = .6;
-  const H = (G.b - G.t) * f;
-  let y = G.b, rects = '';
-  layers.forEach((l,i) => {
-    const h = H * l.v / total;
-    y -= h;
-    rects += `<rect x="0" y="${y.toFixed(2)}" width="120" height="${(h+.6).toFixed(2)}" fill="var(--c-${l.fam})"/>`;
-    if (big && i < layers.length - 1) rects += `<rect x="0" y="${y.toFixed(2)}" width="120" height=".9" fill="var(--bg)" opacity=".55"/>`;
-  });
-  if (it.ing.some(g => g.fam === 'foam')) rects += `<rect x="0" y="${(y-7).toFixed(2)}" width="120" height="7.4" fill="var(--c-foam)"/>`;
-  if (it.ing.some(g => g.fam === 'soda') && big) {
-    for (let i=0;i<7;i++) rects += `<circle cx="${40 + (i*13)%42}" cy="${(G.b - H*((i*37)%100)/100).toFixed(1)}" r="${1.2 + (i%3)*.5}" fill="var(--bg)" opacity=".35"/>`;
-  }
-  const stroke = big ? 2.4 : 5;
-  const unfilled = !it.glass && ['cocktail','lemonade'].includes(it.cat);
-  return `<svg class="glass${big?'':' mini'}" viewBox="0 0 120 160" role="img" aria-label="${esc(it.glass || GLASS_NAMES[k] || '')}">
-    <defs><clipPath id="${id}"><path d="${G.i}"/></clipPath></defs>
-    <path d="${G.i}" fill="var(--glass-fill)"/>
-    <g clip-path="url(#${id})">${rects}</g>
-    <path d="${G.o}" fill="none" stroke="var(--glass)" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round" ${unfilled?'stroke-dasharray="5 6"':''}/>
-  </svg>`;
+function glassKey(it){
+  if (it.cat === 'tea') return 'cup';
+  if (it.cat === 'premix' || it.cat === 'prep') return 'bottle';
+  return glassKeyOf(it.glass) || 'rocks';
 }
 
+/* ---------- garnish drawings ---------- */
+const wheel = (x,y,r,outer,inner) => `<g transform="translate(${x} ${y})"><circle r="${r}" fill="${outer}"/><circle r="${(r*.8).toFixed(1)}" fill="${inner}"/>${[0,1,2,3,4,5,6,7].map(a=>`<line x2="${(Math.cos(a*Math.PI/4)*r*.78).toFixed(1)}" y2="${(Math.sin(a*Math.PI/4)*r*.78).toFixed(1)}" stroke="${outer}" stroke-width="1" opacity=".55"/>`).join('')}<circle r="${(r*.18).toFixed(1)}" fill="${outer}"/></g>`;
+const leafP = (x,y,rot,len,col,w=.42) => `<g transform="translate(${x} ${y}) rotate(${rot})"><path d="M0 0 C ${-len*w} ${-len*.3} ${-len*w*.7} ${-len*.8} 0 ${-len} C ${len*w*.7} ${-len*.8} ${len*w} ${-len*.3} 0 0Z" fill="${col}"/><path d="M0 0 L0 ${-len*.92}" stroke="rgba(0,0,0,.25)" stroke-width=".9"/></g>`;
+const GAR = {
+  peelOrange:(c,i) => `<path d="M${c.rx-18-i*14} ${c.t-1} c 5 -12 18 -14 22 -5 c 3 6 -3 11 -9 7" fill="none" stroke="#ee8420" stroke-width="5" stroke-linecap="round"/>`,
+  peelLemon:(c,i) => `<path d="M${c.rx-18-i*14} ${c.t-1} c 5 -12 18 -14 22 -5 c 3 6 -3 11 -9 7" fill="none" stroke="#e8cc34" stroke-width="5" stroke-linecap="round"/>`,
+  chipOrange:(c,i) => wheel(c.rx-9-i*16, c.t-3, 11.5, '#e3761c', '#f6b45a'),
+  chipLime:(c,i) => wheel(c.rx-9-i*16, c.t-3, 10.5, '#5d9b2e', '#b9dc6a'),
+  wedgeLime:(c,i) => `<g transform="translate(${c.rx-7-i*16} ${c.t-2}) rotate(-28)"><path d="M-12 0A12 12 0 0 0 12 0Z" fill="#5d9b2e"/><path d="M-9.6 0A9.6 9.6 0 0 0 9.6 0Z" fill="#b9dc6a"/><path d="M0 0 L-6 7 M0 0 L0 9 M0 0 L6 7" stroke="#5d9b2e" stroke-width=".9"/></g>`,
+  cucumber:(c,i) => `<g>${wheel(c.rx-9-i*16, c.t-3, 10.5, '#3f7d32', '#d5eab0')}${[0,1,2,3,4,5].map(a=>`<ellipse cx="${(c.rx-9-i*16+Math.cos(a*1.047)*4).toFixed(1)}" cy="${(c.t-3+Math.sin(a*1.047)*4).toFixed(1)}" rx="1.2" ry=".8" fill="#9cc77a"/>`).join('')}</g>`,
+  mint:c => leafP(c.cx+2,c.sy+2,-38,20,'#3f9a55') + leafP(c.cx+6,c.sy+2,8,24,'#4bab62') + leafP(c.cx+10,c.sy+3,48,18,'#358a4a'),
+  dust:(c,col) => { let s=''; for (let j=0;j<30;j++){ const x = c.cx - c.hw + ((j*37)%(c.hw*2)); const y = c.sy + .5 + ((j*13)%5)*.6; s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1+(j%3)*.45).toFixed(2)}" fill="${col}"/>`; } return s; },
+  dustMint:c => GAR.dust(c,'#7fd08a'), dustPink:c => GAR.dust(c,'#e2557c'), dustOrange:c => GAR.dust(c,'#f08a24'), dustCocoa:c => GAR.dust(c,'#6b3f22'),
+  popcorn:c => [[-11,-5],[1,-10],[12,-4],[-3,-2]].map(([dx,dy]) => { const x=c.cx+dx, y=c.sy+dy; return `<g><circle cx="${x-3}" cy="${y}" r="3.8" fill="#f8ebc4" stroke="#caa85a" stroke-width=".8"/><circle cx="${x+3}" cy="${y-1}" r="4" fill="#fbf1d4" stroke="#caa85a" stroke-width=".8"/><circle cx="${x}" cy="${y-4}" r="3.6" fill="#f8ebc4" stroke="#caa85a" stroke-width=".8"/></g>`; }).join(''),
+  floss:c => [[-12,-12,10],[1,-21,13],[14,-12,9.5],[0,-8,10],[-5,-26,8]].map(([dx,dy,r]) => `<circle cx="${c.cx+dx}" cy="${c.sy+dy}" r="${r}" fill="#f6b3cf"/>`).join('') + `<circle cx="${c.cx-3}" cy="${c.sy-24}" r="4" fill="#fbd5e5"/>`,
+  roses:c => [[-13,-2],[0,-4],[13,-2]].map(([dx,dy]) => `<g><circle cx="${c.cx+dx}" cy="${c.sy+dy}" r="4.6" fill="#d9467a"/><circle cx="${c.cx+dx}" cy="${c.sy+dy}" r="2" fill="#8e1f45"/></g>`).join(''),
+  olives:c => `<line x1="${c.rx-30}" y1="${c.sy+14}" x2="${c.rx+4}" y2="${c.t-20}" stroke="#a5814f" stroke-width="1.8" stroke-linecap="round"/>` + [[-15,-1],[-6,-9]].map(([dx,dy]) => `<g><ellipse cx="${c.rx+dx}" cy="${c.t+dy}" rx="6" ry="4.6" fill="#6e7d2a" transform="rotate(-40 ${c.rx+dx} ${c.t+dy})"/><circle cx="${c.rx+dx+1}" cy="${c.t+dy-1}" r="1.3" fill="#c0391f"/></g>`).join(''),
+  skeleton:c => `<g transform="translate(${c.cx+8} ${c.sy+6}) rotate(-18)"><path d="M0 0 C -11 -14 -7 -36 0 -48 C 7 -36 11 -14 0 0Z" fill="#cfa85a" fill-opacity=".38" stroke="#b58a3c" stroke-width="1.2"/><path d="M0 0 L0 -46 M0 -10 L-6 -17 M0 -10 L6 -17 M0 -21 L-6 -28 M0 -21 L6 -28 M0 -32 L-4 -37 M0 -32 L4 -37" stroke="#b58a3c" stroke-width=".8" fill="none"/></g>`,
+  bamboo:c => leafP(c.cx+10, c.sy+8, -14, 54, '#4f9a3c', .2),
+  raspberry:(c,i) => { const x=c.rx-10-i*16, y=c.t-6; return [[0,0],[-4.5,2],[4.5,2],[-2.3,-3.6],[2.3,-3.6],[0,4.2],[-2.3,5],[2.3,5]].map(([dx,dy]) => `<circle cx="${x+dx}" cy="${y+dy}" r="2.8" fill="#c8304e" stroke="#8e1730" stroke-width=".5"/>`).join(''); },
+  sparkle:c => [[c.rx+4,c.t-16,5],[c.rx-24,c.t-12,3.5],[c.cx-14,c.sy-6,3]].map(([x,y,r]) => `<path d="M${x} ${y-r} L${x+r*.28} ${y-r*.28} L${x+r} ${y} L${x+r*.28} ${y+r*.28} L${x} ${y+r} L${x-r*.28} ${y+r*.28} L${x-r} ${y} L${x-r*.28} ${y-r*.28}Z" fill="#f4e3a0"/>`).join(''),
+  nut:c => `<ellipse cx="${c.cx-6}" cy="${c.sy-1}" rx="5.5" ry="4" fill="#b0783a" stroke="#7a4f22" stroke-width=".8"/><ellipse cx="${c.cx+7}" cy="${c.sy-2}" rx="5" ry="3.6" fill="#c08a48" stroke="#7a4f22" stroke-width=".8"/>`,
+  floatLemon:c => wheel(c.cx-12, c.sy+1, 8, '#e2c42a', '#f6e88a'),
+  floatLime:c => wheel(c.cx+12, c.sy+2, 7.5, '#5d9b2e', '#b9dc6a'),
+  floatOrange:c => wheel(c.cx-2, c.sy+1, 8.5, '#e3761c', '#f6b45a'),
+  cinnamon:c => `<g transform="translate(${c.cx-4} ${c.sy-1}) rotate(-26)"><rect x="-18" y="-3.2" width="36" height="6.4" rx="3.2" fill="#8a4f24"/><rect x="-18" y="-1" width="36" height="1.2" fill="#5e3315"/></g>`,
+  anise:c => { const x=c.cx+14, y=c.sy-1; let p=''; for (let k=0;k<16;k++){ const r = k%2 ? 2.4 : 6.5, a = k*Math.PI/8; p += `${(x+Math.cos(a)*r).toFixed(1)},${(y+Math.sin(a)*r*.6).toFixed(1)} `; } return `<polygon points="${p}" fill="#6a3a1c"/>`; },
+};
+const RIM = new Set(['peelOrange','peelLemon','chipOrange','chipLime','wedgeLime','cucumber','raspberry']);
+function garnishKeys(it){
+  const t = (it.garnish || '').toLowerCase(), out = [];
+  const R = [[/цедр\S* апельсин/,'peelOrange'],[/цедр\S* лимон/,'peelLemon'],[/чіпс апельсин/,'chipOrange'],[/чіпс лайм/,'chipLime'],[/сектор лайм|^лайм/,'wedgeLime'],[/огір/,'cucumber'],
+    [/м.ятна пудра/,'dustMint'],[/малинова пудра|пудра малинова/,'dustPink'],[/апельсинова пудра/,'dustOrange'],[/мускат|какао/,'dustCocoa'],[/попкорн/,'popcorn'],[/вата/,'floss'],
+    [/бутони|троянд/,'roses'],[/оливк/,'olives'],[/скелет/,'skeleton'],[/бамбук/,'bamboo'],[/малина|сублім/,'raspberry'],[/кандурін/,'sparkle'],[/фундук|мигдал/,'nut'],[/^м.ята$/,'mint']];
+  for (const [re,k] of R) if (re.test(t) && !out.includes(k)) out.push(k);
+  if (it.cat === 'tea') {
+    const has = re => it.ing.some(g => re.test(g.name.toLowerCase()));
+    if (has(/^м.ята/)) out.push('mint');
+    if (has(/^лимон$/)) out.push('floatLemon');
+    if (has(/^лайм$/)) out.push('floatLime');
+    if (has(/^апельсин$/)) out.push('floatOrange');
+    if (has(/кориц/)) out.push('cinnamon');
+    if (has(/бадьян/)) out.push('anise');
+  }
+  return out;
+}
+function garnishSVG(it, ctx){
+  let ri = 0;
+  return garnishKeys(it).map(k => GAR[k](ctx, RIM.has(k) ? ri++ : 0)).join('');
+}
+
+let gid = 0;
+/* size: 'big' | 'tile' | 'mini' | 'icon';  mode: 'look' (колір напою) | 'layers' (пропорції за типами) */
+function svgGlass(it, o = {}){
+  const size = o.size || 'tile', mode = o.mode || 'look';
+  const k = o.glass || glassKey(it), G = GL[k], id = 'g' + (++gid);
+  const dc = o.dc || dcOf(it);
+  const noGlass = isDrink(it) && !it.glass && !o.glass;
+  let layers = [], total = 0;
+  if (mode === 'layers') { layers = o.layers || it.ing.filter(g => isLiquid(it,g)).map(g => ({fam:g.fam, v:g.num})); total = layers.reduce((s,l)=>s+l.v,0); }
+  let f = o.empty ? 0 : mode === 'layers' ? (G.cap && total ? Math.min(.9, Math.max(.14, total / G.cap)) : (total ? G.f : 0)) : G.f;
+  if (noGlass && !o.empty) f = .6;
+  const H = (G.b - G.t) * f, sy = G.b - H;
+  let inner = '';
+  if (H > 0) {
+    if (mode === 'look') inner += `<rect x="0" y="${sy.toFixed(1)}" width="120" height="${(H+1).toFixed(1)}" fill="url(#${id}l)"/>`;
+    else { let y = G.b; layers.forEach((l,i) => { const h = H*l.v/total; y -= h; inner += `<rect x="0" y="${y.toFixed(2)}" width="120" height="${(h+.6).toFixed(2)}" fill="var(--c-${l.fam})"/>`; if (i < layers.length-1) inner += `<rect x="0" y="${y.toFixed(2)}" width="120" height=".9" fill="var(--bg)" opacity=".5"/>`; }); }
+    if (it.ing.some(g => g.fam === 'soda') || it.top) for (let j=0;j<9;j++) { const x = G.lx + 6 + ((j*29) % Math.max(10,(120-2*G.lx-12))); const y = G.b - 4 - ((j*41) % 100)/100 * (H-10); inner += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1.1+(j%3)*.5).toFixed(1)}" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width=".8"/>`; }
+    if (hasFoam(it) && mode === 'look') { inner += `<rect x="0" y="${sy.toFixed(1)}" width="120" height="9" fill="var(--c-foam)"/>`; for (let j=0;j<10;j++) inner += `<circle cx="${G.lx+4+j*((120-2*G.lx)/10)}" cy="${(sy+3+(j%3)*1.6).toFixed(1)}" r=".9" fill="#d9d2c2"/>`; }
+  }
+  if (size !== 'icon') inner += `<rect x="${G.lx}" y="${G.t}" width="3.5" height="${G.b-G.t}" fill="#fff" opacity=".17"/>`;
+  const sw = {big:2.4, tile:3, mini:5, icon:3.6}[size];
+  const showGar = o.garnish ?? (size === 'big' || size === 'tile');
+  const gar = showGar && H > 0 && !['bottle'].includes(k) ? garnishSVG(it, {rx:G.rx, t:G.t, cx:60, sy, hw:G.hw}) : '';
+  const lbl = it.glass || GLASS_NAMES[k] || CATS[it.cat] || '';
+  return `<svg class="glass" viewBox="-8 -30 136 190" role="img" aria-label="${esc(lbl)}">
+    <defs><clipPath id="${id}"><path d="${G.i}"/></clipPath><linearGradient id="${id}l" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dc}" stop-opacity=".72"/><stop offset="1" stop-color="${dc}"/></linearGradient></defs>
+    <path d="${G.i}" fill="var(--glass-fill)"/><g clip-path="url(#${id})">${inner}</g>
+    <path d="${G.o}" fill="none" stroke="var(--glass)" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"${noGlass?' stroke-dasharray="6 6"':''}/>${gar}</svg>`;
+}
+function garnishIcon(it){
+  const keys = garnishKeys(it); if (!keys.length) return '';
+  const fake = {...it, cat:'cocktail'};
+  return `<svg viewBox="0 0 60 50" aria-hidden="true"><path d="M6 26 L54 26" stroke="var(--glass)" stroke-width="2" stroke-linecap="round" opacity=".5"/>${garnishSVG(fake, {rx:46, t:26, cx:26, sy:26, hw:16})}</svg>`;
+}
+function methodIcons(m){
+  return `<span class="methods-ic">${tokens(m).map(t => METHODS[t] ? `<svg viewBox="0 0 24 24" aria-hidden="true">${METHODS[t].i}</svg>` : '').join('')}</span>`;
+}
+const tokens = m => (m || '').split(',').map(t => t.trim().toLowerCase().replace('драйшейк','драй шейк')).filter(Boolean);
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+
 /* ---------- shared bits ---------- */
-function dots(id){ const b = box(id); return `<div class="dots" aria-label="Рівень ${Math.max(0,b+1)} з 5">${[0,1,2,3,4].map(i=>`<i class="${i<=b?'on':''}"></i>`).join('')}</div>`; }
-function meta(it){
-  if (it.cat === 'premix') return `Бат · порція ${it.portion}`;
-  if (it.cat === 'prep') return `Вихід ${it.yield}`;
-  if (it.cat === 'tea') return `${it.ing.length} інгредієнтів`;
-  if (it.price) return `Ціна ${it.price} · ${it.ing.length} інгр.`;
-  return [it.glass, it.method].filter(Boolean).join(' · ') || 'Посуд і спосіб не вказані';
+function ring(id){
+  const b = box(id) + 1, C = 2*Math.PI*9;
+  return `<svg class="ring" viewBox="0 0 24 24" aria-label="Рівень ${b} з 5"><circle cx="12" cy="12" r="9" stroke="var(--surface-2)"/><circle cx="12" cy="12" r="9" stroke="var(--accent)" stroke-dasharray="${(C*b/5).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 12 12)" stroke-linecap="round"/></svg>`;
+}
+function tileMeta(it){
+  if (it.cat === 'premix') return `<span>${ico('portion').replace('class="ico"','')} порція ${esc(it.portion)}</span>`;
+  if (it.cat === 'prep') return `<span>вихід ${esc(it.yield)}</span>`;
+  if (it.cat === 'tea') return `<span>${it.ing.length} інгредієнтів</span>`;
+  const parts = [];
+  if (it.glass) parts.push(`<span>${esc(it.glass)}</span>`);
+  if (it.method) parts.push(`<span>${methodIcons(it.method).replace('methods-ic','')}${esc(it.method)}</span>`);
+  if (it.price) parts.push(`<span>₴ ${esc(it.price)}</span>`);
+  return parts.join('') || '<span>посуд і спосіб не вказані</span>';
 }
 function ingRows(it, compact){
-  const liq = it.ing.filter(g => isLiquid(it,g));
-  const total = liq.reduce((s,g)=>s+g.num,0);
   return it.ing.map(g => {
     const L = isLiquid(it,g);
     const nm = g.link && BY[g.link] && g.link !== it.id ? `<button class="link" data-open="${g.link}">${esc(g.name)}</button>` : esc(g.name);
     const amt = L ? `${fmt(g.num)}<u>мл</u>` : esc(g.amt || '—');
-    return `<li class="ing" style="--c:var(--c-${g.fam})"><span class="sw"></span>
+    return `<li class="ing"><span class="sw" style="--c:var(--c-${g.fam})"></span>
       <span class="ing-name">${nm}${g.inPremix?'<span class="tag" title="Входить у премікс">бат</span>':''}${compact?'':`<small>${FAM_LBL[g.fam]}</small>`}</span>
-      <span class="ing-amt">${amt}</span>
-      ${L && !compact ? `<span class="ing-bar"><i style="width:${(g.num/total*100).toFixed(1)}%"></i></span>`:''}</li>`;
+      <span class="ing-amt">${amt}</span></li>`;
   }).join('');
 }
-function methodHTML(m){
-  return m.split(',').map(t => t.trim().toLowerCase().replace('драйшейк','драй шейк')).map(t => {
-    const M = METHODS[t];
-    const label = t.charAt(0).toUpperCase() + t.slice(1);
-    return `<div class="method">${M?`<svg viewBox="0 0 24 24" aria-hidden="true">${M.i}</svg>`:''}<p>${esc(label)}${M?`<small>${M.d}</small>`:''}</p></div>`;
-  }).join('');
+function ribbon(it){
+  const liq = it.ing.filter(g => isLiquid(it,g));
+  if (liq.length < 2) return '';
+  const total = liq.reduce((s,g)=>s+g.num,0);
+  return `<div class="ribbon" role="img" aria-label="Пропорції рідин">${liq.map(g => {
+    const p = g.num/total;
+    return `<span style="flex-grow:${g.num};--c:var(--c-${g.fam});--ink:${FAM_INK[g.fam]}" title="${esc(g.name)} — ${fmt(g.num)} мл">${p>=.07?fmt(g.num):''}${p>=.16?`<em>${esc(g.name)}</em>`:''}</span>`;
+  }).join('')}</div><div class="ribbon-cap"><span>Пропорції рідин, мл</span><span>разом <b>${fmt(total)}</b></span></div>`;
+}
+function keyHTML(icon, label, value, miss, note){
+  return `<div class="key${miss?' miss':''}"><div class="key-ic">${icon || ''}</div><div style="min-width:0"><p class="lbl">${label}</p><p>${esc(value)}${note?`<small>${esc(note)}</small>`:''}</p></div></div>`;
+}
+function keysHTML(it){
+  const K = [];
+  if (isDrink(it)) {
+    const gk = glassKeyOf(it.glass);
+    K.push(keyHTML(gk ? svgGlass(it,{size:'icon', empty:true, garnish:false}) : '', 'Посуд', it.glass || 'не вказано', !it.glass));
+    K.push(keyHTML(it.method ? methodIcons(it.method) : '', 'Спосіб', it.method || 'не вказано', !it.method, it.methodNote || (it.method ? tokens(it.method).map(t=>METHODS[t]?.d).filter(Boolean).join('; ') : '')));
+    K.push(keyHTML(garnishIcon(it), 'Гарніш', it.garnish || 'не вказано', !it.garnish));
+    if (hasFoam(it)) K.push(keyHTML(ico('foam'), 'Піна', 'Ізіфоам'));
+    if (it.top) K.push(keyHTML(ico('top'), 'Топ', it.top));
+    if (it.premix) K.push(keyHTML(ico('bat'), 'Бат', `${BY[it.premix].name} · ${BY[it.premix].portion}`));
+    if (it.price) K.push(keyHTML(ico('price'), 'Ціна', it.price, false, `собівартість ${it.cost}`));
+  } else if (it.cat === 'premix') {
+    K.push(keyHTML(ico('portion'), 'Порція', it.portion));
+    K.push(keyHTML(ico('bat'), 'Для напою', (it.for||[]).map(x=>BY[x]?.name).filter(Boolean).join(', ') || 'техкарти немає', !(it.for||[]).length));
+  } else if (it.cat === 'prep') {
+    K.push(keyHTML(ico('yield'), 'Вихід', it.yield));
+    K.push(keyHTML(ico('bat'), 'Інгредієнтів', String(it.ing.length)));
+  } else if (it.cat === 'tea') {
+    K.push(keyHTML(garnishIcon(it), 'У чайнику', `${it.ing.length} інгредієнтів`));
+  }
+  return `<div class="keys">${K.join('')}</div>`;
+}
+function similar(it){
+  const A = new Set(it.ing.map(g => norm(g.name)));
+  return ITEMS.filter(o => o.id !== it.id && o.cat === it.cat).map(o => {
+    const Bn = new Set(o.ing.map(g => norm(g.name)));
+    const inter = [...A].filter(x => Bn.has(x)).length;
+    return {o, inter, s: inter / (A.size + Bn.size - inter)};
+  }).filter(x => x.inter >= 2).sort((a,b) => b.s - a.s).slice(0,3);
 }
 
 /* ---------- detail sheet ---------- */
@@ -579,70 +793,71 @@ const sheet = document.getElementById('sheet'), panel = document.getElementById(
 let lastFocus = null;
 function openDetail(id){
   const it = BY[id]; if (!it) return;
-  lastFocus = lastFocus || document.activeElement;
-  const liq = it.ing.filter(g => isLiquid(it,g));
-  const total = liq.reduce((s,g)=>s+g.num,0);
-  const caption = it.cat==='tea' ? 'Чай' : it.cat==='premix' ? `Бат · порція ${it.portion}` : it.cat==='prep' ? `Вихід ${it.yield}` : (it.glass || 'Посуд не вказано');
-  const miss = '<span class="missing">не вказано в техкарті</span>';
-  let html = `<header class="d-head"><div><p class="eyebrow">${CATS[it.cat]}</p><h2 id="sheet-title">${esc(it.name)}</h2></div>
-    <button class="icon-btn" data-act="close" aria-label="Закрити">×</button></header>
-    <div class="d-top"><figure class="d-glass">${svgGlass(it,true)}<figcaption>${esc(caption)}</figcaption></figure>
-    <div><p class="lbl">Склад${liq.length?' · пропорції рідин':''}</p><ul class="ing-list">${ingRows(it)}</ul>
-    ${liq.length>1 ? `<div class="total"><span>Разом рідин</span><b>${fmt(total)} мл</b></div>`:''}
-    ${it.cat==='premix' ? `<div class="total"><span>Порція за техкартою</span><b>${esc(it.portion)}</b></div>`:''}
-    ${it.cat==='prep' ? `<div class="total"><span>Вихід</span><b>${esc(it.yield)}</b></div>`:''}
-    </div></div>`;
-  if (['cocktail','lemonade'].includes(it.cat)) {
-    html += `<div class="facts">
-      <div class="fact"><p class="lbl">Спосіб</p>${it.method ? methodHTML(it.method) : `<p>${miss}</p>`}${it.methodNote?`<p style="margin-top:8px;font-weight:500;font-size:13px;color:var(--muted)">${esc(it.methodNote)}</p>`:''}</div>
-      <div class="fact"><p class="lbl">Посуд</p><p>${it.glass?esc(it.glass):miss}</p></div>
-      <div class="fact"><p class="lbl">Гарніш</p><p>${it.garnish?esc(it.garnish):miss}</p></div>
-      ${it.top?`<div class="fact"><p class="lbl">Топ</p><p>${esc(it.top)}</p></div>`:''}
-      ${it.price?`<div class="fact"><p class="lbl">Ціна / собівартість</p><p>${esc(it.price)} <span class="missing" style="font-style:normal">/ ${esc(it.cost)}</span></p></div>`:''}
-    </div>`;
-  }
+  if (sheet.hidden) lastFocus = document.activeElement;
+  const dc = dcOf(it);
+  let html = `<button class="close" data-act="close" aria-label="Закрити">×</button>
+    <div class="hero sheet-in" style="--dc:${dc}"><div class="hero-art">${svgGlass(it,{size:'big'})}</div>
+    <div style="min-width:0"><p class="eyebrow">${CATS[it.cat]}</p><h2 id="sheet-title">${esc(it.name)}</h2>${keysHTML(it)}</div></div>
+    <div class="sheet-in">`;
+  html += `<div class="block"><p class="lbl">${it.cat==='prep'?'Склад заготовки':'Формула'}</p>${ribbon(it)}<ul class="ing-list">${ingRows(it)}</ul></div>`;
   if (it.premix && BY[it.premix]) {
-    const pm = BY[it.premix];
-    const svc = it.ing.filter(g => !g.inPremix);
-    html += `<div class="block"><p class="lbl">Бат і сервіс</p><div class="split">
-      <div class="fact"><p>З бату <button class="link" data-open="${pm.id}">${esc(pm.name)}</button></p><small style="color:var(--muted)">порція ${esc(pm.portion)}</small>
-        <ul>${pm.ing.map(g=>`<li>${esc(g.name)} — ${esc(g.amt)}</li>`).join('')}</ul></div>
-      <div class="fact"><p>Додаєш на сервісі</p><ul>${svc.length ? svc.map(g=>`<li>${esc(g.name)}${g.amt?' — '+esc(g.amt):''}</li>`).join('') : '<li>Нічого, тільки бат</li>'}</ul></div>
-    </div></div>`;
+    const pm = BY[it.premix], svc = it.ing.filter(g => !g.inPremix);
+    html += `<div class="block"><p class="lbl">Бат + сервіс</p><div class="split">
+      <div class="box bat"><h4>З бату · <button class="link" data-open="${pm.id}">${esc(pm.name)}</button> <span class="missing" style="font-style:normal">(${esc(pm.portion)})</span></h4><ul>${pm.ing.map(g=>`<li><span>${esc(g.name)}</span><b>${esc(g.amt)}</b></li>`).join('')}</ul></div>
+      <div class="box"><h4>Додаєш на сервісі</h4><ul>${svc.length ? svc.map(g=>`<li><span>${esc(g.name)}</span><b>${esc(g.amt)}</b></li>`).join('') : '<li>Нічого — тільки бат</li>'}</ul></div></div></div>`;
   }
-  if (it.prep && BY[it.prep]) html += `<div class="block"><p class="lbl">Премікс</p><div class="fact"><p>Це <button class="link" data-open="${it.prep}">${esc(BY[it.prep].name)}</button> — заготовка з розділу «Заготовки»</p></div></div>`;
+  if (it.prep && BY[it.prep]) html += `<div class="block"><p class="lbl">Премікс</p><div class="box"><p style="margin:0">Премікс — це заготовка <button class="link" data-open="${it.prep}">${esc(BY[it.prep].name)}</button></p></div></div>`;
   if (it.cat === 'premix') {
     const used = (it.for||[]).filter(x=>BY[x]);
-    html += `<div class="block"><p class="lbl">Для напою</p>${used.length ? `<div class="used">${used.map(x=>`<button class="chip" data-open="${x}">${esc(BY[x].name)}</button>`).join('')}</div>` : `<p class="missing">Повної техкарти напою поки немає</p>`}</div>`;
+    html += `<div class="block"><p class="lbl">Для напою</p>${used.length ? `<div class="used">${used.map(x=>`<button class="pill" style="--dc:${dcOf(BY[x])}" data-open="${x}"><i></i>${esc(BY[x].name)}</button>`).join('')}</div>` : `<p class="missing">Повної техкарти напою поки немає</p>`}</div>`;
   }
   if (it.steps) html += `<div class="block"><p class="lbl">Приготування</p><ol class="steps">${it.steps.map(s=>`<li><span>${esc(s)}</span></li>`).join('')}</ol></div>`;
-  if (USED[it.id]) html += `<div class="block"><p class="lbl">Де використовується</p><div class="used">${[...USED[it.id]].map(x=>`<button class="chip" data-open="${x}">${esc(BY[x].name)}</button>`).join('')}</div></div>`;
+  if (USED[it.id]) html += `<div class="block"><p class="lbl">Де використовується</p><div class="used">${[...USED[it.id]].map(x=>`<button class="pill" style="--dc:${dcOf(BY[x])}" data-open="${x}"><i></i>${esc(BY[x].name)}</button>`).join('')}</div></div>`;
+  const sim = it.cat !== 'prep' ? similar(it) : [];
+  if (sim.length) {
+    const mine = new Map(it.ing.map(g => [norm(g.name), g.name]));
+    html += `<div class="block"><p class="lbl">Не переплутай зі схожими</p>
+      <div class="legend"><span><i style="background:color-mix(in srgb,var(--good) 40%,transparent)"></i>тільки в ${esc(it.name)}</span><span><i style="background:color-mix(in srgb,var(--bad) 40%,transparent)"></i>тільки в схожому</span><span><i style="background:var(--surface-2)"></i>спільне</span></div>
+      <div class="sim">${sim.map(({o}) => {
+        const theirs = new Map(o.ing.map(g => [norm(g.name), g.name]));
+        const same = [...mine.keys()].filter(k => theirs.has(k)).map(k => mine.get(k));
+        const here = [...mine.keys()].filter(k => !theirs.has(k)).map(k => mine.get(k));
+        const there = [...theirs.keys()].filter(k => !mine.has(k)).map(k => theirs.get(k));
+        const extra = [];
+        if (isDrink(it) && it.glass !== o.glass && o.glass) extra.push(`<span class="there">посуд: ${esc(o.glass)}</span>`);
+        if (isDrink(it) && it.method !== o.method && o.method) extra.push(`<span class="there">${esc(o.method)}</span>`);
+        return `<button class="sim-row" style="--dc:${dcOf(o)}" data-open="${o.id}">${svgGlass(o,{size:'mini'})}<div style="min-width:0"><h5>${esc(o.name)}</h5><div class="diff">${here.map(n=>`<span class="here">${esc(n)}</span>`).join('')}${there.map(n=>`<span class="there">${esc(n)}</span>`).join('')}${extra.join('')}${same.map(n=>`<span class="same">${esc(n)}</span>`).join('')}</div></div></button>`;
+      }).join('')}</div></div>`;
+  }
   if (it.note) html += `<div class="block note">${esc(it.note)}</div>`;
   if (it.cat === 'tea') html += `<div class="block note">${RAW.notes.tea}</div>`;
   if (it.cat === 'prep') html += `<div class="block note">${RAW.notes.prep}</div>`;
-  html += `<div class="d-actions">${['cocktail','lemonade','premix'].includes(it.cat)?`<button class="btn primary" data-build="${it.id}">Зібрати по пам’яті</button>`:''}
-    <button class="btn" data-card="${it.id}">Вчити картку</button></div>`;
+  html += `<div class="d-actions">${['cocktail','lemonade','premix'].includes(it.cat)?`<button class="btn primary" data-build="${it.id}">Зібрати по пам’яті</button>`:''}<button class="btn" data-card="${it.id}">Вчити картку</button></div></div>`;
   panel.innerHTML = html;
   sheet.hidden = false; document.body.classList.add('locked');
   panel.scrollTop = 0;
-  panel.querySelector('[data-act="close"]').focus();
+  panel.querySelector('.close').focus();
 }
 function closeDetail(){ sheet.hidden = true; document.body.classList.remove('locked'); if (lastFocus) { try{lastFocus.focus()}catch(e){} lastFocus = null; } }
 
 /* ---------- MENU ---------- */
 const M = {cat:'all', q:''};
+function tileHTML(it){
+  return `<button class="tile" data-open="${it.id}" style="--dc:${dcOf(it)}"><div class="tile-art dc-glow">${svgGlass(it,{size:'tile'})}</div>
+    <div style="min-width:0"><div class="tile-name">${esc(it.name)}</div><div class="tile-meta">${tileMeta(it)}</div></div>${ring(it.id)}</button>`;
+}
 function renderMenu(){
   const el = document.getElementById('v-menu');
   if (!el.dataset.ready) {
-    el.innerHTML = `<div class="view-head"><div><h2>Меню бару</h2><p>Усі техкарти в одному місці. Натисни на позицію — побачиш склад, пропорції в посуді, спосіб, гарніш і що йде з бату.</p></div></div>
+    el.innerHTML = `<div class="view-head"><div><h2>Меню бару</h2><p>Колір рідини, посуд і гарніш — як у реальному напої. Відкрий позицію: формула, бат, схожі напої й заготовки.</p></div></div>
       <div class="toolbar"><label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input id="m-search" type="search" placeholder="Пошук: назва або інгредієнт (напр. «улун», «Wan»)" autocomplete="off"></label>
-      <div class="chips" id="m-cats"></div></div><div id="m-list"></div>`;
+      <input id="m-search" type="search" placeholder="Пошук: назва, інгредієнт або гарніш" autocomplete="off"></label>
+      <div class="seg" id="m-cats" role="group" aria-label="Категорія"></div></div><div id="m-list"></div>`;
     el.dataset.ready = 1;
     el.querySelector('#m-search').addEventListener('input', e => { M.q = e.target.value.trim().toLowerCase(); drawMenuList(); });
   }
   const counts = c => ITEMS.filter(i => c==='all' || i.cat===c).length;
-  el.querySelector('#m-cats').innerHTML = ['all',...CAT_ORDER].map(c => `<button class="chip" data-mcat="${c}" aria-pressed="${M.cat===c}">${c==='all'?'Усе':CATS[c]} <small>${counts(c)}</small></button>`).join('');
+  el.querySelector('#m-cats').innerHTML = ['all',...CAT_ORDER].map(c => `<button data-mcat="${c}" aria-pressed="${M.cat===c}">${c==='all'?'Усе':CATS[c]} <small style="font-family:var(--f-mono);opacity:.6">${counts(c)}</small></button>`).join('');
   drawMenuList();
 }
 function drawMenuList(){
@@ -653,23 +868,91 @@ function drawMenuList(){
     if (M.cat !== 'all' && M.cat !== c) continue;
     const items = ITEMS.filter(i => i.cat === c && match(i));
     if (!items.length) continue;
-    html += `<div class="group"><h3>${CATS[c]} <small>${items.length}</small></h3>`;
+    html += `<div class="group"><div class="group-h"><h3>${CATS[c]}</h3><small>${items.length}</small></div>`;
     if (c === 'tea' && M.cat === 'tea') html += `<div class="note">${RAW.notes.tea}</div>`;
     if (c === 'prep' && M.cat === 'prep') html += `<div class="note">${RAW.notes.prep}</div>`;
-    html += `<div class="grid">${items.map(it => `<button class="tile" data-open="${it.id}">${svgGlass(it,false)}<div style="min-width:0"><div class="tile-name">${esc(it.name)}</div><div class="tile-meta">${esc(meta(it))}</div>${dots(it.id)}</div></button>`).join('')}</div></div>`;
+    html += `<div class="grid">${items.map(tileHTML).join('')}</div></div>`;
   }
   list.innerHTML = html || `<p class="empty">Нічого не знайдено за «${esc(M.q)}».</p>`;
 }
 
+/* ---------- SCHEMES ---------- */
+const SC = {mode:'glass', ing:null, fam:'negroni'};
+const FAMILIES = () => {
+  const drinks = ITEMS.filter(isDrink);
+  return [
+    {id:'negroni', name:'Негроні-родина', ids:['negroni','boulevardier','mc','blood-vial']},
+    {id:'foam', name:'З піною', ids:drinks.filter(hasFoam).map(d=>d.id)},
+    {id:'sparkling', name:'З ігристим', ids:drinks.filter(d=>d.ing.some(g=>/garda|брют/i.test(g.name))).map(d=>d.id)},
+    {id:'tonic', name:'Тонік і содова', ids:drinks.filter(d=>d.cat==='cocktail'&&d.ing.some(g=>/тонік|содов/i.test(g.name))).map(d=>d.id)},
+    {id:'lemonade', name:'Лимонади', ids:ITEMS.filter(i=>i.cat==='lemonade').map(i=>i.id)},
+    {id:'tea', name:'Чаї', ids:ITEMS.filter(i=>i.cat==='tea').map(i=>i.id)},
+    {id:'milk', name:'Milk punch', ids:['kafka-punch','pink-punch','cream-soda-punch']},
+    {id:'cordial', name:'Кордіали і пюре', ids:['raspberry-cordial','oolong-cordial','lemongrass-cordial','passion-puree','oblepiha-puree']},
+    {id:'sj', name:'Суперджуси і сиропи', ids:['sj-lemon','sj-lime','simple-syrup','vanilla-syrup']},
+    {id:'infused', name:'Інфузії', ids:['raspberry-gin','strawberry-rum','fresh-ginger']},
+  ];
+};
+function renderSchemes(){
+  const el = document.getElementById('v-schemes');
+  const modes = [['glass','Посуд'],['method','Спосіб'],['ing','Інгредієнт → де'],['compare','Порівняння']];
+  let body = '';
+  const drinks = ITEMS.filter(isDrink);
+  if (SC.mode === 'glass') {
+    const groups = {};
+    drinks.forEach(d => { const k = glassKeyOf(d.glass) || 'none'; (groups[k] ||= []).push(d); });
+    body = `<div class="board">${['rocks','highball','coupe','nick','wine','flute','none'].filter(k=>groups[k]).map(k => `<div class="board-col">
+      <div class="board-top">${k==='none' ? svgGlass({cat:'cocktail', ing:[]},{size:'icon',empty:true,garnish:false}) : svgGlass({cat:'cocktail', glass:GLASS_NAMES[k], ing:[]},{size:'icon',empty:true,garnish:false,glass:k})}
+      <div><h4>${k==='none'?'Посуд не вказано':GLASS_NAMES[k]}</h4><p>${groups[k].length} ${plural(groups[k].length)}</p></div></div>
+      <div class="board-list">${groups[k].map(d=>`<button class="pill" style="--dc:${dcOf(d)}" data-open="${d.id}"><i></i>${esc(d.name)}</button>`).join('')}</div></div>`).join('')}</div>`;
+  } else if (SC.mode === 'method') {
+    const groups = {};
+    drinks.forEach(d => { const t = tokens(d.method); (t.length ? t : ['none']).forEach(x => (groups[x] ||= []).push(d)); });
+    body = `<div class="board">${['білд','стір','шейк','драй шейк','ролл','none'].filter(k=>groups[k]).map(k => `<div class="board-col">
+      <div class="board-top">${k==='none'?'<span></span>':`<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${METHODS[k].i}</svg>`}<div><h4>${k==='none'?'Спосіб не вказано':cap(k)}</h4><p>${k==='none'?'':METHODS[k].d+' · '}${groups[k].length} ${plural(groups[k].length)}</p></div></div>
+      <div class="board-list">${groups[k].map(d=>`<button class="pill" style="--dc:${dcOf(d)}" data-open="${d.id}"><i></i>${esc(d.name)}</button>`).join('')}</div></div>`).join('')}</div>`;
+  } else if (SC.mode === 'ing') {
+    const usage = {};
+    ITEMS.filter(i => isDrink(i) || i.cat === 'tea').forEach(it => it.ing.forEach(g => { const k = norm(g.name); (usage[k] ||= {k, name:g.name, fam:g.fam, rows:[]}).rows.push({it,g}); }));
+    const list = Object.values(usage).filter(u => u.rows.length >= 2).sort((a,b) => b.rows.length - a.rows.length || a.name.localeCompare(b.name));
+    if (!SC.ing || !usage[SC.ing]) SC.ing = list[0].k;
+    const sel = usage[SC.ing];
+    const max = Math.max(...sel.rows.map(r => r.g.num || 0), 1);
+    body = `<div class="chips" style="margin-bottom:16px">${list.map(u => `<button class="chip" data-sing="${u.k}" aria-pressed="${u.k===SC.ing}"><span class="sw" style="--c:var(--c-${u.fam})"></span>${esc(u.name)}<small>${u.rows.length}</small></button>`).join('')}</div>
+      <div class="panel"><div class="group-h"><h3>${esc(sel.name)}</h3><small>${sel.rows.length} ${plural(sel.rows.length)}</small></div>
+      ${sel.rows.sort((a,b)=>(b.g.num||0)-(a.g.num||0)).map(({it,g}) => `<button class="irow" style="--dc:${dcOf(it)};--c:var(--c-${g.fam})" data-open="${it.id}">${svgGlass(it,{size:'mini'})}
+        <span class="irow-name">${esc(it.name)}<small>${CATS[it.cat]}${it.glass?' · '+esc(it.glass):''}</small></span>
+        <span class="irow-bar"><i style="width:${g.num?(g.num/max*100).toFixed(0):6}%"></i></span><b>${esc(g.amt)}</b></button>`).join('')}</div>`;
+  } else {
+    const fams = FAMILIES();
+    const F = fams.find(f => f.id === SC.fam) || fams[0];
+    const its = F.ids.map(id => BY[id]).filter(Boolean);
+    const rows = [];
+    its.forEach(it => it.ing.forEach(g => { const k = norm(g.name); let r = rows.find(x => x.k === k); if (!r) rows.push(r = {k, name:g.name, fam:g.fam, cells:{}}); r.cells[it.id] = g; }));
+    rows.sort((a,b) => Object.keys(b.cells).length - Object.keys(a.cells).length);
+    const n = its.length;
+    const meta = its.some(isDrink) ? [['Посуд','glass'],['Спосіб','method'],['Гарніш','garnish']] : its.some(i=>i.cat==='prep') ? [['Вихід','yield']] : [];
+    body = `<div class="chips" style="margin-bottom:16px">${fams.map(f => `<button class="chip" data-sfam="${f.id}" aria-pressed="${f.id===F.id}">${esc(f.name)}<small>${f.ids.length}</small></button>`).join('')}</div>
+      <p class="lbl">Рядки зверху — спільне для всіх, нижче — те, чим вони відрізняються</p>
+      <div class="mx-wrap"><table class="mx"><thead><tr><th></th>${its.map(it => `<th><button class="mx-h" data-open="${it.id}" style="--dc:${dcOf(it)}">${svgGlass(it,{size:'mini'})}${esc(it.name)}</button></th>`).join('')}</tr></thead><tbody>
+      ${rows.map(r => `<tr class="${Object.keys(r.cells).length===n && n>1?'all':''}"><th><span class="sw" style="--c:var(--c-${r.fam})"></span>${esc(r.name)}</th>${its.map(it => { const g = r.cells[it.id]; return g ? `<td class="has" style="--c:var(--c-${g.fam})">${esc(g.amt||'✓')}</td>` : '<td class="no">·</td>'; }).join('')}</tr>`).join('')}
+      ${meta.map(([l,f]) => `<tr class="meta"><th>${l}</th>${its.map(it => `<td>${esc(it[f]||'—')}</td>`).join('')}</tr>`).join('')}
+      </tbody></table></div>`;
+  }
+  el.innerHTML = `<div class="view-head"><div><h2>Схеми</h2><p>Меню, розкладене по полицях: що в якому посуді, яким способом, де стоїть кожен інгредієнт і чим відрізняються схожі напої.</p></div></div>
+    <div class="seg" style="margin-bottom:18px" role="group" aria-label="Схема">${modes.map(([k,l]) => `<button data-smode="${k}" aria-pressed="${SC.mode===k}">${l}</button>`).join('')}</div>${body}`;
+}
+const plural = n => { const a = n%10, b = n%100; return a===1 && b!==11 ? 'позиція' : a>=2 && a<=4 && (b<12||b>14) ? 'позиції' : 'позицій'; };
+
 /* ---------- CARDS ---------- */
-const C = {cats:new Set(['cocktail','lemonade']), cur:null, flipped:false, last:null};
+const C = {cats:new Set(['cocktail','lemonade']), cur:null, flipped:false, last:null, hint:false};
 function nextCard(){
   const pool = ITEMS.filter(i => C.cats.has(i.cat));
   if (!pool.length) { C.cur = null; return; }
   const scored = pool.map(i => ({i, s: box(i.id)*10 + (S.seen[i.id] ? (S.seen[i.id] % 1e7)/1e7*3 : 0) + Math.random()*4}));
   scored.sort((a,b) => a.s - b.s);
   const choice = scored.find(x => x.i.id !== C.last) || scored[0];
-  C.cur = choice.i.id; C.flipped = false;
+  C.cur = choice.i.id; C.flipped = false; C.hint = false;
 }
 function renderCards(){
   const el = document.getElementById('v-cards');
@@ -680,23 +963,23 @@ function renderCards(){
   let body = '';
   if (!it) body = `<p class="empty">Обери хоча б одну колоду.</p>`;
   else {
-    const facts = ['cocktail','lemonade'].includes(it.cat) ? `<div class="mini-facts">
-        <div><span>Спосіб</span><b>${esc(it.method || '—')}</b></div>
-        <div><span>Посуд</span><b>${esc(it.glass || '—')}</b></div>
-        <div><span>Гарніш</span><b>${esc(it.garnish || '—')}</b></div>
-        ${it.top?`<div><span>Топ</span><b>${esc(it.top)}</b></div>`:''}
-        ${it.premix?`<div><span>Бат</span><b>${esc(BY[it.premix].name)} · ${esc(BY[it.premix].portion)}</b></div>`:''}
-        ${it.price?`<div><span>Ціна</span><b>${esc(it.price)}</b></div>`:''}</div>`
-      : it.cat==='premix' ? `<div class="mini-facts"><div><span>Порція</span><b>${esc(it.portion)}</b></div></div>`
-      : it.cat==='prep' ? `<div class="mini-facts"><div><span>Вихід</span><b>${esc(it.yield)}</b></div></div><ol class="steps" style="margin-top:12px;font-size:13px">${it.steps.map(s=>`<li><span>${esc(s)}</span></li>`).join('')}</ol>` : '';
-    const prompt = it.cat==='prep' ? 'Згадай склад, вихід і як готувати' : it.cat==='premix' ? 'Згадай склад бату і порцію' : it.cat==='tea' ? 'Згадай склад чаю' : 'Згадай склад, спосіб, посуд і гарніш';
-    body = `<div class="stage"><div class="card ${C.flipped?'flipped':''}" id="card" role="button" tabindex="0" aria-label="Перевернути картку">
-        <div class="face front"><div><p class="eyebrow">${CATS[it.cat]}</p><h3>${esc(it.name)}</h3><p>${prompt}</p></div><p class="hint">Торкнись, щоб перевернути</p></div>
-        <div class="face back"><h3>${esc(it.name)}</h3><div class="back-grid"><div>${svgGlass(it,true)}</div><div><ul class="ing-list">${ingRows(it,true)}</ul></div></div>${facts}</div>
+    const dc = dcOf(it);
+    const mk = [];
+    if (isDrink(it)) { mk.push(it.glass||'посуд —', it.method||'спосіб —', it.garnish||'гарніш —'); if (hasFoam(it)) mk.push('Ізіфоам'); if (it.top) mk.push(it.top); if (it.premix) mk.push(`бат ${BY[it.premix].name} · ${BY[it.premix].portion}`); if (it.price) mk.push('₴ '+it.price); }
+    if (it.cat === 'premix') mk.push('порція '+it.portion);
+    if (it.cat === 'prep') mk.push('вихід '+it.yield);
+    const prompt = it.cat==='prep' ? 'Склад, вихід і як готувати' : it.cat==='premix' ? 'Склад бату і порція' : it.cat==='tea' ? 'Склад чаю' : 'Склад, спосіб, посуд, гарніш';
+    body = `<div class="stage"><div class="card ${C.flipped?'flipped':''}" id="card" role="button" tabindex="0" aria-label="Перевернути картку" style="--dc:${dc}">
+        <div class="face front"><div class="front-main"><p class="eyebrow">${CATS[it.cat]}</p><h3>${esc(it.name)}</h3><p>Згадай: ${prompt}</p>
+          ${C.hint ? `<div class="silhouette">${svgGlass(it,{size:'tile'})}</div>` : ''}</div>
+          <div class="front-foot"><span>Торкнись — перевернути</span>${C.hint?'':'<button class="btn ghost" data-act="hint" style="text-transform:none;letter-spacing:0;padding:8px 12px">Підказка: вигляд</button>'}</div></div>
+        <div class="face back"><div class="back-hero">${svgGlass(it,{size:'big'})}<div style="min-width:0"><h3>${esc(it.name)}</h3><div class="mini-keys">${mk.map(x=>`<span>${esc(x)}</span>`).join('')}</div></div></div>
+          <div class="back-body">${ribbon(it)}<ul class="ing-list">${ingRows(it,true)}</ul>
+          ${it.steps?`<ol class="steps" style="margin-top:12px;font-size:13px">${it.steps.map(s=>`<li><span>${esc(s)}</span></li>`).join('')}</ol>`:''}</div></div>
       </div></div>
       <div class="rate">
         <button class="btn bad" data-rate="0">Не пам’ятаю<small>почати знову</small></button>
-        <button class="btn mid" data-rate="1">Майже<small>ще раз скоро</small></button>
+        <button class="btn" data-rate="1">Майже<small>ще раз скоро</small></button>
         <button class="btn ok" data-rate="2">Знаю<small>рідше</small></button>
       </div>
       <p class="kbd">Пробіл — перевернути · 1 / 2 / 3 — оцінка</p>`;
@@ -727,40 +1010,36 @@ function numPool(v){
   return base.filter(x => x !== v).sort((a,b) => Math.abs(a-v) - Math.abs(b-v)).slice(0,5);
 }
 function buildQuiz(){
-  const cats = [...Z.cats], Q = [];
-  const drinks = ITEMS.filter(i => ['cocktail','lemonade'].includes(i.cat));
-  const pools = {
-    glass: uniq(drinks.map(i=>i.glass).filter(Boolean)),
-    method: uniq(drinks.map(i=>i.method).filter(Boolean)),
-    garnish: uniq(drinks.map(i=>i.garnish).filter(Boolean)),
-  };
+  const Q = [];
+  const drinks = ITEMS.filter(isDrink);
+  const pools = { glass: uniq(drinks.map(i=>i.glass).filter(Boolean)), method: uniq(drinks.map(i=>i.method).filter(Boolean)), garnish: uniq(drinks.map(i=>i.garnish).filter(Boolean)) };
   for (const it of ITEMS) {
     if (!Z.cats.has(it.cat)) continue;
     const same = ITEMS.filter(o => o.cat === it.cat && o.id !== it.id);
-    if (['cocktail','lemonade'].includes(it.cat)) {
+    const img = {img:it.id};
+    if (isDrink(it)) {
       if (it.glass) Q.push(mkQ(it.id, `У чому подаємо ${bq(it.name)}?`, it.glass, pools.glass));
-      if (it.method) Q.push(mkQ(it.id, `Спосіб приготування ${bq(it.name)}?`, it.method, pools.method));
+      if (it.method) Q.push(mkQ(it.id, `Спосіб приготування ${bq(it.name)}?`, it.method, pools.method, img));
       if (it.garnish) Q.push(mkQ(it.id, `Гарніш для ${bq(it.name)}?`, it.garnish, pools.garnish));
+      if (it.glass || it.garnish) Q.push(mkQ(it.id, 'Що це за напій?', it.name, same.map(o=>o.name), {img:it.id, big:true}));
     }
+    if (it.cat === 'tea') Q.push(mkQ(it.id, 'Що це за чай?', it.name, same.map(o=>o.name), {img:it.id, big:true}));
     if (it.cat !== 'prep') {
       for (const g of it.ing) {
         if (g.num == null) continue;
         if (it.cat !== 'tea' && !isLiquid(it,g)) continue;
         const u = it.cat === 'tea' ? '' : ' мл';
-        Q.push(mkQ(it.id, `Скільки ${bq(g.name)} у ${bq(it.name)}?`, fmt(g.num)+u, numPool(g.num).map(v => fmt(v)+u)));
+        Q.push(mkQ(it.id, `Скільки ${bq(g.name)} у ${bq(it.name)}?`, fmt(g.num)+u, numPool(g.num).map(v => fmt(v)+u), img));
       }
-      if (it.ing.length >= 2 && it.cat !== 'premix') Q.push(mkQ(it.id, 'Що за напій?', it.name, same.map(o=>o.name), {sub: it.ing.map(g=>g.name)}));
+      if (it.ing.length >= 2 && it.cat !== 'premix') Q.push(mkQ(it.id, 'Що за напій за складом?', it.name, same.map(o=>o.name), {sub: it.ing.map(g=>g.name)}));
       const own = it.ing.map(g => norm(g.name));
       const foreign = uniq(same.flatMap(o => o.ing.map(g => g.name))).filter(n => !own.includes(norm(n)));
-      if (it.ing.length >= 3 && foreign.length) {
-        const ans = pick(foreign);
-        Q.push({itemId:it.id, q:`Що з цього НЕ входить у ${bq(it.name)}?`, answer:ans, options: shuffle([ans, ...sample(it.ing.map(g=>g.name),3)])});
-      }
+      if (it.ing.length >= 3 && foreign.length) { const ans = pick(foreign); Q.push({itemId:it.id, q:`Що з цього НЕ входить у ${bq(it.name)}?`, answer:ans, options: shuffle([ans, ...sample(it.ing.map(g=>g.name),3)]), img:it.id}); }
     }
     if (it.premix) {
       const inB = it.ing.filter(g=>g.inPremix).map(g=>g.name), svc = it.ing.filter(g=>!g.inPremix).map(g=>g.name);
-      if (inB.length >= 3 && svc.length) { const a = pick(svc); Q.push({itemId:it.id, q:`Що в ${bq(it.name)} додаєш на сервісі, а не з бату?`, answer:a, options:shuffle([a, ...sample(inB,3)])}); }
-      else if (svc.length >= 3 && inB.length) { const a = pick(inB); Q.push({itemId:it.id, q:`Що в ${bq(it.name)} вже є в баті?`, answer:a, options:shuffle([a, ...sample(svc,3)])}); }
+      if (inB.length >= 3 && svc.length) { const a = pick(svc); Q.push({itemId:it.id, q:`Що в ${bq(it.name)} додаєш на сервісі, а не з бату?`, answer:a, options:shuffle([a, ...sample(inB,3)]), img:it.id}); }
+      else if (svc.length >= 3 && inB.length) { const a = pick(inB); Q.push({itemId:it.id, q:`Що в ${bq(it.name)} вже є в баті?`, answer:a, options:shuffle([a, ...sample(svc,3)]), img:it.id}); }
     }
     if (it.cat === 'premix') Q.push(mkQ(it.id, `Порція преміксу ${bq(it.name)}?`, it.portion, ITEMS.filter(o=>o.cat==='premix').map(o=>o.portion)));
     if (it.cat === 'prep') {
@@ -774,15 +1053,14 @@ function buildQuiz(){
   }
   for (const f of RAW.facts) if (Z.cats.has(f.cat)) Q.push({itemId:f.id, q:esc(f.q), answer:f.a, options:shuffle([f.a, ...f.w])});
   const seen = new Set();
-  const out = shuffle(Q.filter(Boolean)).filter(q => { const k = q.q + (q.sub||''); if (seen.has(k)) return false; seen.add(k); return true; });
-  // не більше 2 питань про одну позицію поспіль у сесії
+  const out = shuffle(Q.filter(Boolean)).filter(q => { const k = q.q + (q.sub||'') + (q.big?q.itemId:''); if (seen.has(k)) return false; seen.add(k); return true; });
   const per = {}, res = [];
   for (const q of out) { per[q.itemId] = (per[q.itemId]||0) + 1; if (per[q.itemId] <= 2) res.push(q); if (res.length >= Z.n) break; }
   return res;
 }
 function renderQuiz(){
   const el = document.getElementById('v-quiz');
-  const head = `<div class="view-head"><div><h2>Тест по меню</h2><p>Посуд, способи, гарніші, граммовки, бат і заготовки. Помилки знижують рівень картки — вона частіше з’явиться в «Картках».</p></div></div>`;
+  const head = `<div class="view-head"><div><h2>Тест по меню</h2><p>Впізнай напій за виглядом, згадай посуд, спосіб, гарніш, граммовки, бат і заготовки. Помилки повертають картку в «Картки».</p></div></div>`;
   if (!Z.list) {
     el.innerHTML = head + `<div class="panel qz-setup">
       <div><p class="lbl">Що перевіряємо</p><div class="chips">${CAT_ORDER.map(c=>`<button class="chip" data-zcat="${c}" aria-pressed="${Z.cats.has(c)}">${CATS[c]}</button>`).join('')}</div></div>
@@ -793,17 +1071,17 @@ function renderQuiz(){
   }
   if (Z.i >= Z.list.length) {
     const pct = Math.round(Z.score / Z.list.length * 100);
-    el.innerHTML = head + `<div class="panel" style="max-width:640px"><p class="lbl">Результат</p><p class="score">${Z.score}<span style="color:var(--muted);font-size:28px"> / ${Z.list.length}</span></p>
+    el.innerHTML = head + `<div class="panel" style="max-width:660px"><p class="lbl">Результат</p><p class="score">${Z.score}<span style="color:var(--muted);font-size:28px"> / ${Z.list.length}</span></p>
       <p style="margin:0;color:var(--muted)">${pct>=90?'Чудово, меню в голові.':pct>=70?'Добре. Пройдися по помилках нижче.':'Варто повторити картки по цих позиціях.'}</p>
-      ${Z.mistakes.length?`<p class="lbl" style="margin-top:18px">Помилки</p><ul class="mist">${Z.mistakes.map(m=>`<li>${m.q}<br><span>${esc(m.answer)}</span> · <button class="link" data-open="${m.itemId}">техкарта</button></li>`).join('')}</ul>`:''}
+      ${Z.mistakes.length?`<p class="lbl" style="margin-top:18px">Помилки</p><ul class="mist">${Z.mistakes.map(m=>`<li>${m.q}${m.big&&BY[m.itemId]?' ('+esc(BY[m.itemId].name)+')':''}<br><span>${esc(m.answer)}</span> · <button class="link" data-open="${m.itemId}">техкарта</button></li>`).join('')}</ul>`:''}
       <div class="d-actions"><button class="btn primary" data-act="zagain">Ще раз</button><button class="btn" data-act="zsetup">Змінити налаштування</button></div></div>`;
     return;
   }
-  const q = Z.list[Z.i], done = Z.picked !== null;
-  el.innerHTML = head + `<div class="panel" style="max-width:720px">
+  const q = Z.list[Z.i], done = Z.picked !== null, it = q.img && BY[q.img];
+  el.innerHTML = head + `<div class="panel" style="max-width:760px">
     <div class="qz-progress"><span>${Z.i+1} / ${Z.list.length}</span><div class="meter"><i style="width:${(Z.i/Z.list.length*100)}%"></i></div><span>✓ ${Z.score}</span></div>
-    <p class="qz-q">${q.q}</p>
-    ${q.sub?`<div class="chips qz-sub">${q.sub.map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>`:''}
+    <div class="qz-main ${it?(q.big?'big-art':'has-art'):''}">${it?`<div class="qz-art dc-glow" style="--dc:${dcOf(it)}">${svgGlass(it,{size:q.big?'big':'tile'})}</div>`:''}
+      <div style="min-width:0;${q.big?'text-align:center':''}"><p class="qz-q">${q.q}</p>${q.sub?`<div class="chips qz-sub">${q.sub.map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>`:''}</div></div>
     <div class="opts">${q.options.map((o,k)=>{
       const cls = done ? (o===q.answer?'right':(o===Z.picked?'wrong':'')) : '';
       return `<button class="opt ${cls}" data-opt="${k}" ${done?'disabled':''}><span class="k">${k+1}</span>${esc(o)}</button>`;}).join('')}</div>
@@ -820,27 +1098,38 @@ function answer(k){
 function startQuiz(){ Z.list = buildQuiz(); Z.i = 0; Z.score = 0; Z.picked = null; Z.mistakes = []; renderQuiz(); }
 
 /* ---------- BUILD ---------- */
-const B = {cats:new Set(['cocktail','lemonade']), item:null, pool:[], picked:{}, glass:'', method:'', checked:false};
+const B = {cats:new Set(['cocktail','lemonade']), item:null, pool:[], picked:{}, glass:'', method:'', checked:false, scored:false};
 function newBuild(id){
   const cand = ITEMS.filter(i => B.cats.has(i.cat) && ['cocktail','lemonade','premix'].includes(i.cat));
   const it = id ? BY[id] : (cand.length ? pick(cand.filter(i => i.id !== B.item?.id)) || cand[0] : null);
-  B.item = it; B.picked = {}; B.glass = ''; B.method = ''; B.checked = false;
+  B.item = it; B.picked = {}; B.glass = ''; B.method = ''; B.checked = false; B.scored = false;
   if (!it) return;
   const own = new Set(it.ing.map(g => norm(g.name)));
   const others = uniq(ITEMS.filter(o => o.cat === it.cat && o.id !== it.id).flatMap(o => o.ing.map(g => g.name))).filter(n => !own.has(norm(n)));
   B.pool = shuffle([...it.ing.map(g=>g.name), ...sample(others, Math.max(5, 12 - it.ing.length))]);
 }
+const numOf = s => parseFloat(String(s).replace(',','.').replace(/[^\d.]/g,''));
 function sameAmt(a, b){
-  const n = s => parseFloat(String(s).replace(',','.').replace(/[^\d.]/g,''));
-  const x = n(a), y = n(b);
+  const x = numOf(a), y = numOf(b);
   if (isNaN(x) || isNaN(y)) return String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
   return Math.abs(x - y) < 1e-9;
+}
+function liveGlass(){
+  const it = B.item; if (!it) return '';
+  const names = Object.keys(B.picked);
+  const fake = {cat:'cocktail', glass: it.cat==='premix' ? '' : (B.glass || ''), ing: names.map(n => ({name:n, fam:famOf(n)}))};
+  const layers = names.filter(n => !NONLIQ.test(n.toLowerCase())).map(n => ({fam:famOf(n), v:numOf(B.picked[n])})).filter(l => l.v > 0);
+  const k = it.cat === 'premix' ? 'bottle' : (glassKeyOf(B.glass) || 'rocks');
+  const mine = svgGlass(fake, {size:'big', mode:'layers', layers, glass:k, garnish:false});
+  if (!B.checked) return `<figure>${mine}<figcaption>Твій ${it.cat==='premix'?'бат':'бокал'}</figcaption></figure>`;
+  const truth = svgGlass(it, {size:'big', mode:'layers'});
+  return `<div class="pair"><figure>${mine}<figcaption>Твій</figcaption></figure><figure>${truth}<figcaption>Як має бути</figcaption></figure></div>`;
 }
 function renderBuild(){
   const el = document.getElementById('v-build');
   if (!B.item || !B.cats.has(B.item.cat)) newBuild();
   const it = B.item;
-  const head = `<div class="view-head"><div><h2>Збери напій</h2><p>Обери інгредієнти з набору і впиши граммовки по пам’яті. Потім перевір.</p></div>
+  const head = `<div class="view-head"><div><h2>Збери напій</h2><p>Обери інгредієнти з набору, впиши граммовки — бокал наповнюється на очах. Потім перевір.</p></div>
     <div class="chips">${['cocktail','lemonade','premix'].map(c=>`<button class="chip" data-bcat="${c}" aria-pressed="${B.cats.has(c)}">${CATS[c]}</button>`).join('')}</div></div>`;
   if (!it) { el.innerHTML = head + '<p class="empty">Обери хоча б одну категорію.</p>'; return; }
   const truth = Object.fromEntries(it.ing.map(g => [g.name, g]));
@@ -851,37 +1140,33 @@ function renderBuild(){
     if (B.checked) {
       if (!g) { cls = 'no'; res = 'Зайве — цього в напої немає'; pts -= .5; }
       else if (!g.amt || sameAmt(B.picked[nm], g.amt)) { cls = 'ok'; res = `Так: ${g.amt||'—'}${isLiquid(it,g)?' мл':''}`; pts += 1; }
-      else { cls = 'half'; res = `Інгредієнт так, але кількість: ${g.amt}${isLiquid(it,g)?' мл':''}`; pts += .5; }
+      else { cls = 'half'; res = `Інгредієнт так, кількість: ${g.amt}${isLiquid(it,g)?' мл':''}`; pts += .5; }
     }
-    rows += `<li class="${cls}"><span style="font-weight:600;min-width:0;overflow-wrap:anywhere">${esc(nm)}</span>
+    rows += `<li class="${cls}"><span class="sw" style="--c:var(--c-${famOf(nm)})"></span><span style="font-weight:650;min-width:0;overflow-wrap:anywhere">${esc(nm)}</span>
       <input id="amt-${norm(nm)}" data-amt="${esc(nm)}" inputmode="decimal" placeholder="к-сть" value="${esc(B.picked[nm])}" ${B.checked?'disabled':''} aria-label="Кількість: ${esc(nm)}">
       ${B.checked?`<span class="res">${esc(res)}</span>`:''}</li>`;
   }
-  if (B.checked) {
-    for (const g of it.ing) if (!(g.name in B.picked)) rows += `<li class="no"><span style="font-weight:600">${esc(g.name)}</span><span style="font-family:var(--f-mono);text-align:right">${esc(g.amt)}</span><span class="res">Пропущено</span></li>`;
-  }
-  const hasGM = ['cocktail','lemonade'].includes(it.cat);
-  const drinks = ITEMS.filter(i => ['cocktail','lemonade'].includes(i.cat));
+  if (B.checked) for (const g of it.ing) if (!(g.name in B.picked)) rows += `<li class="no"><span class="sw" style="--c:var(--c-${g.fam})"></span><span style="font-weight:650">${esc(g.name)}</span><span style="font-family:var(--f-mono);text-align:right">${esc(g.amt)}</span><span class="res">Пропущено</span></li>`;
+  const drinks = ITEMS.filter(isDrink);
   const gl = uniq(drinks.map(i=>i.glass).filter(Boolean)), me = uniq(drinks.map(i=>i.method).filter(Boolean));
   let extra = '';
-  if (hasGM && it.glass) {
+  if (isDrink(it) && it.glass) {
     const ok = B.glass === it.glass; if (B.checked && ok) pts += 1; max += 1;
-    extra += `<div class="field"><label for="b-glass">Посуд</label><select id="b-glass" data-bsel="glass" ${B.checked?'disabled':''}><option value="">—</option>${gl.map(g=>`<option ${B.glass===g?'selected':''}>${esc(g)}</option>`).join('')}</select>${B.checked?`<span class="res" style="font-size:12.5px;color:var(--${ok?'good':'bad'})">${ok?'Так':'Правильно: '+esc(it.glass)}</span>`:''}</div>`;
+    extra += `<div class="field"><label for="b-glass">Посуд</label><select id="b-glass" data-bsel="glass" ${B.checked?'disabled':''}><option value="">—</option>${gl.map(g=>`<option ${B.glass===g?'selected':''}>${esc(g)}</option>`).join('')}</select>${B.checked?`<span style="font-size:12.5px;color:var(--${ok?'good':'bad'})">${ok?'Так':'Правильно: '+esc(it.glass)}</span>`:''}</div>`;
   }
-  if (hasGM && it.method) {
+  if (isDrink(it) && it.method) {
     const ok = B.method === it.method; if (B.checked && ok) pts += 1; max += 1;
-    extra += `<div class="field"><label for="b-method">Спосіб</label><select id="b-method" data-bsel="method" ${B.checked?'disabled':''}><option value="">—</option>${me.map(g=>`<option ${B.method===g?'selected':''}>${esc(g)}</option>`).join('')}</select>${B.checked?`<span class="res" style="font-size:12.5px;color:var(--${ok?'good':'bad'})">${ok?'Так':'Правильно: '+esc(it.method)}</span>`:''}</div>`;
+    extra += `<div class="field"><label for="b-method">Спосіб</label><select id="b-method" data-bsel="method" ${B.checked?'disabled':''}><option value="">—</option>${me.map(g=>`<option ${B.method===g?'selected':''}>${esc(g)}</option>`).join('')}</select>${B.checked?`<span style="font-size:12.5px;color:var(--${ok?'good':'bad'})">${ok?'Так':'Правильно: '+esc(it.method)}</span>`:''}</div>`;
   }
   const pct = Math.max(0, Math.round(pts / max * 100));
-  el.innerHTML = head + `<div class="panel" style="margin-bottom:14px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
-      <div><p class="eyebrow">${CATS[it.cat]}</p><h3 style="font-family:var(--f-display);font-weight:400;font-size:30px;margin:0;line-height:1.1">${esc(it.name)}</h3></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><label class="sr" for="b-pick" hidden>Обрати напій</label>
-      <select id="b-pick" data-bsel="pick" style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;max-width:200px">
+  el.innerHTML = head + `<div class="bd-head"><div><p class="eyebrow">${CATS[it.cat]}</p><h3>${esc(it.name)}</h3></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><select id="b-pick" data-bsel="pick" aria-label="Обрати напій">
         ${ITEMS.filter(i=>B.cats.has(i.cat)&&['cocktail','lemonade','premix'].includes(i.cat)).map(i=>`<option value="${i.id}" ${i.id===it.id?'selected':''}>${esc(i.name)}</option>`).join('')}</select>
       <button class="btn" data-act="bnew">Випадковий</button></div></div>
     <div class="bd-grid">
-      <div class="panel"><p class="lbl">Набір інгредієнтів</p><div class="chips pool">${B.pool.map(n=>`<button class="chip" data-pool="${esc(n)}" aria-pressed="${n in B.picked}" ${B.checked?'disabled':''}>${esc(n)}</button>`).join('')}</div></div>
-      <div class="panel"><p class="lbl">Твій склад</p>${rows?`<ul class="mine">${rows}</ul>`:'<p class="missing" style="margin:0">Торкнись інгредієнтів зліва, щоб додати.</p>'}
+      <div class="panel bd-live" id="b-live">${liveGlass()}</div>
+      <div class="panel"><p class="lbl">Набір інгредієнтів</p><div class="chips pool">${B.pool.map(n=>`<button class="chip" data-pool="${esc(n)}" aria-pressed="${n in B.picked}" ${B.checked?'disabled':''}><span class="sw" style="--c:var(--c-${famOf(n)})"></span>${esc(n)}</button>`).join('')}</div></div>
+      <div class="panel"><p class="lbl">Твій склад</p>${rows?`<ul class="mine">${rows}</ul>`:'<p class="missing" style="margin:0">Торкнись інгредієнтів у наборі, щоб додати.</p>'}
         ${extra}
         ${B.checked?`<p class="bd-result">Результат: ${pct}%</p><div class="d-actions" style="margin-top:8px"><button class="btn primary" data-act="bnew">Наступний</button><button class="btn" data-open="${it.id}">Техкарта</button></div>`
           :`<div class="d-actions" style="margin-top:16px"><button class="btn primary" data-act="bcheck" ${picked.length?'':'disabled'}>Перевірити</button></div>`}
@@ -892,9 +1177,10 @@ function renderBuild(){
     save();
   }
 }
+const refreshLive = () => { const l = document.getElementById('b-live'); if (l) l.innerHTML = liveGlass(); };
 
 /* ---------- routing & events ---------- */
-const VIEWS = {menu:renderMenu, cards:renderCards, quiz:renderQuiz, build:renderBuild};
+const VIEWS = {menu:renderMenu, schemes:renderSchemes, cards:renderCards, quiz:renderQuiz, build:renderBuild};
 let view = 'menu';
 function go(v){
   if (!VIEWS[v]) v = 'menu';
@@ -910,10 +1196,14 @@ document.addEventListener('click', e => {
   const d = t.dataset;
   if (d.nav) return go(d.nav);
   if (d.act === 'close') return closeDetail();
-  if (d.open) { if (!sheet.hidden) lastFocus = lastFocus; return openDetail(d.open); }
+  if (d.open) return openDetail(d.open);
   if (d.build) { closeDetail(); B.cats.add(BY[d.build].cat); newBuild(d.build); return go('build'); }
-  if (d.card) { closeDetail(); C.cats.add(BY[d.card].cat); C.cur = d.card; C.flipped = false; return go('cards'); }
+  if (d.card) { closeDetail(); C.cats.add(BY[d.card].cat); C.cur = d.card; C.flipped = false; C.hint = false; return go('cards'); }
   if (d.mcat) { M.cat = d.mcat; return renderMenu(); }
+  if (d.smode) { SC.mode = d.smode; return renderSchemes(); }
+  if (d.sing) { SC.ing = d.sing; return renderSchemes(); }
+  if (d.sfam) { SC.fam = d.sfam; return renderSchemes(); }
+  if (d.act === 'hint') { C.hint = true; return renderCards(); }
   if (t.id === 'card') { C.flipped = !C.flipped; t.classList.toggle('flipped', C.flipped); return; }
   if (d.ccat) { C.cats.has(d.ccat) ? C.cats.delete(d.ccat) : C.cats.add(d.ccat); C.cur = null; return renderCards(); }
   if (d.rate) return rateCard(+d.rate);
@@ -926,16 +1216,16 @@ document.addEventListener('click', e => {
     if (Z.i + 1 >= Z.list.length) { const pct = Math.round(Z.score / Z.list.length * 100); if (pct > (S.best||0)) { S.best = pct; save(); } }
     Z.i++; Z.picked = null; return renderQuiz();
   }
-  if (d.bcat) { B.cats.has(d.bcat) ? B.cats.delete(d.bcat) : B.cats.add(d.bcat); B.item = null; B.scored = false; return renderBuild(); }
+  if (d.bcat) { B.cats.has(d.bcat) ? B.cats.delete(d.bcat) : B.cats.add(d.bcat); B.item = null; return renderBuild(); }
   if (d.pool !== undefined) { const n = d.pool; if (n in B.picked) delete B.picked[n]; else B.picked[n] = ''; return renderBuild(); }
   if (d.act === 'bcheck') { B.checked = true; B.scored = false; return renderBuild(); }
-  if (d.act === 'bnew') { newBuild(); B.scored = false; return renderBuild(); }
+  if (d.act === 'bnew') { newBuild(); return renderBuild(); }
 });
-document.addEventListener('input', e => { const n = e.target.dataset?.amt; if (n !== undefined) B.picked[n] = e.target.value; });
+document.addEventListener('input', e => { const n = e.target.dataset?.amt; if (n !== undefined) { B.picked[n] = e.target.value; refreshLive(); } });
 document.addEventListener('change', e => {
   const s = e.target.dataset?.bsel; if (!s) return;
-  if (s === 'pick') { newBuild(e.target.value); B.scored = false; return renderBuild(); }
-  B[s] = e.target.value;
+  if (s === 'pick') { newBuild(e.target.value); return renderBuild(); }
+  B[s] = e.target.value; refreshLive();
 });
 document.addEventListener('keydown', e => {
   if (!sheet.hidden) { if (e.key === 'Escape') closeDetail(); return; }
