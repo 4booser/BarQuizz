@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="uk">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BarQuizz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Тренажер по меню бару: техкарти, картки, тести та збірка напоїв">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: app shell — sticky header, one working view at a time, bottom tab bar; a recipe opens as a sheet over the view */
+:root{
+  --bg:#0f1513; --surface:#161e1b; --surface-2:#1f2925; --line:#2b3732;
+  --fg:#ece5d3; --muted:#97a39c; --accent:#d4a24c; --accent-ink:#1c1405;
+  --good:#72c08d; --bad:#e3806f; --glass:#c9d3ce; --glass-fill:rgba(201,211,206,.06);
+  --shadow:0 18px 40px rgba(0,0,0,.4);
+  --f-display:"Prata","Georgia","Times New Roman",serif;
+  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --c-spirit:#c98a3a; --c-liqueur:#b5578a; --c-bitter:#c4473d; --c-syrup:#e7a0b8;
+  --c-cordial:#a68ad8; --c-citrus:#dccb4e; --c-juice:#e8894a; --c-soda:#8cc3d8;
+  --c-dairy:#eadfc4; --c-foam:#f4f2ec; --c-tea:#9a7444; --c-premix:#d4a24c; --c-other:#7f8c86;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#edf1ec; --surface:#fbfcfa; --surface-2:#e2e9e3; --line:#c9d4cb;
+    --fg:#15201b; --muted:#55645c; --accent:#94640f; --accent-ink:#fff8ea;
+    --good:#2b8550; --bad:#b4473b; --glass:#4f5f58; --glass-fill:rgba(79,95,88,.06);
+    --shadow:0 18px 40px rgba(20,40,30,.14);
+    --c-citrus:#cdb92c; --c-foam:#fffefa; --c-dairy:#e6d6ae; --c-soda:#7db8cf;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#edf1ec; --surface:#fbfcfa; --surface-2:#e2e9e3; --line:#c9d4cb;
+  --fg:#15201b; --muted:#55645c; --accent:#94640f; --accent-ink:#fff8ea;
+  --good:#2b8550; --bad:#b4473b; --glass:#4f5f58; --glass-fill:rgba(79,95,88,.06);
+  --shadow:0 18px 40px rgba(20,40,30,.14);
+  --c-citrus:#cdb92c; --c-foam:#fffefa; --c-dairy:#e6d6ae; --c-soda:#7db8cf;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#0f1513; --surface:#161e1b; --surface-2:#1f2925; --line:#2b3732;
+  --fg:#ece5d3; --muted:#97a39c; --accent:#d4a24c; --accent-ink:#1c1405;
+  --good:#72c08d; --bad:#e3806f; --glass:#c9d3ce; --glass-fill:rgba(201,211,206,.06);
+  --shadow:0 18px 40px rgba(0,0,0,.4);
+  --c-citrus:#dccb4e; --c-foam:#f4f2ec; --c-dairy:#eadfc4; --c-soda:#8cc3d8;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body.locked{overflow:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;padding-block:12px}
+.brand{font-family:var(--f-display);font-size:24px;letter-spacing:.01em;line-height:1;margin:0}
+.brand span{color:var(--accent)}
+.top-progress{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.top-progress b{color:var(--fg);font-family:var(--f-mono);font-weight:600}
+.meter{width:96px;height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+
+main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+.view{padding-block:20px 8px}
+.view-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px;margin-bottom:16px}
+.view-head h2{font-family:var(--f-display);font-weight:400;font-size:clamp(26px,5vw,36px);line-height:1.1;margin:0;text-wrap:balance}
+.view-head p{margin:4px 0 0;color:var(--muted);max-width:60ch}
+.lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 6px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:7px 13px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s}
+.chip small{font-family:var(--f-mono);font-size:11px;color:var(--muted);font-weight:500}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip[aria-pressed="true"] small{color:var(--accent-ink);opacity:.75}
+.chip:hover{border-color:var(--accent)}
+
+/* menu */
+.toolbar{display:grid;gap:12px;margin-bottom:18px}
+.search{position:relative}
+.search input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px 40px;font-size:15px}
+.search input::placeholder{color:var(--muted)}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2}
+.note{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:12px 14px;color:var(--muted);font-size:13.5px;margin-bottom:16px}
+.note b{color:var(--fg)}
+.group{margin-bottom:26px}
+.group h3{font-family:var(--f-display);font-weight:400;font-size:21px;margin:0 0 12px;display:flex;align-items:baseline;gap:10px}
+.group h3 small{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 12px 12px;text-align:left;display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:center;min-width:0;transition:transform .15s,border-color .15s}
+.tile:hover{border-color:var(--accent);transform:translateY(-1px)}
+.tile .mini{width:44px;height:58px}
+.tile-name{font-weight:700;font-size:14.5px;line-height:1.25;overflow-wrap:anywhere}
+.tile-meta{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.3}
+.dots{display:flex;gap:3px;margin-top:6px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--surface-2)}
+.dots i.on{background:var(--accent)}
+.empty{color:var(--muted);padding:30px 0;text-align:center}
+
+/* glass */
+.glass{display:block;width:100%;height:auto;overflow:visible}
+
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet-bg{position:absolute;inset:0;background:rgba(5,9,7,.6);animation:fade .2s}
+.sheet-panel{position:relative;width:min(780px,100%);max-height:calc(100% - 24px - env(safe-area-inset-top,0px));overflow:auto;background:var(--bg);border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;box-shadow:var(--shadow);padding:20px max(18px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));animation:rise .25s cubic-bezier(.2,.8,.2,1)}
+@media (min-width:820px){.sheet{align-items:center}.sheet-panel{border-radius:22px;border-bottom:1px solid var(--line);max-height:88vh;padding:28px 32px}}
+@keyframes rise{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes fade{from{opacity:0}}
+.d-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+.d-head h2{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,6vw,40px);line-height:1.05;margin:0;text-wrap:balance}
+.icon-btn{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;font-size:22px;line-height:1}
+.d-top{display:grid;grid-template-columns:170px minmax(0,1fr);gap:24px;align-items:start}
+.d-glass{margin:0;text-align:center}
+.d-glass svg{max-width:170px;margin:0 auto}
+.d-glass figcaption{font-size:12.5px;color:var(--muted);margin-top:6px}
+@media (max-width:600px){.d-top{grid-template-columns:1fr}.d-glass svg{max-width:140px}}
+.ing-list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.ing{display:grid;grid-template-columns:12px minmax(0,1fr) auto;column-gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.ing:last-child{border-bottom:0}
+.sw{width:12px;height:12px;border-radius:4px;background:var(--c);border:1px solid color-mix(in srgb,var(--fg) 18%,transparent)}
+.ing-name{font-weight:600;min-width:0;overflow-wrap:anywhere}
+.ing-name small{display:block;font-weight:500;font-size:11px;color:var(--muted);letter-spacing:.04em}
+.ing-amt{font-family:var(--f-mono);font-weight:600;font-size:14px;text-align:right;white-space:nowrap}
+.ing-amt u{text-decoration:none;color:var(--muted);font-size:11px;margin-left:3px}
+.ing-bar{grid-column:2 / 4;height:3px;background:var(--surface-2);border-radius:99px;margin-top:6px;overflow:hidden}
+.ing-bar i{display:block;height:100%;background:var(--c);border-radius:99px}
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);border-radius:5px;padding:0 5px;margin-left:6px;vertical-align:2px}
+.link{background:none;border:0;padding:0;color:inherit;font-weight:inherit;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px;text-align:left}
+.total{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);padding-top:10px}
+.total b{font-family:var(--f-mono);color:var(--fg)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:22px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0}
+.fact p{margin:0;font-weight:600}
+.fact .lbl{margin-bottom:6px}
+.method{display:flex;gap:10px;align-items:flex-start}
+.method + .method{margin-top:10px}
+.method svg{flex:none;width:26px;height:26px;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.method small{display:block;color:var(--muted);font-weight:500;font-size:12px;line-height:1.35}
+.missing{color:var(--muted);font-weight:500;font-style:italic}
+.block{margin-top:22px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.split{grid-template-columns:1fr}}
+.split .fact ul{margin:6px 0 0;padding-left:18px}
+.split .fact li{margin:2px 0}
+.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:10px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start}
+.steps li::before{content:counter(s);font-family:var(--f-mono);font-size:12px;font-weight:600;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);color:var(--accent)}
+.used{display:flex;flex-wrap:wrap;gap:6px}
+.d-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+
+/* buttons */
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 16px;font-weight:700;font-size:14px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:disabled{opacity:.45;cursor:default}
+.btn.ghost{background:transparent}
+
+/* flashcards */
+.deck-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.counts{display:flex;gap:16px;font-size:13px;color:var(--muted)}
+.counts b{font-family:var(--f-mono);color:var(--fg);margin-right:4px}
+.stage{perspective:1400px;max-width:560px;margin:0 auto}
+.card{position:relative;height:min(64vh,520px);min-height:380px;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.3,.7,.2,1);cursor:pointer}
+.card.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:22px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+.front{display:grid;place-items:center;text-align:center;padding:28px;background:radial-gradient(120% 80% at 50% 0%,color-mix(in srgb,var(--accent) 14%,var(--surface)) 0%,var(--surface) 60%)}
+.front h3{font-family:var(--f-display);font-weight:400;font-size:clamp(32px,8vw,48px);line-height:1.05;margin:8px 0 14px;text-wrap:balance}
+.front p{color:var(--muted);margin:0;font-size:14px}
+.front .hint{position:absolute;bottom:18px;left:0;right:0;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.back{transform:rotateY(180deg);overflow:auto;padding:20px 20px 24px}
+.back h3{font-family:var(--f-display);font-weight:400;font-size:24px;margin:0 0 12px}
+.back-grid{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;align-items:start}
+.back .ing{padding:6px 0}
+.mini-facts{display:grid;gap:6px;margin-top:14px;font-size:13.5px}
+.mini-facts div{display:flex;gap:8px}
+.mini-facts span{color:var(--muted);min-width:76px}
+.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:560px;margin:16px auto 0}
+.rate .btn{display:grid;gap:2px;padding:12px 8px;text-align:center}
+.rate .btn small{font-weight:500;color:var(--muted);font-size:11.5px}
+.rate .bad{border-color:color-mix(in srgb,var(--bad) 60%,var(--line))}
+.rate .mid{border-color:var(--line)}
+.rate .ok{border-color:color-mix(in srgb,var(--good) 60%,var(--line))}
+.kbd{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-align:center;margin-top:10px}
+
+/* quiz */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px}
+.qz-setup{display:grid;gap:18px;max-width:640px}
+.qz-progress{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.qz-progress .meter{flex:1;width:auto}
+.qz-q{font-size:clamp(19px,4vw,24px);line-height:1.35;margin:0 0 14px;text-wrap:balance}
+.qz-q b{font-family:var(--f-display);font-weight:400;color:var(--accent)}
+.qz-sub{margin-bottom:14px}
+.qz-sub .chip{cursor:default}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:13px 14px;font-weight:600;display:flex;gap:12px;align-items:center}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt .k{font-family:var(--f-mono);font-size:12px;color:var(--muted);width:20px;height:20px;border-radius:6px;border:1px solid var(--line);display:grid;place-items:center;flex:none}
+.opt.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--bg))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--bg))}
+.opt:disabled{cursor:default}
+.qz-foot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:16px}
+.verdict{font-weight:700}
+.verdict.good{color:var(--good)}
+.verdict.bad{color:var(--bad)}
+.score{font-family:var(--f-display);font-size:64px;line-height:1;margin:6px 0}
+.mist{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:8px}
+.mist li{border-top:1px solid var(--line);padding-top:8px;font-size:14px}
+.mist li span{color:var(--good);font-weight:700}
+
+/* builder */
+.bd-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:760px){.bd-grid{grid-template-columns:1fr}}
+.pool .chip{cursor:pointer}
+.pool .chip[aria-pressed="true"]::before{content:"✓"}
+.mine{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.mine li{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:10px;align-items:center;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:8px 8px 8px 12px}
+.mine li.ok{border-color:var(--good)}
+.mine li.half{border-color:var(--accent)}
+.mine li.no{border-color:var(--bad)}
+.mine li .res{grid-column:1 / -1;font-size:12.5px;color:var(--muted)}
+.mine li.ok .res{color:var(--good)}
+.mine li.no .res{color:var(--bad)}
+.mine input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-family:var(--f-mono);text-align:right}
+.field{display:grid;gap:6px;margin-top:12px}
+.field label{font-size:12px;color:var(--muted);font-weight:600}
+.field select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.bd-result{margin-top:14px;font-weight:700}
+
+/* nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+.nav-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.nav button{background:none;border:0;border-radius:12px;padding:7px 4px;display:grid;justify-items:center;gap:3px;font-size:11.5px;font-weight:700;color:var(--muted)}
+.nav svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.nav button[aria-current="page"]{color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <h1 class="brand">Bar<span>Quizz</span></h1>
+    <div class="top-progress" title="Позиції, які ти позначив як «Знаю» хоча б тричі">
+      <span>Вивчено <b id="known">0</b> з <b id="total">0</b></span>
+      <div class="meter"><i id="meter" style="width:0"></i></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="v-menu" class="view"></section>
+  <section id="v-cards" class="view" hidden></section>
+  <section id="v-quiz" class="view" hidden></section>
+  <section id="v-build" class="view" hidden></section>
+</main>
+
+<nav class="nav" aria-label="Розділи">
+  <div class="nav-in">
+    <button data-nav="menu"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/><path d="M9 8h6"/></svg>Меню</button>
+    <button data-nav="cards"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="13" height="15" rx="2.5"/><path d="M8 3h9.5A2.5 2.5 0 0 1 20 5.5V17"/></svg>Картки</button>
+    <button data-nav="quiz"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.6V14"/><path d="M12 17.2v.1"/></svg>Тест</button>
+    <button data-nav="build"><svg viewBox="0 0 24 24"><path d="M7.5 10h9l-1.3 11H8.8z"/><path d="M8.5 10V7h7v3"/><path d="M10.5 7V4.5h3V7"/></svg>Збірка</button>
+  </div>
+</nav>
+
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-bg" data-act="close"></div>
+  <article class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title" id="sheet-panel"></article>
+</div>
+
+<script>
+/* ============================================================
+   ДАНІ — перенесено з техкарт (Google Sheets: Коктичі, коктичі,
+   Лімо, Чаї, Н/ф, Н/ф 2) та з текстових техкарт.
+   Формат інгредієнта: "Назва-кількість". Префікс • = входить у премікс (бат).
+   ============================================================ */
+const RAW = {
+drinks: [
+  // ---- Коктейлі
+  {id:'negroni', cat:'cocktail', name:'Negroni', ing:['Джин Wan-30','•G.Torino червоний вермут-30','•G.Torino біттер-30'], method:'Стір', glass:'Олд Фешн', garnish:'Цедра апельсину', premix:'americano-mix'},
+  {id:'blood-vial', cat:'cocktail', name:'Blood Vial Negroni', ing:['•Джин на малині-35','•G.Torino червоний вермут-20','•G.Torino біттер-25','•Кордіал малина-10'], method:'Стір', glass:'Олд Фешн', garnish:'Сублім малина + кандурін', premix:'blood-vial-mix'},
+  {id:'boulevardier', cat:'cocktail', name:'Boulevardier', ing:['Дербі Краун-30','•G.Torino червоний вермут-30','•G.Torino біттер-30'], method:'Стір', glass:'Олд Фешн', garnish:'Цедра апельсина', premix:'americano-mix'},
+  {id:'mc', cat:'cocktail', name:'MC', ing:['Screwball бурбон-35','•G.Torino червоний вермут-30','•G.Torino біттер-30','Ангостура орандж-1мл'], method:'Стір', glass:'Олд Фешн', garnish:'Фундук? Чіпси мигдалю? (у техкарті під питанням)', premix:'americano-mix'},
+  {id:'champloo', cat:'cocktail', name:'Champloo Garden', ing:['•Джин Wan-40','•Монін ківі пюре-15','•Монін лічі-10','Суперджус лайм-20','•Кордіал улун-30','Огірок свіжий-30'], method:'Шейк', methodNote:'Частину огірка — у шейкер', glass:'Олд Фешн', garnish:'Два слайси огірка', premix:'champloo-mix'},
+  {id:'aperitivo', cat:'cocktail', name:'Aperetivo Sprits', ing:['G.Torino аперитив-60','Garda Brut-100','Содова-50','Чіпс апельсин-1'], method:'Білд', glass:'Вінка', garnish:'Чіпс апельсин'},
+  {id:'french', cat:'cocktail', name:'French', ing:['•Джин Wan-30','•Монін сироп яблуко-5','•Монін сироп бузина-5','•Санджермен-15','Суперджус лайм-20','Garda Brut-75'], method:'Шейк', glass:'Флюте', garnish:'Цедра лимону', top:'Ігристе топ', premix:'french-mix'},
+  {id:'lebowski', cat:'cocktail', name:'Lebowski', ing:['Distil Caramel-50','Франжеліко-20','Kahlua-20','Вершки-50'], method:'Білд, Стір', glass:'Олд Фешн', garnish:'Тертий мускат + какао'},
+  {id:'clover', cat:'cocktail', name:'Clover Club +', ing:['•Джин на малині-40','•Санджермен-15','•Кордіал малина-30','•Монін лічі-10','Суперджус лимон-20','Ізіфоам-2','Пудра малинова-0,002','Троянда-0,001'], method:'Шейк, Драй шейк', glass:'Купе', garnish:'Пудра малинова', premix:'clover-mix'},
+  {id:'whiskey-sour', cat:'cocktail', name:'Whiskey Sour', ing:['Дербі Краун-50','Цукровий сироп-20','Суперджус лимон-20','Ізіфоам-2']},
+  {id:'pornstar', cat:'cocktail', name:'Pornstar', ing:['•Distil passion fruit-20','•Distil vanilla-20','•Лікер Vedrenne passion fruit-25','•Сироп ваніль-15','Суперджус лайм-15','•Маракуя пюре пф-30','Garda Brut-50','Ізіфоам-1'], method:'Шейк', glass:'Купе', garnish:'Малинова пудра + контрацептив', top:'Ігристе топ', premix:'pornstar-mix'},
+  {id:'bloody', cat:'cocktail', name:'Bloody Mary', ing:['Текіла El Tequleno-40','Сангріта пф-120','Суперджус лайм-10','Оливки-10гр','Паприка копчена мелена-1гр','Сіль селери-1'], method:'Ролл', glass:'Олд Фешн', garnish:'Дві оливки у спеціях'},
+  {id:'gin-tonic', cat:'cocktail', name:'Gin-tonic', ing:['Джин Wan-50','Тонік-100','Лайм/лимон/огірок-30'], method:'Білд', glass:'Олд Фешн / Хайбол', garnish:'Лайм / лимон / огірок'},
+  {id:'kafka', cat:'cocktail', name:'Kafka on the Shore', ing:['Премікс-100','Попкорн-5гр'], method:'Стір', glass:'Ніка Нора', garnish:'Попкорн', prep:'kafka-punch'},
+  {id:'oli', cat:'cocktail', name:'Oli', ing:['Ром на полуниці-70','Монін кокос-20','Суперджус лайм-20','Ізіфоам-2'], method:'Шейк, Драй шейк', glass:'Ніка Нора', garnish:'Бутони роз'},
+  {id:'pink-panther', cat:'cocktail', name:'Pink Panther', ing:['Премікс-100','Цукрова вата-15'], method:'Стір', glass:'Ніка Нора', garnish:'Цукрова рожева вата', prep:'pink-punch'},
+  {id:'jojo', cat:'cocktail', name:'JoJo Sour', ing:['•Соджу апельсин-40','•Джин Wan-20','•Vedrenne peach-20','Сік ананас-20','•Монін мандарин-20','Суперджус лайм-20','Ізіфоам-2'], method:'Шейк, Драй шейк', glass:'Купе', garnish:'Апельсинова пудра', premix:'jojo-mix'},
+  {id:'soju-tonic', cat:'cocktail', name:'Soju-tonic', ing:['Соджу-50','Монін маракуя-15','Тонік-100'], method:'Білд', glass:'Хайбол', garnish:'Сектор лайм'},
+  {id:'midori', cat:'cocktail', name:'Midori', ing:['•Vedrenne Green Melon-40','•Джин Wan-20','Суперджус лайм-20','•Цукровий сироп-10','Ізіфоам-2','М’ятна пудра-2гр'], method:'Шейк, Драй шейк', glass:'Олд Фешн', garnish:'М’ятна пудра', premix:'midori-mix'},
+  {id:'muzyka', cat:'cocktail', name:'Музика', ing:['•Джин Wan-50','•Vedrenne peach-20','Сік яблуко-50','•Монін яблуко-10','Суперджус лайм-15','Тонік-100','Огірок-20'], method:'Білд', glass:'Хайбол', garnish:'Огірок', premix:'muzyka-mix'},
+  {id:'mcfly', cat:'cocktail', name:'McFly', ing:['Soda punch-50','Distil citronata-30','С. лимон-15','Брют Гарда-50','Содова-50','М’ята-3'], method:'Білд', glass:'Винний бокал', garnish:'М’ята'},
+  // ---- Коктейлі з текстових техкарт
+  {id:'kabocha', cat:'cocktail', name:'Кабоча', ing:['Текіла-50','Трипл сек-20','Лимон-25','Гарбузовий сироп-20','Ізіфоам-2 деш'], cost:'82,80', price:'310'},
+  {id:'monkey', cat:'cocktail', name:'Monkey Business', ing:['Dead Man’s Fingers кокос-50','Лікер банан-50','Монін зелений банан-15','Кокос-10','Лимон-30','Ананас-50','Ізіфоам-2 деш'], cost:'105,07', price:'320'},
+  {id:'purple-haze', cat:'cocktail', name:'Purple Haze', ing:['Горілка Курант-50','Монін смородина-20','Лимон-20','Ізіфоам-2 деш'], cost:'33,26', price:'280'},
+  {id:'irish-velvet', cat:'cocktail', name:'Irish Velvet', ing:['Tullamore Dew-30','Tullamore Honey-20','Popcorn Syrup-15','Lemon Juice-20','Banana Syrup-10','Ізіфоам-2'], cost:'79,11', price:'290'},
+
+  // ---- Лимонади
+  {id:'raspberry-coconut', cat:'lemonade', name:'Raspberry-Coconut', ing:['•Кордіал малина-40','•Монін кокос-10','Суперджус лимон-20','Содова-100','Малина с/м / сублім-20'], method:'Білд', glass:'Хайбол', garnish:'Малина с/м / сублім', premix:'rc-mix'},
+  {id:'soda-punch', cat:'lemonade', name:'Soda Punch', ing:['Премікс-100','Содова-100','Скелетований лист-1'], method:'Білд', glass:'Хайбол', garnish:'Скелетований лист'},
+  {id:'lemongrass-lychee', cat:'lemonade', name:'Lemongrass-Lichi', ing:['•Монін лічі-15','•Кордіал лемонграс-40','Суперджус лайм-20','Содова-100'], method:'Білд', glass:'Хайбол', garnish:'Скелетований лист', premix:'lgl-mix'},
+  {id:'passion-bergamot', cat:'lemonade', name:'Passion-Bergamot', ing:['Маракуя пюре-40','Монін бергамот-15','Суперджус лайм-15','Кордіал улун-30','Содова-100','Бамбук-1','Чіпс лайм-1'], method:'Білд', glass:'Хайбол', garnish:'Лист бамбуку, чіпс лайм'},
+  {id:'kiwi-aloe', cat:'lemonade', name:'Kiwi-Aloe', ing:['•Монін ківі-15','Огірок-20','•Кордіал улун-30','Суперджус лайм-30'], method:'Білд', glass:'Хайбол', garnish:'Огірок', premix:'kiwi-mix'},
+
+  // ---- Чаї
+  {id:'tea-raspberry', cat:'tea', name:'Малиновий', ing:['Кордіал малина-70','Сік ананас-100','Лимон-40','М’ята-10','Чай «Нахабний фрукт»-5г']},
+  {id:'tea-oblepikha', cat:'tea', name:'Обліпиха-Імбир-Маракуя', ing:['Пюре обліпиха-150','Фреш імбир-50','Монін маракуя-50','Апельсин-40','Чай чорний-5г','Сік апельсин-0,1'], note:'Фреш імбир — у техкарті позначено «ще старий».'},
+  {id:'tea-tropical', cat:'tea', name:'Тропічний', ing:['Монін манго-35','Маракуя пюре-70','М’ята-10','Апельсин-20','Лайм-20','Зелений чай з саусепом-5г']},
+  {id:'tea-citrus', cat:'tea', name:'Цитрусовий', ing:['Монін мандарин-30','Монін бергамот-30','Сік апельсиновий-100','Лимон-15','Лайм-15','Апельсин-30','Зелений чай-5г','Кордіал лемонграс-50']},
+  {id:'tea-moroccan', cat:'tea', name:'Марокканський', ing:['Чорний чай-5г','М’ята-15','Монін Hazelnut-20','Лайм-30','Імбир фреш-джус-30','Гвоздика-2г','Палка кориці-1шт (4-5г)','Бадьян-2г']},
+],
+
+premixes: [
+  {id:'americano-mix', name:'Амерікано мікс', ing:['G.Torino vermouth Rosso-30','G.Torino Bitter-30'], portion:'60', for:['negroni','boulevardier','mc']},
+  {id:'blood-vial-mix', name:'Blood Vial Negroni', ing:['Джин на малині-35','G.Torino rosso-20','G.Torino Bitter-25','Кордіал малина-10'], portion:'90', for:['blood-vial']},
+  {id:'champloo-mix', name:'Champloo Garden', ing:['Gin Wan-40','Monin kiwi pure-15','Monin lychee-10','Кордіал улун-30'], portion:'90', for:['champloo']},
+  {id:'french-mix', name:'French', ing:['Gin Wan-30','Monin green apple-5','Monin elderflower-5','St. Germain-15'], portion:'55', for:['french']},
+  {id:'clover-mix', name:'Clover Club +', ing:['Джин на малині-40','St. Germain-15','Кордіал малина-30','Monin lychee-10'], portion:'95', for:['clover']},
+  {id:'pornstar-mix', name:'Pornstar', ing:['Distil passion-20','Distil vanilla-20','Vedrenne passion-25','Сироп ваніль-15','Пф маракуя пюре-30'], portion:'110', for:['pornstar']},
+  {id:'jojo-mix', name:'JoJo', ing:['Soju-40','Gin Wan-20','Vedrenne peach-20','Monin mandarin-20'], portion:'100', for:['jojo']},
+  {id:'midori-mix', name:'Midori', ing:['Vedrenne green melon-40','Gin Wan-20','Цукровий сироп-10'], portion:'70', for:['midori']},
+  {id:'muzyka-mix', name:'Музика', ing:['Gin Wan-50','Vedrenne peach-20','Monin green apple-10'], portion:'80', for:['muzyka']},
+  {id:'drago-mix', name:'Drago Margo', ing:['Текіла пітахая пф-40','Distil citronata-30','Monin lychee-15'], portion:'85', for:[]},
+  {id:'rc-mix', name:'Raspberry coconut', ing:['Кордіал малина-40','Монін кокос-10'], portion:'50', for:['raspberry-coconut']},
+  {id:'lgl-mix', name:'Lemongrass lychee', ing:['Monin lychee-15','Кордіал лемонграс-40'], portion:'55', for:['lemongrass-lychee']},
+  {id:'kiwi-mix', name:'Kiwi', ing:['Monin kiwi pure-15','Кордіал улун-30'], portion:'45', for:['kiwi-aloe']},
+],
+
+preps: [
+  {id:'simple-syrup', name:'Simple syrup', ing:['Цукор-1кг','Вода-1л'], yield:'~1,6 л', steps:['Залити цукор кип’ятком, добре перемішати.','Пропарити пляшку, залити рідину, поставити маркування і дату.']},
+  {id:'vanilla-syrup', name:'Vanilla Syrup', ing:['Цукор ванільний-0,5кг','Окріп-0,33'], yield:'0,65 л', steps:['Добре перемішати і залити у підготовлену пляшку.']},
+  {id:'sj-lemon', name:'Superjuice Lemon', ing:['Цедра лимону-0,050гр','Кислота лимонна-0,050гр','Вода фільтр-0,85мл'], yield:'1 л', steps:['Зняти потрібну кількість цедри без альбедо.','З «лисих» лимонів видавити фреш.','Додати всі інгредієнти разом з фрешем у блендер і збити.','Процідити через сито + марлю.','Пропарити пляшку, поставити маркування і дату. Зберігати у холодильнику.']},
+  {id:'sj-lime', name:'Superjuice Lime', ing:['Цедра лайма-0,050','Кислота лимонна-0,033','Кислота яблучна-0,017','Вода фільтр-0,85'], yield:'1 л', steps:['Те саме, що й у Superjuice Lemon: цедра без альбедо, фреш, блендер, сито + марля, пляшка з маркуванням, холодильник.']},
+  {id:'passion-puree', name:'Passion fruit puree', ing:['Маракуя с/м-1кг','Цукровий сироп-0,3мл','Сорбат-0,001,5'], yield:'1,3 л', steps:['Розморозити маракую.','Додати цукровий сироп і прогріти 10 хвилин.','Дати охолонути, додати сорбат і добре перемішати.','Частину — у вак. пакет і в морозилку, другу — у підготовлену пляшку.']},
+  {id:'raspberry-cordial', name:'Raspberry Cordial', ing:['Малина с/м-1кг','Вода фільтр-1л','Цукор-1кг','Каффір-6гр','Суперджус лайм-0,3мл','Сорбат-0,001,2гр'], yield:'2,2 л', steps:['На низ каструлі покласти каффір, зверху с/м малину, зверху цукор.','Дати постояти у холодильнику ніч або 12 годин.','Додати суперджус і воду. Прогріти, часто перемішуючи до розчинення цукру. Не доводити до кипіння.','Процідити через сито, якщо потрібно — ще раз через інше.','Дати охолонути, додати сорбат.','Одну частину — у підготовлену пляшку, іншу — у вак. пакет і в морозилку. Написати назву, дату, кількість і наявність сорбату.']},
+  {id:'oblepiha-puree', name:'Oblepiha puree', ing:['Обліпихи пюре-1кг','Цукровий сироп-0,5л','Сорбат-0,001,5гр'], yield:'1,5 л', steps:['Розморозити пюре.','Додати сироп і пюре у каструлю, прогріти, не доводячи до кипіння.','Дати охолонути. Додати сорбат і добре перемішати.','Одну частину — у підготовлену пляшку + маркування. Іншу — у вак. пакет + маркування і в морозилку.']},
+  {id:'oolong-cordial', name:'Oolong Cordial', ing:['Молочний улун / улун-20гр','Кип’яток-0,500л','Цукор-0,250гр','Кислота лимонна-0,005гр','Кислота яблучна-0,005гр','Сорбат-0,000,7гр'], yield:'0,65 л', steps:['Залити чай кип’ятком, дати настоятись 10–12 хвилин.','Дати трохи охолонути. Процідити через фільтр-пакет від пилу.','У ще теплий чай додати цукор і кислоти. Добре перемішати до розчинення.','Додати сорбат і ще раз добре перемішати.','Перелити у підготовлену пляшку + маркування з наявністю сорбату.']},
+  {id:'lemongrass-cordial', name:'Lemongrass Cordial', ing:['Лемонграс с/м-0,25гр','Вода фільтр-1,6л','Цукор-0,800гр','Цедра одного лимона-~20-40гр','Кислота лимонна-0,015гр','Сорбат-0,002гр'], yield:'2,2 л', steps:['Дрібно нарізаний лемонграс (якщо приїхав цілий — дрібно нарізати) покласти в каструлю, додати воду та цукор.','Добре перемішати і довести майже до кипіння.','Додати цедру лимона і лимонну кислоту, дати настоятись 2 години.','Процідити, додати сорбат.','Частину — у підготовлену пляшку + маркування, іншу — у вак. пакет + маркування і в морозилку.']},
+  {id:'raspberry-gin', name:'Raspberry Infused Gin', ing:['Джин Wan-1л','Цукор-0,030','Малина с/м-0,5кг','Бадьян-0,004гр'], yield:'1,2 л', steps:['Усі інгредієнти покласти у вак. пакет і завакуумувати.','Сувід: 58 градусів, одна година.','Зупинити екстракцію: пакет у кулер з водою і льодом.','Після охолодження процідити через сито. Не давити ягоди, щоб рідина не була мутною.','Перелити у підготовлену пляшку + маркування.']},
+  {id:'strawberry-rum', name:'Strawberry Infused Rum', ing:['DMF Rum-1л','Полуниця-1кг'], yield:'1,35 л', steps:['Покласти інгредієнти у вакуумний пакет і завакуумувати.','Сувід: 58 градусів, півтори години.','Дати охолонути, процідити.','Полуницю залишити проціджуватись під пресом на ніч.','Перелити у підготовлену пляшку.']},
+  {id:'fresh-ginger', name:'Fresh Ginger', ing:['Імбир-1кг','Вода-1л'], yield:'1,5 л', steps:['Промити імбир.','Додати разом з водою у блендер і перебити.','Процідити через сито і марлю, трохи віджати в кінці.','Перелити у підготовлену пляшку + маркування.']},
+  {id:'kafka-punch', name:'Kafka milk punch', ing:['Distil caramel-0,3л','Kahlua-0,25л','Монін попкорн-0,16л','Суперджус лимон-0,17л','Еспресо-8 порцій','Молоко-0,450мл'], yield:'1 л', steps:['В одну тару змішати алкоголь, каву і кислу частину.','В іншу — підігріте молоко ~50–60 градусів.','Влити все з першої тари в молоко, ретельно помішуючи.','Залишити на 3 години у холодильнику, максимально не чіпаючи і не мішаючи.','Поставити фільтруватись через кавовий фільтр.','У кінці додати сироп і перемішати. Вилити у підготовлену пляшку + маркування.']},
+  {id:'pink-punch', name:'Pink Panther milk punch', ing:['Горілка ваніль-0,3мл','Bols apricot brandy-0,170мл','Суперджус лайм-0,190мл','Молоко-0,250мл','Вершки-0,100мл','Кордіал малина-0,200мл','Сироп ваніль-0,070мл'], yield:'1 л', steps:['Те саме, що й у Kafka milk punch.','Відмінність: тільки сироп — у кінці, після фільтрації.']},
+  {id:'cream-soda-punch', name:'Cream soda punch', ing:['Монін карамель-0,2мл','Сироп ваніль-0,2мл','Сік яблуко-0,5мл','Суперджус лимон-0,1мл','Молоко-0,15','Вершки-0,070'], yield:'1 л', steps:['Усе так само, як з Kafka milk punch.','Відмінність: сиропи — не після фільтрації, а до додавання в молоко.']},
+  {id:'sangrita', name:'Sangrita', ing:['Перець болгарський брутто-0,23','Соус чорного перцю-0,016','Сечуанський перець-0,0001','Копчена паприка-0,008','Часник сушений копчений-0,006','Сіль селери-0,011','Соус хабанеро-0,010','Соус табаско-0,004','Соус ворчестер-0,035','Соус устричний-0,015','Томатний сік-1л','Фреш апельсиновий-0,2','Суперджус лайм-0,1','Мескаль-0,020','Сорбат-0,001,5','Бензоат-0,000,7'], yield:'1,4 л', steps:['Попросити кухаря запекти перець, дати охолонути і почистити від шкірки, насіння і ніжки.','Видавити потрібну кількість фрешу з апельсинів і процідити.','Об’єднати всі інгредієнти в блендері, додати сорбат і бензоат, ретельно перемішати.','Перелити у підготовлену пляшку і наклеїти маркування.']},
+],
+
+notes: {
+  tea:'Асортиментні чаї — по <b>5 г</b>. Аляплуг — по <b>6 г</b>, фруктовий — по <b>6 г</b>. Китайські чаї — по <b>7 г</b>.',
+  prep:'<b>Підготовлена пляшка і маркування</b> — пропарюємо пляшку і клеїмо стікер з назвою і датою; якщо потрібно, пишемо наявність сорбату.',
+},
+
+facts: [
+  {id:'raspberry-gin', cat:'prep', q:'Сувід для Raspberry Infused Gin?', a:'58° · 1 година', w:['58° · 1,5 години','62° · 1 година','50° · 2 години']},
+  {id:'strawberry-rum', cat:'prep', q:'Сувід для Strawberry Infused Rum?', a:'58° · 1,5 години', w:['58° · 1 година','65° · 30 хвилин','50° · 3 години']},
+  {id:'strawberry-rum', cat:'prep', q:'Що роблять з полуницею після сувіду (Strawberry Infused Rum)?', a:'Проціджують під пресом на ніч', w:['Викидають одразу','Заморожують для гарнішу','Перебивають у блендері']},
+  {id:'raspberry-gin', cat:'prep', q:'Чому ягоди в Raspberry Infused Gin не можна давити?', a:'Щоб рідина не була мутною', w:['Щоб не було гірчинки','Щоб не втратити колір','Щоб швидше процідити']},
+  {id:'oolong-cordial', cat:'prep', q:'Скільки настоюється улун для Oolong Cordial?', a:'10–12 хвилин', w:['3–5 хвилин','30 хвилин','2 години']},
+  {id:'lemongrass-cordial', cat:'prep', q:'Скільки настоюється Lemongrass Cordial після цедри й кислоти?', a:'2 години', w:['10–12 хвилин','30 хвилин','Ніч']},
+  {id:'raspberry-cordial', cat:'prep', q:'Скільки малина з цукром і каффіром стоїть у холодильнику (Raspberry Cordial)?', a:'Ніч або 12 годин', w:['1 година','3 години','2 доби']},
+  {id:'raspberry-cordial', cat:'prep', q:'Що кладемо на самий низ каструлі для Raspberry Cordial?', a:'Каффір', w:['Цукор','Малину','Суперджус']},
+  {id:'kafka-punch', cat:'prep', q:'До якої температури гріти молоко для milk punch?', a:'~50–60°', w:['~30°','~80–90°','До кипіння']},
+  {id:'kafka-punch', cat:'prep', q:'Скільки milk punch стоїть у холодильнику перед фільтрацією?', a:'3 години', w:['1 година','12 годин','30 хвилин']},
+  {id:'kafka-punch', cat:'prep', q:'Через що фільтрують milk punch?', a:'Кавовий фільтр', w:['Сито і марля','Фільтр-пакет для чаю','Не фільтрують']},
+  {id:'kafka-punch', cat:'prep', q:'Коли додають сироп у Kafka milk punch?', a:'У кінці, після фільтрації', w:['До молока','Разом з алкоголем','Перед заморозкою']},
+  {id:'cream-soda-punch', cat:'prep', q:'Коли додають сиропи в Cream soda punch?', a:'До додавання в молоко', w:['Після фільтрації','Не додають','Разом з молоком після 3 годин']},
+  {id:'passion-puree', cat:'prep', q:'Скільки прогрівати пюре маракуї з сиропом?', a:'10 хвилин', w:['2 хвилини','30 хвилин','Довести до кипіння']},
+  {id:'sangrita', cat:'prep', q:'Які консерванти йдуть у Sangrita?', a:'Сорбат і бензоат', w:['Тільки сорбат','Тільки бензоат','Лимонна кислота']},
+  {id:'sangrita', cat:'prep', q:'Хто запікає перець для Sangrita?', a:'Кухар', w:['Бармен на зміні','Перець не запікають','Купуємо готовий']},
+  {id:'sj-lemon', cat:'prep', q:'Як знімати цедру для Superjuice?', a:'Без альбедо', w:['Разом з альбедо','З цілого лимона з м’якоттю','Тертою на дрібній тертці']},
+  {id:'tea-raspberry', cat:'tea', q:'Скільки грамів китайського чаю?', a:'7 г', w:['5 г','6 г','10 г']},
+  {id:'tea-raspberry', cat:'tea', q:'Скільки грамів фруктового чаю?', a:'6 г', w:['5 г','7 г','8 г']},
+  {id:'tea-raspberry', cat:'tea', q:'Скільки грамів асортиментного чаю?', a:'5 г', w:['6 г','7 г','4 г']},
+  {id:'kabocha', cat:'cocktail', q:'Ціна Кабочі в меню?', a:'310', w:['280','290','320']},
+  {id:'monkey', cat:'cocktail', q:'Ціна Monkey Business в меню?', a:'320', w:['280','290','310']},
+  {id:'purple-haze', cat:'cocktail', q:'Ціна Purple Haze в меню?', a:'280', w:['290','310','320']},
+  {id:'irish-velvet', cat:'cocktail', q:'Ціна Irish Velvet в меню?', a:'290', w:['280','310','320']},
+],
+};
+
+/* ============================================================ */
+const CATS = {cocktail:'Коктейлі', lemonade:'Лимонади', tea:'Чаї', premix:'Премікси', prep:'Заготовки'};
+const CAT_ORDER = ['cocktail','lemonade','tea','premix','prep'];
+
+const FAM = [
+  ['foam',/ізіфоам/],
+  ['soda',/содов|тонік|garda|брют|ігрист/],
+  ['dairy',/вершк|молок/],
+  ['premix',/^премікс|soda punch/],
+  ['cordial',/кордіал/],
+  ['syrup',/монін|monin|сироп|syrup/],
+  ['citrus',/суперджус|^с\.\s?лимон|^лимон|^лайм|lemon|^апельсин$|цедра|кислота/],
+  ['juice',/сік|пюре|фреш|сангріт|томат|маракуя|обліпих|ананас/],
+  ['bitter',/вермут|біттер|bitter|rosso|аперитив|ангостур/],
+  ['liqueur',/vedrenne|лікер|санджермен|st\.?\s?germ|kahlua|франжел|distil|bols|трипл/],
+  ['spirit',/джин|gin|ром|rum|текіл|соджу|soju|бурбон|screwball|дербі|горілк|мескаль|dead man|tullamore/],
+  ['tea',/чай|улун|еспресо/],
+];
+const FAM_LBL = {spirit:'міцне', liqueur:'лікер', bitter:'вермут / біттер', syrup:'сироп', cordial:'кордіал', citrus:'кисле', juice:'сік / пюре', soda:'газоване', dairy:'молочне', foam:'піна', tea:'чай / кава', premix:'премікс', other:'інше'};
+const NONLIQ = /ізіфоам|чіпс|бамбук|лист|м.ята|огірок|попкорн|вата|пудра|троянд|оливк|паприк|сіль|сублім|лайм\/|гвоздик|кориц|бадьян/;
+
+const PREP_LINK = [
+  [/суперджус\s*лимон|^с\.\s*лимон/i,'sj-lemon'], [/суперджус\s*лайм/i,'sj-lime'],
+  [/кордіал\s*малин/i,'raspberry-cordial'], [/кордіал\s*улун/i,'oolong-cordial'], [/кордіал\s*лемонгра/i,'lemongrass-cordial'],
+  [/маракуя\s*пюре|пюре\s*маракуя/i,'passion-puree'], [/пюре\s*обліпих/i,'oblepiha-puree'],
+  [/джин на малині/i,'raspberry-gin'], [/ром на полуниці/i,'strawberry-rum'],
+  [/імбир\s*фреш|фреш\s*імбир/i,'fresh-ginger'], [/сангріт/i,'sangrita'],
+  [/цукровий сироп/i,'simple-syrup'], [/^сироп ваніль/i,'vanilla-syrup'],
+];
+
+const METHODS = {
+  'білд':{d:'Збирається одразу в посуді подачі', i:'<path d="M7 10h10l-1.2 11H8.2z"/><path d="M12 2.5v5"/><path d="M9.5 5.5 12 8l2.5-2.5"/>'},
+  'стір':{d:'Перемішування з льодом у змішувальному стакані', i:'<path d="M6 9h12l-1.5 12h-9z"/><path d="M15 3 10 17"/><path d="M9 14.5c1.6 1 4.4 1 6 0"/>'},
+  'шейк':{d:'Збивання з льодом у шейкері', i:'<path d="M8 10h8l-1 11H9z"/><path d="M9 10V7h6v3"/><path d="M10.5 7V4.5h3V7"/>'},
+  'драй шейк':{d:'Збивання без льоду — для піни', i:'<path d="M8 10h8l-1 11H9z"/><path d="M9 10V7h6v3"/><path d="M10.5 7V4.5h3V7"/><path d="M18.5 3.5l2 2m0-2-2 2"/>'},
+  'ролл':{d:'Переливання між двома частинами шейкера', i:'<path d="M4 9h6l-1 11H5z"/><path d="M14 9h6l-1 11h-4z"/><path d="M7 6c2.5-2.5 7.5-2.5 10 0"/><path d="M17 6l-2.3.4M17 6l-.4-2.3"/>'},
+};
+
+/* ---------- build model ---------- */
+function parseIng(s){
+  let inPremix = false;
+  if (s.startsWith('•')) { inPremix = true; s = s.slice(1); }
+  const m = s.match(/^(.+?)\s*-\s*(~?\d.*)$/);
+  const name = m ? m[1].trim() : s.trim();
+  const amt = m ? m[2].trim() : '';
+  const num = /^\d+([.,]\d+)?$/.test(amt) ? parseFloat(amt.replace(',','.')) : null;
+  const low = name.toLowerCase();
+  let fam = 'other';
+  for (const [k,re] of FAM) if (re.test(low)) { fam = k; break; }
+  let link = null;
+  for (const [re,id] of PREP_LINK) if (re.test(name)) { link = id; break; }
+  return {name, amt, num, inPremix, fam, link};
+}
+const ITEMS = [], BY = {};
+function add(it){ it.ing = it.ing.map(parseIng); ITEMS.push(it); BY[it.id] = it; }
+RAW.drinks.forEach(d => add({...d}));
+RAW.premixes.forEach(p => add({...p, cat:'premix'}));
+RAW.preps.forEach(p => add({...p, cat:'prep'}));
+// Премікс-рядок у Kafka / Pink Panther веде на milk punch
+ITEMS.forEach(it => { if (it.prep) it.ing.forEach(g => { if (g.fam === 'premix') g.link = it.prep; }); });
+// де використовується заготовка
+const USED = {};
+ITEMS.forEach(it => it.ing.forEach(g => { if (g.link && g.link !== it.id) (USED[g.link] ||= new Set()).add(it.id); }));
+
+const isLiquid = (it,g) => ['cocktail','lemonade','premix'].includes(it.cat) && g.num != null && !NONLIQ.test(g.name.toLowerCase());
+const fmt = n => String(n).replace('.', ',');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => s.toLowerCase().replace(/[^a-zа-яіїєґ0-9]/g,'');
+const shuffle = a => { for (let i=a.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const sample = (a,n) => shuffle([...a]).slice(0,n);
+const uniq = a => [...new Set(a)];
+const pick = a => a[Math.random()*a.length|0];
+
+/* ---------- storage (per viewer) ---------- */
+const KEY = 'barquizz.v1';
+let S = {box:{}, seen:{}, best:0};
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.box) S = {...S, ...s}; } catch(e){}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} updateTop(); }
+const box = id => S.box[id] ?? -1;
+function setBox(id, v){ S.box[id] = Math.max(0, Math.min(4, v)); S.seen[id] = Date.now(); }
+function updateTop(){
+  const known = ITEMS.filter(i => box(i.id) >= 3).length;
+  document.getElementById('known').textContent = known;
+  document.getElementById('total').textContent = ITEMS.length;
+  document.getElementById('meter').style.width = (known / ITEMS.length * 100) + '%';
+}
+
+/* ---------- glass drawings ---------- */
+const GL = {
+  highball:{o:'M32 16 L36 144 Q36.5 150 42 150 L78 150 Q83.5 150 84 144 L88 16', i:'M35.5 18 L39 141 Q39.3 145 43 145 L77 145 Q80.7 145 81 141 L84.5 18 Z', b:145, t:18, cap:300},
+  rocks:{o:'M20 60 L25 144 Q25.5 150 31 150 L89 150 Q94.5 150 95 144 L100 60 M27.8 136 L92.2 136', i:'M23.5 62 L27.8 136 L92.2 136 L96.5 62 Z', b:136, t:62, cap:240},
+  coupe:{o:'M12 38 Q13 92 60 95 Q107 92 108 38 M60 95 L60 145 M36 149 Q60 141 84 149', i:'M15.5 40 Q17 89 60 91.5 Q103 89 104.5 40 Z', b:91.5, t:40, cap:170},
+  nick:{o:'M27 26 Q25 98 60 102 Q95 98 93 26 M60 102 L60 145 M38 149 Q60 141 82 149', i:'M30.5 28 Q29 95 60 98.5 Q91 95 89.5 28 Z', b:98.5, t:28, cap:150},
+  wine:{o:'M31 14 Q20 66 32 86 Q44 104 60 104 Q76 104 88 86 Q100 66 89 14 M60 104 L60 145 M36 149 Q60 141 84 149', i:'M34 16 Q24 66 35 84 Q46 100.5 60 100.5 Q74 100.5 85 84 Q96 66 86 16 Z', b:100.5, t:16, cap:360},
+  flute:{o:'M45 10 Q40 78 51 102 Q60 113 69 102 Q80 78 75 10 M60 109 L60 145 M40 149 Q60 142 80 149', i:'M48 12 Q43.5 78 54 100 Q60 107.5 66 100 Q76.5 78 72 12 Z', b:107, t:12, cap:200},
+  bottle:{o:'M38 150 L38 72 Q38 56 52 50 L52 20 L68 20 L68 50 Q82 56 82 72 L82 150 Z M50 13 L70 13 L70 20 L50 20 Z', i:'M41.5 146.5 L41.5 73 Q41.5 59 55 53 L55 30 L65 30 L65 53 Q78.5 59 78.5 73 L78.5 146.5 Z', b:146.5, t:30, cap:0},
+  cup:{o:'M22 66 L29 130 Q31 142 45 142 L75 142 Q89 142 91 130 L98 66 M95 82 Q114 84 110 102 Q106 118 89 116 M14 148 L106 148', i:'M25.5 68 L32.4 129 Q34 138.5 46 138.5 L74 138.5 Q86 138.5 87.6 129 L94.5 68 Z', b:138.5, t:68, cap:0},
+};
+const GLASS_NAMES = {highball:'Хайбол', rocks:'Олд Фешн', coupe:'Купе', nick:'Ніка Нора', wine:'Винний бокал', flute:'Флюте'};
+function glassKey(it){
+  if (it.cat === 'tea') return 'cup';
+  if (it.cat === 'premix' || it.cat === 'prep') return 'bottle';
+  const g = (it.glass || '').toLowerCase();
+  if (!g) return 'rocks';
+  if (/^олд|фешн/.test(g)) return 'rocks';
+  if (/хайбол/.test(g)) return 'highball';
+  if (/купе/.test(g)) return 'coupe';
+  if (/нік|нора/.test(g)) return 'nick';
+  if (/вин|вінк/.test(g)) return 'wine';
+  if (/флют/.test(g)) return 'flute';
+  return 'rocks';
+}
+let gid = 0;
+function svgGlass(it, big){
+  const k = glassKey(it), G = GL[k], id = 'cp' + (++gid);
+  let layers = [];
+  if (it.cat === 'tea') layers = [{fam:'tea', v:1}];
+  else if (it.cat === 'prep') layers = [{fam: it.ing[0]?.fam || 'other', v:1}];
+  else layers = it.ing.filter(g => isLiquid(it,g)).map(g => ({fam:g.fam, v:g.num}));
+  const total = layers.reduce((s,l) => s + l.v, 0) || 1;
+  let f = G.cap ? Math.min(.9, Math.max(.45, total / G.cap)) : (it.cat === 'tea' ? .78 : .82);
+  if (!it.glass && ['cocktail','lemonade'].includes(it.cat)) f = .6;
+  const H = (G.b - G.t) * f;
+  let y = G.b, rects = '';
+  layers.forEach((l,i) => {
+    const h = H * l.v / total;
+    y -= h;
+    rects += `<rect x="0" y="${y.toFixed(2)}" width="120" height="${(h+.6).toFixed(2)}" fill="var(--c-${l.fam})"/>`;
+    if (big && i < layers.length - 1) rects += `<rect x="0" y="${y.toFixed(2)}" width="120" height=".9" fill="var(--bg)" opacity=".55"/>`;
+  });
+  if (it.ing.some(g => g.fam === 'foam')) rects += `<rect x="0" y="${(y-7).toFixed(2)}" width="120" height="7.4" fill="var(--c-foam)"/>`;
+  if (it.ing.some(g => g.fam === 'soda') && big) {
+    for (let i=0;i<7;i++) rects += `<circle cx="${40 + (i*13)%42}" cy="${(G.b - H*((i*37)%100)/100).toFixed(1)}" r="${1.2 + (i%3)*.5}" fill="var(--bg)" opacity=".35"/>`;
+  }
+  const stroke = big ? 2.4 : 5;
+  const unfilled = !it.glass && ['cocktail','lemonade'].includes(it.cat);
+  return `<svg class="glass${big?'':' mini'}" viewBox="0 0 120 160" role="img" aria-label="${esc(it.glass || GLASS_NAMES[k] || '')}">
+    <defs><clipPath id="${id}"><path d="${G.i}"/></clipPath></defs>
+    <path d="${G.i}" fill="var(--glass-fill)"/>
+    <g clip-path="url(#${id})">${rects}</g>
+    <path d="${G.o}" fill="none" stroke="var(--glass)" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round" ${unfilled?'stroke-dasharray="5 6"':''}/>
+  </svg>`;
+}
+
+/* ---------- shared bits ---------- */
+function dots(id){ const b = box(id); return `<div class="dots" aria-label="Рівень ${Math.max(0,b+1)} з 5">${[0,1,2,3,4].map(i=>`<i class="${i<=b?'on':''}"></i>`).join('')}</div>`; }
+function meta(it){
+  if (it.cat === 'premix') return `Бат · порція ${it.portion}`;
+  if (it.cat === 'prep') return `Вихід ${it.yield}`;
+  if (it.cat === 'tea') return `${it.ing.length} інгредієнтів`;
+  if (it.price) return `Ціна ${it.price} · ${it.ing.length} інгр.`;
+  return [it.glass, it.method].filter(Boolean).join(' · ') || 'Посуд і спосіб не вказані';
+}
+function ingRows(it, compact){
+  const liq = it.ing.filter(g => isLiquid(it,g));
+  const total = liq.reduce((s,g)=>s+g.num,0);
+  return it.ing.map(g => {
+    const L = isLiquid(it,g);
+    const nm = g.link && BY[g.link] && g.link !== it.id ? `<button class="link" data-open="${g.link}">${esc(g.name)}</button>` : esc(g.name);
+    const amt = L ? `${fmt(g.num)}<u>мл</u>` : esc(g.amt || '—');
+    return `<li class="ing" style="--c:var(--c-${g.fam})"><span class="sw"></span>
+      <span class="ing-name">${nm}${g.inPremix?'<span class="tag" title="Входить у премікс">бат</span>':''}${compact?'':`<small>${FAM_LBL[g.fam]}</small>`}</span>
+      <span class="ing-amt">${amt}</span>
+      ${L && !compact ? `<span class="ing-bar"><i style="width:${(g.num/total*100).toFixed(1)}%"></i></span>`:''}</li>`;
+  }).join('');
+}
+function methodHTML(m){
+  return m.split(',').map(t => t.trim().toLowerCase().replace('драйшейк','драй шейк')).map(t => {
+    const M = METHODS[t];
+    const label = t.charAt(0).toUpperCase() + t.slice(1);
+    return `<div class="method">${M?`<svg viewBox="0 0 24 24" aria-hidden="true">${M.i}</svg>`:''}<p>${esc(label)}${M?`<small>${M.d}</small>`:''}</p></div>`;
+  }).join('');
+}
+
+/* ---------- detail sheet ---------- */
+const sheet = document.getElementById('sheet'), panel = document.getElementById('sheet-panel');
+let lastFocus = null;
+function openDetail(id){
+  const it = BY[id]; if (!it) return;
+  lastFocus = lastFocus || document.activeElement;
+  const liq = it.ing.filter(g => isLiquid(it,g));
+  const total = liq.reduce((s,g)=>s+g.num,0);
+  const caption = it.cat==='tea' ? 'Чай' : it.cat==='premix' ? `Бат · порція ${it.portion}` : it.cat==='prep' ? `Вихід ${it.yield}` : (it.glass || 'Посуд не вказано');
+  const miss = '<span class="missing">не вказано в техкарті</span>';
+  let html = `<header class="d-head"><div><p class="eyebrow">${CATS[it.cat]}</p><h2 id="sheet-title">${esc(it.name)}</h2></div>
+    <button class="icon-btn" data-act="close" aria-label="Закрити">×</button></header>
+    <div class="d-top"><figure class="d-glass">${svgGlass(it,true)}<figcaption>${esc(caption)}</figcaption></figure>
+    <div><p class="lbl">Склад${liq.length?' · пропорції рідин':''}</p><ul class="ing-list">${ingRows(it)}</ul>
+    ${liq.length>1 ? `<div class="total"><span>Разом рідин</span><b>${fmt(total)} мл</b></div>`:''}
+    ${it.cat==='premix' ? `<div class="total"><span>Порція за техкартою</span><b>${esc(it.portion)}</b></div>`:''}
+    ${it.cat==='prep' ? `<div class="total"><span>Вихід</span><b>${esc(it.yield)}</b></div>`:''}
+    </div></div>`;
+  if (['cocktail','lemonade'].includes(it.cat)) {
+    html += `<div class="facts">
+      <div class="fact"><p class="lbl">Спосіб</p>${it.method ? methodHTML(it.method) : `<p>${miss}</p>`}${it.methodNote?`<p style="margin-top:8px;font-weight:500;font-size:13px;color:var(--muted)">${esc(it.methodNote)}</p>`:''}</div>
+      <div class="fact"><p class="lbl">Посуд</p><p>${it.glass?esc(it.glass):miss}</p></div>
+      <div class="fact"><p class="lbl">Гарніш</p><p>${it.garnish?esc(it.garnish):miss}</p></div>
+      ${it.top?`<div class="fact"><p class="lbl">Топ</p><p>${esc(it.top)}</p></div>`:''}
+      ${it.price?`<div class="fact"><p class="lbl">Ціна / собівартість</p><p>${esc(it.price)} <span class="missing" style="font-style:normal">/ ${esc(it.cost)}</span></p></div>`:''}
+    </div>`;
+  }
+  if (it.premix && BY[it.premix]) {
+    const pm = BY[it.premix];
+    const svc = it.ing.filter(g => !g.inPremix);
+    html += `<div class="block"><p class="lbl">Бат і сервіс</p><div class="split">
+      <div class="fact"><p>З бату <button class="link" data-open="${pm.id}">${esc(pm.name)}</button></p><small style="color:var(--muted)">порція ${esc(pm.portion)}</small>
+        <ul>${pm.ing.map(g=>`<li>${esc(g.name)} — ${esc(g.amt)}</li>`).join('')}</ul></div>
+      <div class="fact"><p>Додаєш на сервісі</p><ul>${svc.length ? svc.map(g=>`<li>${esc(g.name)}${g.amt?' — '+esc(g.amt):''}</li>`).join('') : '<li>Нічого, тільки бат</li>'}</ul></div>
+    </div></div>`;
+  }
+  if (it.prep && BY[it.prep]) html += `<div class="block"><p class="lbl">Премікс</p><div class="fact"><p>Це <button class="link" data-open="${it.prep}">${esc(BY[it.prep].name)}</button> — заготовка з розділу «Заготовки»</p></div></div>`;
+  if (it.cat === 'premix') {
+    const used = (it.for||[]).filter(x=>BY[x]);
+    html += `<div class="block"><p class="lbl">Для напою</p>${used.length ? `<div class="used">${used.map(x=>`<button class="chip" data-open="${x}">${esc(BY[x].name)}</button>`).join('')}</div>` : `<p class="missing">Повної техкарти напою поки немає</p>`}</div>`;
+  }
+  if (it.steps) html += `<div class="block"><p class="lbl">Приготування</p><ol class="steps">${it.steps.map(s=>`<li><span>${esc(s)}</span></li>`).join('')}</ol></div>`;
+  if (USED[it.id]) html += `<div class="block"><p class="lbl">Де використовується</p><div class="used">${[...USED[it.id]].map(x=>`<button class="chip" data-open="${x}">${esc(BY[x].name)}</button>`).join('')}</div></div>`;
+  if (it.note) html += `<div class="block note">${esc(it.note)}</div>`;
+  if (it.cat === 'tea') html += `<div class="block note">${RAW.notes.tea}</div>`;
+  if (it.cat === 'prep') html += `<div class="block note">${RAW.notes.prep}</div>`;
+  html += `<div class="d-actions">${['cocktail','lemonade','premix'].includes(it.cat)?`<button class="btn primary" data-build="${it.id}">Зібрати по пам’яті</button>`:''}
+    <button class="btn" data-card="${it.id}">Вчити картку</button></div>`;
+  panel.innerHTML = html;
+  sheet.hidden = false; document.body.classList.add('locked');
+  panel.scrollTop = 0;
+  panel.querySelector('[data-act="close"]').focus();
+}
+function closeDetail(){ sheet.hidden = true; document.body.classList.remove('locked'); if (lastFocus) { try{lastFocus.focus()}catch(e){} lastFocus = null; } }
+
+/* ---------- MENU ---------- */
+const M = {cat:'all', q:''};
+function renderMenu(){
+  const el = document.getElementById('v-menu');
+  if (!el.dataset.ready) {
+    el.innerHTML = `<div class="view-head"><div><h2>Меню бару</h2><p>Усі техкарти в одному місці. Натисни на позицію — побачиш склад, пропорції в посуді, спосіб, гарніш і що йде з бату.</p></div></div>
+      <div class="toolbar"><label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="m-search" type="search" placeholder="Пошук: назва або інгредієнт (напр. «улун», «Wan»)" autocomplete="off"></label>
+      <div class="chips" id="m-cats"></div></div><div id="m-list"></div>`;
+    el.dataset.ready = 1;
+    el.querySelector('#m-search').addEventListener('input', e => { M.q = e.target.value.trim().toLowerCase(); drawMenuList(); });
+  }
+  const counts = c => ITEMS.filter(i => c==='all' || i.cat===c).length;
+  el.querySelector('#m-cats').innerHTML = ['all',...CAT_ORDER].map(c => `<button class="chip" data-mcat="${c}" aria-pressed="${M.cat===c}">${c==='all'?'Усе':CATS[c]} <small>${counts(c)}</small></button>`).join('');
+  drawMenuList();
+}
+function drawMenuList(){
+  const list = document.getElementById('m-list');
+  const match = it => !M.q || it.name.toLowerCase().includes(M.q) || it.ing.some(g => g.name.toLowerCase().includes(M.q)) || (it.garnish||'').toLowerCase().includes(M.q);
+  let html = '';
+  for (const c of CAT_ORDER) {
+    if (M.cat !== 'all' && M.cat !== c) continue;
+    const items = ITEMS.filter(i => i.cat === c && match(i));
+    if (!items.length) continue;
+    html += `<div class="group"><h3>${CATS[c]} <small>${items.length}</small></h3>`;
+    if (c === 'tea' && M.cat === 'tea') html += `<div class="note">${RAW.notes.tea}</div>`;
+    if (c === 'prep' && M.cat === 'prep') html += `<div class="note">${RAW.notes.prep}</div>`;
+    html += `<div class="grid">${items.map(it => `<button class="tile" data-open="${it.id}">${svgGlass(it,false)}<div style="min-width:0"><div class="tile-name">${esc(it.name)}</div><div class="tile-meta">${esc(meta(it))}</div>${dots(it.id)}</div></button>`).join('')}</div></div>`;
+  }
+  list.innerHTML = html || `<p class="empty">Нічого не знайдено за «${esc(M.q)}».</p>`;
+}
+
+/* ---------- CARDS ---------- */
+const C = {cats:new Set(['cocktail','lemonade']), cur:null, flipped:false, last:null};
+function nextCard(){
+  const pool = ITEMS.filter(i => C.cats.has(i.cat));
+  if (!pool.length) { C.cur = null; return; }
+  const scored = pool.map(i => ({i, s: box(i.id)*10 + (S.seen[i.id] ? (S.seen[i.id] % 1e7)/1e7*3 : 0) + Math.random()*4}));
+  scored.sort((a,b) => a.s - b.s);
+  const choice = scored.find(x => x.i.id !== C.last) || scored[0];
+  C.cur = choice.i.id; C.flipped = false;
+}
+function renderCards(){
+  const el = document.getElementById('v-cards');
+  if (!C.cur || !C.cats.has(BY[C.cur]?.cat)) nextCard();
+  const pool = ITEMS.filter(i => C.cats.has(i.cat));
+  const nNew = pool.filter(i => box(i.id) < 0).length, nKnown = pool.filter(i => box(i.id) >= 3).length;
+  const it = BY[C.cur];
+  let body = '';
+  if (!it) body = `<p class="empty">Обери хоча б одну колоду.</p>`;
+  else {
+    const facts = ['cocktail','lemonade'].includes(it.cat) ? `<div class="mini-facts">
+        <div><span>Спосіб</span><b>${esc(it.method || '—')}</b></div>
+        <div><span>Посуд</span><b>${esc(it.glass || '—')}</b></div>
+        <div><span>Гарніш</span><b>${esc(it.garnish || '—')}</b></div>
+        ${it.top?`<div><span>Топ</span><b>${esc(it.top)}</b></div>`:''}
+        ${it.premix?`<div><span>Бат</span><b>${esc(BY[it.premix].name)} · ${esc(BY[it.premix].portion)}</b></div>`:''}
+        ${it.price?`<div><span>Ціна</span><b>${esc(it.price)}</b></div>`:''}</div>`
+      : it.cat==='premix' ? `<div class="mini-facts"><div><span>Порція</span><b>${esc(it.portion)}</b></div></div>`
+      : it.cat==='prep' ? `<div class="mini-facts"><div><span>Вихід</span><b>${esc(it.yield)}</b></div></div><ol class="steps" style="margin-top:12px;font-size:13px">${it.steps.map(s=>`<li><span>${esc(s)}</span></li>`).join('')}</ol>` : '';
+    const prompt = it.cat==='prep' ? 'Згадай склад, вихід і як готувати' : it.cat==='premix' ? 'Згадай склад бату і порцію' : it.cat==='tea' ? 'Згадай склад чаю' : 'Згадай склад, спосіб, посуд і гарніш';
+    body = `<div class="stage"><div class="card ${C.flipped?'flipped':''}" id="card" role="button" tabindex="0" aria-label="Перевернути картку">
+        <div class="face front"><div><p class="eyebrow">${CATS[it.cat]}</p><h3>${esc(it.name)}</h3><p>${prompt}</p></div><p class="hint">Торкнись, щоб перевернути</p></div>
+        <div class="face back"><h3>${esc(it.name)}</h3><div class="back-grid"><div>${svgGlass(it,true)}</div><div><ul class="ing-list">${ingRows(it,true)}</ul></div></div>${facts}</div>
+      </div></div>
+      <div class="rate">
+        <button class="btn bad" data-rate="0">Не пам’ятаю<small>почати знову</small></button>
+        <button class="btn mid" data-rate="1">Майже<small>ще раз скоро</small></button>
+        <button class="btn ok" data-rate="2">Знаю<small>рідше</small></button>
+      </div>
+      <p class="kbd">Пробіл — перевернути · 1 / 2 / 3 — оцінка</p>`;
+  }
+  el.innerHTML = `<div class="view-head"><div><h2>Картки</h2><p>Спершу згадай сам, потім переверни. Те, що не пам’ятаєш, повертатиметься частіше.</p></div></div>
+    <div class="deck-bar"><div class="chips">${CAT_ORDER.map(c=>`<button class="chip" data-ccat="${c}" aria-pressed="${C.cats.has(c)}">${CATS[c]}</button>`).join('')}</div>
+    <div class="counts"><span><b>${nNew}</b>нових</span><span><b>${pool.length-nNew-nKnown}</b>вчу</span><span><b>${nKnown}</b>знаю</span></div></div>${body}`;
+}
+function rateCard(r){
+  const id = C.cur; if (!id) return;
+  const b = box(id);
+  if (r === 0) setBox(id, 0);
+  else if (r === 1) setBox(id, Math.max(1, b));
+  else setBox(id, b < 0 ? 2 : b + 1);
+  save(); C.last = id; nextCard(); renderCards();
+}
+
+/* ---------- QUIZ ---------- */
+const Z = {cats:new Set(['cocktail','lemonade']), n:10, list:null, i:0, score:0, picked:null, mistakes:[]};
+const bq = s => `<b>${esc(s)}</b>`;
+function mkQ(itemId, q, answer, pool, extra={}){
+  const wrong = sample(uniq(pool).filter(x => x && x !== answer), 3);
+  if (wrong.length < 3) return null;
+  return {itemId, q, answer, options: shuffle([answer, ...wrong]), ...extra};
+}
+function numPool(v){
+  const base = [5,10,15,20,25,30,35,40,45,50,60,70,75,80,100,120,150];
+  return base.filter(x => x !== v).sort((a,b) => Math.abs(a-v) - Math.abs(b-v)).slice(0,5);
+}
+function buildQuiz(){
+  const cats = [...Z.cats], Q = [];
+  const drinks = ITEMS.filter(i => ['cocktail','lemonade'].includes(i.cat));
+  const pools = {
+    glass: uniq(drinks.map(i=>i.glass).filter(Boolean)),
+    method: uniq(drinks.map(i=>i.method).filter(Boolean)),
+    garnish: uniq(drinks.map(i=>i.garnish).filter(Boolean)),
+  };
+  for (const it of ITEMS) {
+    if (!Z.cats.has(it.cat)) continue;
+    const same = ITEMS.filter(o => o.cat === it.cat && o.id !== it.id);
+    if (['cocktail','lemonade'].includes(it.cat)) {
+      if (it.glass) Q.push(mkQ(it.id, `У чому подаємо ${bq(it.name)}?`, it.glass, pools.glass));
+      if (it.method) Q.push(mkQ(it.id, `Спосіб приготування ${bq(it.name)}?`, it.method, pools.method));
+      if (it.garnish) Q.push(mkQ(it.id, `Гарніш для ${bq(it.name)}?`, it.garnish, pools.garnish));
+    }
+    if (it.cat !== 'prep') {
+      for (const g of it.ing) {
+        if (g.num == null) continue;
+        if (it.cat !== 'tea' && !isLiquid(it,g)) continue;
+        const u = it.cat === 'tea' ? '' : ' мл';
+        Q.push(mkQ(it.id, `Скільки ${bq(g.name)} у ${bq(it.name)}?`, fmt(g.num)+u, numPool(g.num).map(v => fmt(v)+u)));
+      }
+      if (it.ing.length >= 2 && it.cat !== 'premix') Q.push(mkQ(it.id, 'Що за напій?', it.name, same.map(o=>o.name), {sub: it.ing.map(g=>g.name)}));
+      const own = it.ing.map(g => norm(g.name));
+      const foreign = uniq(same.flatMap(o => o.ing.map(g => g.name))).filter(n => !own.includes(norm(n)));
+      if (it.ing.length >= 3 && foreign.length) {
+        const ans = pick(foreign);
+        Q.push({itemId:it.id, q:`Що з цього НЕ входить у ${bq(it.name)}?`, answer:ans, options: shuffle([ans, ...sample(it.ing.map(g=>g.name),3)])});
+      }
+    }
+    if (it.premix) {
+      const inB = it.ing.filter(g=>g.inPremix).map(g=>g.name), svc = it.ing.filter(g=>!g.inPremix).map(g=>g.name);
+      if (inB.length >= 3 && svc.length) { const a = pick(svc); Q.push({itemId:it.id, q:`Що в ${bq(it.name)} додаєш на сервісі, а не з бату?`, answer:a, options:shuffle([a, ...sample(inB,3)])}); }
+      else if (svc.length >= 3 && inB.length) { const a = pick(inB); Q.push({itemId:it.id, q:`Що в ${bq(it.name)} вже є в баті?`, answer:a, options:shuffle([a, ...sample(svc,3)])}); }
+    }
+    if (it.cat === 'premix') Q.push(mkQ(it.id, `Порція преміксу ${bq(it.name)}?`, it.portion, ITEMS.filter(o=>o.cat==='premix').map(o=>o.portion)));
+    if (it.cat === 'prep') {
+      Q.push(mkQ(it.id, `Вихід заготовки ${bq(it.name)}?`, it.yield, same.map(o=>o.yield)));
+      Q.push(mkQ(it.id, 'Що за заготовка?', it.name, same.map(o=>o.name), {sub: it.ing.map(g=>g.name)}));
+      for (const g of it.ing) if (g.amt) {
+        const others = uniq([...it.ing.map(x=>x.amt), ...sample(same.flatMap(o=>o.ing.map(x=>x.amt)),6)]);
+        Q.push(mkQ(it.id, `Скільки ${bq(g.name)} в ${bq(it.name)}?`, g.amt, others));
+      }
+    }
+  }
+  for (const f of RAW.facts) if (Z.cats.has(f.cat)) Q.push({itemId:f.id, q:esc(f.q), answer:f.a, options:shuffle([f.a, ...f.w])});
+  const seen = new Set();
+  const out = shuffle(Q.filter(Boolean)).filter(q => { const k = q.q + (q.sub||''); if (seen.has(k)) return false; seen.add(k); return true; });
+  // не більше 2 питань про одну позицію поспіль у сесії
+  const per = {}, res = [];
+  for (const q of out) { per[q.itemId] = (per[q.itemId]||0) + 1; if (per[q.itemId] <= 2) res.push(q); if (res.length >= Z.n) break; }
+  return res;
+}
+function renderQuiz(){
+  const el = document.getElementById('v-quiz');
+  const head = `<div class="view-head"><div><h2>Тест по меню</h2><p>Посуд, способи, гарніші, граммовки, бат і заготовки. Помилки знижують рівень картки — вона частіше з’явиться в «Картках».</p></div></div>`;
+  if (!Z.list) {
+    el.innerHTML = head + `<div class="panel qz-setup">
+      <div><p class="lbl">Що перевіряємо</p><div class="chips">${CAT_ORDER.map(c=>`<button class="chip" data-zcat="${c}" aria-pressed="${Z.cats.has(c)}">${CATS[c]}</button>`).join('')}</div></div>
+      <div><p class="lbl">Кількість питань</p><div class="chips">${[10,20,40].map(n=>`<button class="chip" data-zn="${n}" aria-pressed="${Z.n===n}">${n}</button>`).join('')}</div></div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn primary" data-act="zstart" ${Z.cats.size?'':'disabled'}>Почати тест</button>
+      ${S.best?`<span style="color:var(--muted);font-size:13px">Найкращий результат: <b style="color:var(--fg);font-family:var(--f-mono)">${S.best}%</b></span>`:''}</div></div>`;
+    return;
+  }
+  if (Z.i >= Z.list.length) {
+    const pct = Math.round(Z.score / Z.list.length * 100);
+    el.innerHTML = head + `<div class="panel" style="max-width:640px"><p class="lbl">Результат</p><p class="score">${Z.score}<span style="color:var(--muted);font-size:28px"> / ${Z.list.length}</span></p>
+      <p style="margin:0;color:var(--muted)">${pct>=90?'Чудово, меню в голові.':pct>=70?'Добре. Пройдися по помилках нижче.':'Варто повторити картки по цих позиціях.'}</p>
+      ${Z.mistakes.length?`<p class="lbl" style="margin-top:18px">Помилки</p><ul class="mist">${Z.mistakes.map(m=>`<li>${m.q}<br><span>${esc(m.answer)}</span> · <button class="link" data-open="${m.itemId}">техкарта</button></li>`).join('')}</ul>`:''}
+      <div class="d-actions"><button class="btn primary" data-act="zagain">Ще раз</button><button class="btn" data-act="zsetup">Змінити налаштування</button></div></div>`;
+    return;
+  }
+  const q = Z.list[Z.i], done = Z.picked !== null;
+  el.innerHTML = head + `<div class="panel" style="max-width:720px">
+    <div class="qz-progress"><span>${Z.i+1} / ${Z.list.length}</span><div class="meter"><i style="width:${(Z.i/Z.list.length*100)}%"></i></div><span>✓ ${Z.score}</span></div>
+    <p class="qz-q">${q.q}</p>
+    ${q.sub?`<div class="chips qz-sub">${q.sub.map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>`:''}
+    <div class="opts">${q.options.map((o,k)=>{
+      const cls = done ? (o===q.answer?'right':(o===Z.picked?'wrong':'')) : '';
+      return `<button class="opt ${cls}" data-opt="${k}" ${done?'disabled':''}><span class="k">${k+1}</span>${esc(o)}</button>`;}).join('')}</div>
+    <div class="qz-foot">${done?`<span class="verdict ${Z.picked===q.answer?'good':'bad'}">${Z.picked===q.answer?'Правильно':'Правильна відповідь: '+esc(q.answer)}</span>
+      <span style="display:flex;gap:8px"><button class="btn ghost" data-open="${q.itemId}">Техкарта</button><button class="btn primary" data-act="znext">${Z.i+1<Z.list.length?'Далі':'Результат'}</button></span>`:'<span style="color:var(--muted);font-size:13px">Клавіші 1–4</span>'}</div></div>`;
+}
+function answer(k){
+  const q = Z.list?.[Z.i]; if (!q || Z.picked !== null) return;
+  Z.picked = q.options[k];
+  if (Z.picked === q.answer) Z.score++;
+  else { Z.mistakes.push(q); if (BY[q.itemId]) setBox(q.itemId, box(q.itemId) - 1); save(); }
+  renderQuiz();
+}
+function startQuiz(){ Z.list = buildQuiz(); Z.i = 0; Z.score = 0; Z.picked = null; Z.mistakes = []; renderQuiz(); }
+
+/* ---------- BUILD ---------- */
+const B = {cats:new Set(['cocktail','lemonade']), item:null, pool:[], picked:{}, glass:'', method:'', checked:false};
+function newBuild(id){
+  const cand = ITEMS.filter(i => B.cats.has(i.cat) && ['cocktail','lemonade','premix'].includes(i.cat));
+  const it = id ? BY[id] : (cand.length ? pick(cand.filter(i => i.id !== B.item?.id)) || cand[0] : null);
+  B.item = it; B.picked = {}; B.glass = ''; B.method = ''; B.checked = false;
+  if (!it) return;
+  const own = new Set(it.ing.map(g => norm(g.name)));
+  const others = uniq(ITEMS.filter(o => o.cat === it.cat && o.id !== it.id).flatMap(o => o.ing.map(g => g.name))).filter(n => !own.has(norm(n)));
+  B.pool = shuffle([...it.ing.map(g=>g.name), ...sample(others, Math.max(5, 12 - it.ing.length))]);
+}
+function sameAmt(a, b){
+  const n = s => parseFloat(String(s).replace(',','.').replace(/[^\d.]/g,''));
+  const x = n(a), y = n(b);
+  if (isNaN(x) || isNaN(y)) return String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
+  return Math.abs(x - y) < 1e-9;
+}
+function renderBuild(){
+  const el = document.getElementById('v-build');
+  if (!B.item || !B.cats.has(B.item.cat)) newBuild();
+  const it = B.item;
+  const head = `<div class="view-head"><div><h2>Збери напій</h2><p>Обери інгредієнти з набору і впиши граммовки по пам’яті. Потім перевір.</p></div>
+    <div class="chips">${['cocktail','lemonade','premix'].map(c=>`<button class="chip" data-bcat="${c}" aria-pressed="${B.cats.has(c)}">${CATS[c]}</button>`).join('')}</div></div>`;
+  if (!it) { el.innerHTML = head + '<p class="empty">Обери хоча б одну категорію.</p>'; return; }
+  const truth = Object.fromEntries(it.ing.map(g => [g.name, g]));
+  const picked = Object.keys(B.picked);
+  let rows = '', pts = 0, max = it.ing.length;
+  for (const nm of picked) {
+    const g = truth[nm]; let cls = '', res = '';
+    if (B.checked) {
+      if (!g) { cls = 'no'; res = 'Зайве — цього в напої немає'; pts -= .5; }
+      else if (!g.amt || sameAmt(B.picked[nm], g.amt)) { cls = 'ok'; res = `Так: ${g.amt||'—'}${isLiquid(it,g)?' мл':''}`; pts += 1; }
+      else { cls = 'half'; res = `Інгредієнт так, але кількість: ${g.amt}${isLiquid(it,g)?' мл':''}`; pts += .5; }
+    }
+    rows += `<li class="${cls}"><span style="font-weight:600;min-width:0;overflow-wrap:anywhere">${esc(nm)}</span>
+      <input id="amt-${norm(nm)}" data-amt="${esc(nm)}" inputmode="decimal" placeholder="к-сть" value="${esc(B.picked[nm])}" ${B.checked?'disabled':''} aria-label="Кількість: ${esc(nm)}">
+      ${B.checked?`<span class="res">${esc(res)}</span>`:''}</li>`;
+  }
+  if (B.checked) {
+    for (const g of it.ing) if (!(g.name in B.picked)) rows += `<li class="no"><span style="font-weight:600">${esc(g.name)}</span><span style="font-family:var(--f-mono);text-align:right">${esc(g.amt)}</span><span class="res">Пропущено</span></li>`;
+  }
+  const hasGM = ['cocktail','lemonade'].includes(it.cat);
+  const drinks = ITEMS.filter(i => ['cocktail','lemonade'].includes(i.cat));
+  const gl = uniq(drinks.map(i=>i.glass).filter(Boolean)), me = uniq(drinks.map(i=>i.method).filter(Boolean));
+  let extra = '';
+  if (hasGM && it.glass) {
+    const ok = B.glass === it.glass; if (B.checked && ok) pts += 1; max += 1;
+    extra += `<div class="field"><label for="b-glass">Посуд</label><select id="b-glass" data-bsel="glass" ${B.checked?'disabled':''}><option value="">—</option>${gl.map(g=>`<option ${B.glass===g?'selected':''}>${esc(g)}</option>`).join('')}</select>${B.checked?`<span class="res" style="font-size:12.5px;color:var(--${ok?'good':'bad'})">${ok?'Так':'Правильно: '+esc(it.glass)}</span>`:''}</div>`;
+  }
+  if (hasGM && it.method) {
+    const ok = B.method === it.method; if (B.checked && ok) pts += 1; max += 1;
+    extra += `<div class="field"><label for="b-method">Спосіб</label><select id="b-method" data-bsel="method" ${B.checked?'disabled':''}><option value="">—</option>${me.map(g=>`<option ${B.method===g?'selected':''}>${esc(g)}</option>`).join('')}</select>${B.checked?`<span class="res" style="font-size:12.5px;color:var(--${ok?'good':'bad'})">${ok?'Так':'Правильно: '+esc(it.method)}</span>`:''}</div>`;
+  }
+  const pct = Math.max(0, Math.round(pts / max * 100));
+  el.innerHTML = head + `<div class="panel" style="margin-bottom:14px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+      <div><p class="eyebrow">${CATS[it.cat]}</p><h3 style="font-family:var(--f-display);font-weight:400;font-size:30px;margin:0;line-height:1.1">${esc(it.name)}</h3></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><label class="sr" for="b-pick" hidden>Обрати напій</label>
+      <select id="b-pick" data-bsel="pick" style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;max-width:200px">
+        ${ITEMS.filter(i=>B.cats.has(i.cat)&&['cocktail','lemonade','premix'].includes(i.cat)).map(i=>`<option value="${i.id}" ${i.id===it.id?'selected':''}>${esc(i.name)}</option>`).join('')}</select>
+      <button class="btn" data-act="bnew">Випадковий</button></div></div>
+    <div class="bd-grid">
+      <div class="panel"><p class="lbl">Набір інгредієнтів</p><div class="chips pool">${B.pool.map(n=>`<button class="chip" data-pool="${esc(n)}" aria-pressed="${n in B.picked}" ${B.checked?'disabled':''}>${esc(n)}</button>`).join('')}</div></div>
+      <div class="panel"><p class="lbl">Твій склад</p>${rows?`<ul class="mine">${rows}</ul>`:'<p class="missing" style="margin:0">Торкнись інгредієнтів зліва, щоб додати.</p>'}
+        ${extra}
+        ${B.checked?`<p class="bd-result">Результат: ${pct}%</p><div class="d-actions" style="margin-top:8px"><button class="btn primary" data-act="bnew">Наступний</button><button class="btn" data-open="${it.id}">Техкарта</button></div>`
+          :`<div class="d-actions" style="margin-top:16px"><button class="btn primary" data-act="bcheck" ${picked.length?'':'disabled'}>Перевірити</button></div>`}
+      </div></div>`;
+  if (B.checked && !B.scored) {
+    B.scored = true;
+    if (pct >= 90) setBox(it.id, box(it.id) < 0 ? 2 : box(it.id) + 1); else if (pct < 50) setBox(it.id, 0);
+    save();
+  }
+}
+
+/* ---------- routing & events ---------- */
+const VIEWS = {menu:renderMenu, cards:renderCards, quiz:renderQuiz, build:renderBuild};
+let view = 'menu';
+function go(v){
+  if (!VIEWS[v]) v = 'menu';
+  view = v;
+  for (const k in VIEWS) document.getElementById('v-'+k).hidden = k !== v;
+  document.querySelectorAll('[data-nav]').forEach(b => b.setAttribute('aria-current', b.dataset.nav === v ? 'page' : 'false'));
+  VIEWS[v]();
+  try { history.replaceState(null, '', '#' + v); } catch(e){}
+  window.scrollTo(0,0);
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('button,[data-act],#card'); if (!t) return;
+  const d = t.dataset;
+  if (d.nav) return go(d.nav);
+  if (d.act === 'close') return closeDetail();
+  if (d.open) { if (!sheet.hidden) lastFocus = lastFocus; return openDetail(d.open); }
+  if (d.build) { closeDetail(); B.cats.add(BY[d.build].cat); newBuild(d.build); return go('build'); }
+  if (d.card) { closeDetail(); C.cats.add(BY[d.card].cat); C.cur = d.card; C.flipped = false; return go('cards'); }
+  if (d.mcat) { M.cat = d.mcat; return renderMenu(); }
+  if (t.id === 'card') { C.flipped = !C.flipped; t.classList.toggle('flipped', C.flipped); return; }
+  if (d.ccat) { C.cats.has(d.ccat) ? C.cats.delete(d.ccat) : C.cats.add(d.ccat); C.cur = null; return renderCards(); }
+  if (d.rate) return rateCard(+d.rate);
+  if (d.zcat) { Z.cats.has(d.zcat) ? Z.cats.delete(d.zcat) : Z.cats.add(d.zcat); return renderQuiz(); }
+  if (d.zn) { Z.n = +d.zn; return renderQuiz(); }
+  if (d.act === 'zstart' || d.act === 'zagain') return startQuiz();
+  if (d.act === 'zsetup') { Z.list = null; return renderQuiz(); }
+  if (d.opt) return answer(+d.opt);
+  if (d.act === 'znext') {
+    if (Z.i + 1 >= Z.list.length) { const pct = Math.round(Z.score / Z.list.length * 100); if (pct > (S.best||0)) { S.best = pct; save(); } }
+    Z.i++; Z.picked = null; return renderQuiz();
+  }
+  if (d.bcat) { B.cats.has(d.bcat) ? B.cats.delete(d.bcat) : B.cats.add(d.bcat); B.item = null; B.scored = false; return renderBuild(); }
+  if (d.pool !== undefined) { const n = d.pool; if (n in B.picked) delete B.picked[n]; else B.picked[n] = ''; return renderBuild(); }
+  if (d.act === 'bcheck') { B.checked = true; B.scored = false; return renderBuild(); }
+  if (d.act === 'bnew') { newBuild(); B.scored = false; return renderBuild(); }
+});
+document.addEventListener('input', e => { const n = e.target.dataset?.amt; if (n !== undefined) B.picked[n] = e.target.value; });
+document.addEventListener('change', e => {
+  const s = e.target.dataset?.bsel; if (!s) return;
+  if (s === 'pick') { newBuild(e.target.value); B.scored = false; return renderBuild(); }
+  B[s] = e.target.value;
+});
+document.addEventListener('keydown', e => {
+  if (!sheet.hidden) { if (e.key === 'Escape') closeDetail(); return; }
+  if (/input|select|textarea/i.test(e.target.tagName)) return;
+  if (view === 'cards') {
+    if (e.key === ' ' || e.key === 'Enter') { const c = document.getElementById('card'); if (c && (e.target === c || e.target === document.body)) { e.preventDefault(); C.flipped = !C.flipped; c.classList.toggle('flipped', C.flipped); } }
+    if (['1','2','3'].includes(e.key)) rateCard(+e.key - 1);
+  }
+  if (view === 'quiz' && Z.list) {
+    if (['1','2','3','4'].includes(e.key)) answer(+e.key - 1);
+    if (e.key === 'Enter' && Z.picked !== null) document.querySelector('[data-act="znext"]')?.click();
+  }
+});
+
+updateTop();
+const h = (location.hash || '').slice(1);
+go(VIEWS[h] ? h : 'menu');
+</script>
+
+</html>
