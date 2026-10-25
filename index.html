@@ -164,6 +164,9 @@ main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
 .ing-list{list-style:none;margin:0;padding:0;display:grid}
 .ing{display:grid;grid-template-columns:14px minmax(0,1fr) auto;column-gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
 .ing:last-child{border-bottom:0}
+.ing-grp{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:800;padding:14px 0 2px}
+.ing-grp:first-child{padding-top:2px}
+.ing:has(+ .ing-grp){border-bottom:0}
 .ing .sw{width:14px;height:14px;border-radius:5px}
 .ing-name{font-weight:650;min-width:0;overflow-wrap:anywhere}
 .ing-name small{display:block;font-weight:500;font-size:11px;color:var(--muted);letter-spacing:.04em}
@@ -574,6 +577,33 @@ RAW.drinks.forEach(d => add({...d}));
 RAW.premixes.forEach(p => add({...p, cat:'premix'}));
 RAW.preps.forEach(p => add({...p, cat:'prep'}));
 ITEMS.forEach(it => { if (it.prep) it.ing.forEach(g => { if (g.fam === 'premix') g.link = it.prep; }); });
+/* Порядок у техкарті: спершу основа, далі все інше — як збирають напій */
+const GROUPS = {
+  tea: [['base','Основа: сиропи, кордіали, соки, пюре'],['fresh','Цитрус і зелень'],['brew','Заварка і спеції']],
+  drink: [['alc','Алкоголь'],['sweet','Солодке'],['sour','Кисле'],['juice','Соки, пюре, молочне'],['foam','Піна'],['top','Доливка'],['decor','Фрукти, зелень, декор']],
+};
+function groupOf(it, g){
+  const n = g.name.toLowerCase();
+  if (it.cat === 'tea') {
+    if (g.fam === 'tea' || /гвоздик|кориц|бадьян/.test(n)) return 'brew';
+    if (g.fam === 'citrus' || /м.ята/.test(n)) return 'fresh';
+    return 'base';
+  }
+  if (g.fam === 'foam') return 'foam';
+  if (g.num == null || NONLIQ.test(n)) return 'decor';
+  if (['spirit','liqueur','bitter','premix'].includes(g.fam)) return 'alc';
+  if (['syrup','cordial'].includes(g.fam)) return 'sweet';
+  if (g.fam === 'citrus') return 'sour';
+  if (g.fam === 'soda') return 'top';
+  return 'juice';
+}
+ITEMS.forEach(it => {
+  if (it.cat === 'prep') return;
+  const order = (it.cat === 'tea' ? GROUPS.tea : GROUPS.drink).map(x => x[0]);
+  it.ing.forEach((g,i) => { g.grp = groupOf(it,g); g.ord = order.indexOf(g.grp) * 100 + (g.grp === 'fresh' && g.fam !== 'citrus' ? 50 : 0) + i; });
+  it.ing.sort((a,b) => a.ord - b.ord);
+});
+const groupLabel = (it, key) => ((it.cat === 'tea' ? GROUPS.tea : GROUPS.drink).find(x => x[0] === key) || [,''])[1];
 const USED = {};
 ITEMS.forEach(it => it.ing.forEach(g => { if (g.link && g.link !== it.id) (USED[g.link] ||= new Set()).add(it.id); }));
 const dcOf = it => DC[it.id] || (it.for && DC[it.for[0]]) || '#c9a35a';
@@ -738,11 +768,14 @@ function tileMeta(it){
   return parts.join('') || '<span>посуд і спосіб не вказані</span>';
 }
 function ingRows(it, compact){
+  let prev = null;
   return it.ing.map(g => {
+    const head = g.grp && g.grp !== prev ? `<li class="ing-grp">${esc(groupLabel(it, g.grp))}</li>` : '';
+    prev = g.grp;
     const L = isLiquid(it,g);
     const nm = g.link && BY[g.link] && g.link !== it.id ? `<button class="link" data-open="${g.link}">${esc(g.name)}</button>` : esc(g.name);
     const amt = L ? `${fmt(g.num)}<u>мл</u>` : esc(g.amt || '—');
-    return `<li class="ing"><span class="sw" style="--c:var(--c-${g.fam})"></span>
+    return head + `<li class="ing"><span class="sw" style="--c:var(--c-${g.fam})"></span>
       <span class="ing-name">${nm}${g.inPremix?'<span class="tag" title="Входить у премікс">бат</span>':''}${compact?'':`<small>${FAM_LBL[g.fam]}</small>`}</span>
       <span class="ing-amt">${amt}</span></li>`;
   }).join('');
