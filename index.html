@@ -199,6 +199,8 @@ main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
 .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--muted);margin-bottom:8px}
 .legend span{display:inline-flex;align-items:center;gap:5px}
 .legend i{width:10px;height:10px;border-radius:3px}
+.desc{margin:0;padding:14px 16px;border-left:3px solid var(--dc);background:color-mix(in srgb,var(--dc) 9%,var(--surface));border-radius:0 14px 14px 0;font-family:var(--f-display);font-size:17px;line-height:1.5}
+.badge-new{position:absolute;top:10px;left:10px;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:2px 7px}
 .d-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
 
 /* buttons */
@@ -394,16 +396,12 @@ drinks: [
   {id:'mc', cat:'cocktail', name:'MC', ing:['Screwball бурбон-35','•G.Torino червоний вермут-30','•G.Torino біттер-30','Ангостура орандж-1мл'], method:'Стір', glass:'Олд Фешн', garnish:'Фундук? Чіпси мигдалю? (у техкарті під питанням)', premix:'americano-mix'},
   {id:'champloo', cat:'cocktail', name:'Champloo Garden', ing:['•Джин Wan-40','•Монін ківі пюре-15','•Монін лічі-10','Суперджус лайм-20','•Кордіал улун-30','Огірок свіжий-30'], method:'Шейк', methodNote:'Частину огірка — у шейкер', glass:'Олд Фешн', garnish:'Два слайси огірка', premix:'champloo-mix'},
   {id:'aperitivo', cat:'cocktail', name:'Aperetivo Sprits', ing:['G.Torino аперитив-60','Garda Brut-100','Содова-50','Чіпс апельсин-1'], method:'Білд', glass:'Вінка', garnish:'Чіпс апельсин'},
-  {id:'french', cat:'cocktail', name:'French', ing:['•Джин Wan-30','•Монін сироп яблуко-5','•Монін сироп бузина-5','•Санджермен-15','Суперджус лайм-20','Garda Brut-75'], method:'Шейк', glass:'Флюте', garnish:'Цедра лимону', top:'Ігристе топ', premix:'french-mix'},
-  {id:'lebowski', cat:'cocktail', name:'Lebowski', ing:['Distil Caramel-50','Франжеліко-20','Kahlua-20','Вершки-50'], method:'Білд, Стір', glass:'Олд Фешн', garnish:'Тертий мускат + какао'},
   {id:'clover', cat:'cocktail', name:'Clover Club +', ing:['•Джин на малині-40','•Санджермен-15','•Кордіал малина-30','•Монін лічі-10','Суперджус лимон-20','Ізіфоам-2','Пудра малинова-0,002','Троянда-0,001'], method:'Шейк, Драй шейк', glass:'Купе', garnish:'Пудра малинова', premix:'clover-mix'},
   {id:'whiskey-sour', cat:'cocktail', name:'Whiskey Sour', ing:['Дербі Краун-50','Цукровий сироп-20','Суперджус лимон-20','Ізіфоам-2']},
   {id:'pornstar', cat:'cocktail', name:'Pornstar', ing:['•Distil passion fruit-20','•Distil vanilla-20','•Лікер Vedrenne passion fruit-25','•Сироп ваніль-15','Суперджус лайм-15','•Маракуя пюре пф-30','Garda Brut-50','Ізіфоам-1'], method:'Шейк', glass:'Купе', garnish:'Малинова пудра + контрацептив', top:'Ігристе топ', premix:'pornstar-mix'},
   {id:'bloody', cat:'cocktail', name:'Bloody Mary', ing:['Текіла El Tequleno-40','Сангріта пф-120','Суперджус лайм-10','Оливки-10гр','Паприка копчена мелена-1гр','Сіль селери-1'], method:'Ролл', glass:'Олд Фешн', garnish:'Дві оливки у спеціях'},
   {id:'gin-tonic', cat:'cocktail', name:'Gin-tonic', ing:['Джин Wan-50','Тонік-100','Лайм/лимон/огірок-30'], method:'Білд', glass:'Олд Фешн / Хайбол', garnish:'Лайм / лимон / огірок'},
   {id:'kafka', cat:'cocktail', name:'Kafka on the Shore', ing:['Премікс-100','Попкорн-5гр'], method:'Стір', glass:'Ніка Нора', garnish:'Попкорн', prep:'kafka-punch'},
-  {id:'oli', cat:'cocktail', name:'Oli', ing:['Ром на полуниці-70','Монін кокос-20','Суперджус лайм-20','Ізіфоам-2'], method:'Шейк, Драй шейк', glass:'Ніка Нора', garnish:'Бутони роз'},
-  {id:'pink-panther', cat:'cocktail', name:'Pink Panther', ing:['Премікс-100','Цукрова вата-15'], method:'Стір', glass:'Ніка Нора', garnish:'Цукрова рожева вата', prep:'pink-punch'},
   {id:'jojo', cat:'cocktail', name:'JoJo Sour', ing:['•Соджу апельсин-40','•Джин Wan-20','•Vedrenne peach-20','Сік ананас-20','•Монін мандарин-20','Суперджус лайм-20','Ізіфоам-2'], method:'Шейк, Драй шейк', glass:'Купе', garnish:'Апельсинова пудра', premix:'jojo-mix'},
   {id:'soju-tonic', cat:'cocktail', name:'Soju-tonic', ing:['Соджу-50','Монін маракуя-15','Тонік-100'], method:'Білд', glass:'Хайбол', garnish:'Сектор лайм'},
   {id:'midori', cat:'cocktail', name:'Midori', ing:['•Vedrenne Green Melon-40','•Джин Wan-20','Суперджус лайм-20','•Цукровий сироп-10','Ізіфоам-2','М’ятна пудра-2гр'], method:'Шейк, Драй шейк', glass:'Олд Фешн', garnish:'М’ятна пудра', premix:'midori-mix'},
@@ -414,6 +412,20 @@ drinks: [
   {id:'monkey', cat:'cocktail', name:'Monkey Business', ing:['Dead Man’s Fingers кокос-50','Лікер банан-50','Монін зелений банан-15','Кокос-10','Лимон-30','Ананас-50','Ізіфоам-2 деш'], cost:'105,07', price:'320'},
   {id:'purple-haze', cat:'cocktail', name:'Purple Haze', ing:['Горілка Курант-50','Монін смородина-20','Лимон-20','Ізіфоам-2 деш'], cost:'33,26', price:'280'},
   {id:'irish-velvet', cat:'cocktail', name:'Irish Velvet', ing:['Tullamore Dew-30','Tullamore Honey-20','Popcorn Syrup-15','Lemon Juice-20','Banana Syrup-10','Ізіфоам-2'], cost:'79,11', price:'290'},
+
+  // ---- Нові авторські коктейлі
+  {id:'shizuku', cat:'cocktail', isNew:true, name:'Shizuku', sub:'крапля', ing:['Текіла-30','Фреш лайм-20','Кордіал улун-30','Кордіал лемонграс-15','Сік ананас-50','Огірок-1 слайс'], method:'Шейк, Дабл стрейн', glass:'Олд Фешн', ice:'Глиба', garnish:'Скручений слайс огірка',
+    steps:['Додаємо всі інгредієнти в шейкер і кидаємо 1 слайс огірка.','Шейкуємо.','Після шейку робимо дабл стрейн у бокал на верх глиби.','Прикрашаємо скрученим слайсом огірка.'],
+    desc:'Мов крапля роси на бамбуковому листі. Димний мескаль, витончений улун, ароматний лемонграс і стиглий ананас створюють гармонію, яку підкреслює освіжаючий огірок. Спокійний на початку, глибокий у фіналі.', descNote:'В описі для гостя — мескаль; у складі зараз текіла.'},
+  {id:'paradox', cat:'cocktail', isNew:true, name:'Парадокс', ing:['Distil currant-30','Лікер персик-20','Лимонний фреш-15','Кордіал смородини-20','Сік вишні-30','Сироп сакура-20'], method:'Шейк, Дабл стрейн', glass:'Бокал для глінтвейну', ice:'Дзвіночок', garnish:'Квіточка, малина в кандуріні',
+    steps:['Додаємо всі інгредієнти в шейкер.','Шейкуємо.','Робимо дабл стрейн у бокал.','Прикраса: квіточка, малина в кандуріні.'],
+    desc:'На честь загиблого військового, який приїхав з іншої країни і рвався сюди воювати, захищати людей і робити щось для країни. У нього була мрія захистити та врятувати якомога більше людей — і він виконав цю мрію. Був не лише чудовим військовим, а неймовірною людиною з великої літери. У пам’ять герою.'},
+  {id:'nine-tails', cat:'cocktail', isNew:true, name:'Nine Tails', ing:['Текіла-40','Соджу-50','Сироп мандарин-15','Сироп лічі-30','Кордіал маракуя-30','Фреш лайм-20','Кориця мелена-дрібка','Ізіфоам-2 краплі'], method:'Шейк, Дабл шейк, Дабл стрейн', glass:'Купе', garnish:'Квіточка і візерунок з кориці',
+    steps:['Додаємо всі інгредієнти в шейкер і шейкуємо сухим шейком.','Додаємо лід і шейкуємо.','Висипаємо лід з шейкера і знову сухий шейк.','Робимо дабл стрейн.','Прикрашаємо квіточкою і візерунком з кориці.'],
+    desc:'Полум’яний дух, укладений у келих. Мескаль приносить димну міць, соджу пом’якшує удар, а лічі, маракуя й мандарин розкривають дев’ять граней тропічного смаку. Лайм освіжає фінал, а кориця додає характеру, що залишається надовго.', descNote:'В описі для гостя — мескаль; у складі зараз текіла.'},
+  {id:'natsu', cat:'cocktail', isNew:true, name:'Natsu', ing:['Текіла-50','Сироп мандарин-20','Сироп лічі-15','Кордіал імбир-15','Фреш лайм-25','Сік апельсиновий-30','Ізіфоам-2 краплі','Рожевий перець-дрібка'], method:'Шейк, Дабл шейк, Дабл стрейн', glass:'Кубок', garnish:'Малина 1 шт і дрібка рожевого перцю',
+    steps:['Додаємо всі інгредієнти в шейкер і шейкуємо сухим шейком.','Додаємо лід і шейкуємо.','Висипаємо лід з шейкера і знову сухий шейк.','Робимо дабл стрейн.','Гарніш: 1 малина і дрібка рожевого перцю.'],
+    desc:'Вибух цитрусової свіжості, зігрітий димним характером мескалю. Солодкість мандарина та лічі плавно переходить у пряний імбир, а лайм додає яскравої кислотності. Легка піна та рожевий перець залишають довгий, теплий післясмак, немов подих полум’я.', descNote:'В описі для гостя — мескаль; у складі зараз текіла.'},
 
   // ---- Лимонади
   {id:'raspberry-coconut', cat:'lemonade', name:'Raspberry-Coconut', ing:['•Кордіал малина-40','•Монін кокос-10','Суперджус лимон-20','Содова-100','Малина с/м / сублім-20'], method:'Білд', glass:'Хайбол', garnish:'Малина с/м / сублім', premix:'rc-mix'},
@@ -434,7 +446,6 @@ premixes: [
   {id:'americano-mix', name:'Амерікано мікс', ing:['G.Torino vermouth Rosso-30','G.Torino Bitter-30'], portion:'60', for:['negroni','boulevardier','mc']},
   {id:'blood-vial-mix', name:'Blood Vial Negroni', ing:['Джин на малині-35','G.Torino rosso-20','G.Torino Bitter-25','Кордіал малина-10'], portion:'90', for:['blood-vial']},
   {id:'champloo-mix', name:'Champloo Garden', ing:['Gin Wan-40','Monin kiwi pure-15','Monin lychee-10','Кордіал улун-30'], portion:'90', for:['champloo']},
-  {id:'french-mix', name:'French', ing:['Gin Wan-30','Monin green apple-5','Monin elderflower-5','St. Germain-15'], portion:'55', for:['french']},
   {id:'clover-mix', name:'Clover Club +', ing:['Джин на малині-40','St. Germain-15','Кордіал малина-30','Monin lychee-10'], portion:'95', for:['clover']},
   {id:'pornstar-mix', name:'Pornstar', ing:['Distil passion-20','Distil vanilla-20','Vedrenne passion-25','Сироп ваніль-15','Пф маракуя пюре-30'], portion:'110', for:['pornstar']},
   {id:'jojo-mix', name:'JoJo', ing:['Soju-40','Gin Wan-20','Vedrenne peach-20','Monin mandarin-20'], portion:'100', for:['jojo']},
@@ -460,7 +471,6 @@ preps: [
   {id:'strawberry-rum', name:'Strawberry Infused Rum', ing:['DMF Rum-1л','Полуниця-1кг'], yield:'1,35 л', steps:['Покласти інгредієнти у вакуумний пакет і завакуумувати.','Сувід: 58 градусів, півтори години.','Дати охолонути, процідити.','Полуницю залишити проціджуватись під пресом на ніч.','Перелити у підготовлену пляшку.']},
   {id:'fresh-ginger', name:'Fresh Ginger', ing:['Імбир-1кг','Вода-1л'], yield:'1,5 л', steps:['Промити імбир.','Додати разом з водою у блендер і перебити.','Процідити через сито і марлю, трохи віджати в кінці.','Перелити у підготовлену пляшку + маркування.']},
   {id:'kafka-punch', name:'Kafka milk punch', ing:['Distil caramel-0,3л','Kahlua-0,25л','Монін попкорн-0,16л','Суперджус лимон-0,17л','Еспресо-8 порцій','Молоко-0,450мл'], yield:'1 л', steps:['В одну тару змішати алкоголь, каву і кислу частину.','В іншу — підігріте молоко ~50–60 градусів.','Влити все з першої тари в молоко, ретельно помішуючи.','Залишити на 3 години у холодильнику, максимально не чіпаючи і не мішаючи.','Поставити фільтруватись через кавовий фільтр.','У кінці додати сироп і перемішати. Вилити у підготовлену пляшку + маркування.']},
-  {id:'pink-punch', name:'Pink Panther milk punch', ing:['Горілка ваніль-0,3мл','Bols apricot brandy-0,170мл','Суперджус лайм-0,190мл','Молоко-0,250мл','Вершки-0,100мл','Кордіал малина-0,200мл','Сироп ваніль-0,070мл'], yield:'1 л', steps:['Те саме, що й у Kafka milk punch.','Відмінність: тільки сироп — у кінці, після фільтрації.']},
   {id:'cream-soda-punch', name:'Cream soda punch', ing:['Монін карамель-0,2мл','Сироп ваніль-0,2мл','Сік яблуко-0,5мл','Суперджус лимон-0,1мл','Молоко-0,15','Вершки-0,070'], yield:'1 л', steps:['Усе так само, як з Kafka milk punch.','Відмінність: сиропи — не після фільтрації, а до додавання в молоко.']},
   {id:'sangrita', name:'Sangrita', ing:['Перець болгарський брутто-0,23','Соус чорного перцю-0,016','Сечуанський перець-0,0001','Копчена паприка-0,008','Часник сушений копчений-0,006','Сіль селери-0,011','Соус хабанеро-0,010','Соус табаско-0,004','Соус ворчестер-0,035','Соус устричний-0,015','Томатний сік-1л','Фреш апельсиновий-0,2','Суперджус лайм-0,1','Мескаль-0,020','Сорбат-0,001,5','Бензоат-0,000,7'], yield:'1,4 л', steps:['Попросити кухаря запекти перець, дати охолонути і почистити від шкірки, насіння і ніжки.','Видавити потрібну кількість фрешу з апельсинів і процідити.','Об’єднати всі інгредієнти в блендері, додати сорбат і бензоат, ретельно перемішати.','Перелити у підготовлену пляшку і наклеїти маркування.']},
 ],
@@ -510,7 +520,7 @@ const DC = {
   'simple-syrup':'#f1ece0','vanilla-syrup':'#efe2c0','sj-lemon':'#f2e27a','sj-lime':'#cfe27a','passion-puree':'#f2b13c',
   'raspberry-cordial':'#c8304e','oblepiha-puree':'#f08a24','oolong-cordial':'#c99a52','lemongrass-cordial':'#e3e2a0',
   'raspberry-gin':'#d23a5c','strawberry-rum':'#e0485a','fresh-ginger':'#e9d58a','kafka-punch':'#ecdcae','pink-punch':'#f2b6c6',
-  'cream-soda-punch':'#efe0bc',sangrita:'#c0391f',
+  'cream-soda-punch':'#efe0bc', shizuku:'#e3e6a6', paradox:'#8e1f3a', 'nine-tails':'#f2a33a', natsu:'#f5a24a',sangrita:'#c0391f',
 };
 
 /* ============================================================ */
@@ -523,7 +533,7 @@ const FAM = [
   ['premix',/^премікс|soda punch/],
   ['cordial',/кордіал/],
   ['syrup',/монін|monin|сироп|syrup/],
-  ['citrus',/суперджус|^с\.\s?лимон|^лимон|^лайм|lemon|^апельсин$|цедра|кислота/],
+  ['citrus',/фреш лайм|лимонний фреш|суперджус|^с\.\s?лимон|^лимон|^лайм|lemon|^апельсин$|цедра|кислота/],
   ['juice',/сік|пюре|фреш|сангріт|томат|маракуя|обліпих|ананас/],
   ['bitter',/вермут|біттер|bitter|rosso|аперитив|ангостур/],
   ['liqueur',/vedrenne|лікер|санджермен|st\.?\s?germ|kahlua|франжел|distil|bols|трипл/],
@@ -546,6 +556,8 @@ const METHODS = {
   'стір':{d:'Перемішування з льодом у змішувальному стакані', i:'<path d="M6 9h12l-1.5 12h-9z"/><path d="M15 3 10 17"/><path d="M9 14.5c1.6 1 4.4 1 6 0"/>'},
   'шейк':{d:'Збивання з льодом у шейкері', i:'<path d="M8 10h8l-1 11H9z"/><path d="M9 10V7h6v3"/><path d="M10.5 7V4.5h3V7"/>'},
   'драй шейк':{d:'Збивання без льоду — для піни', i:'<path d="M8 10h8l-1 11H9z"/><path d="M9 10V7h6v3"/><path d="M10.5 7V4.5h3V7"/><path d="M18.5 3.5l2 2m0-2-2 2"/>'},
+  'дабл шейк':{d:'Сухий шейк → з льодом → лід висипати → знову сухий шейк', i:'<path d="M3.5 10h6l-.8 10H4.3z"/><path d="M4.3 10V7.5h4.4V10"/><path d="M14.5 10h6l-.8 10h-4.4z"/><path d="M15.3 10V7.5h4.4V10"/><path d="M10.5 5.5h3"/>'},
+  'дабл стрейн':{d:'Проціджування через стрейнер і дрібне сито', i:'<path d="M4 7h11"/><path d="M6 7a5 5 0 0 0 9 0"/><path d="M15 7l5-2"/><path d="M8 15h8l-2 4h-4z"/><path d="M10 15.5l.5 1M12 15.5v1M14 15.5l-.5 1"/>'},
   'ролл':{d:'Переливання між двома частинами шейкера', i:'<path d="M4 9h6l-1 11H5z"/><path d="M14 9h6l-1 11h-4z"/><path d="M7 6c2.5-2.5 7.5-2.5 10 0"/><path d="M17 6l-2.3.4M17 6l-.4-2.3"/>'},
 };
 const ICO = {
@@ -554,6 +566,7 @@ const ICO = {
   bat:'<path d="M9 3h6v3l2 3v12H7V9l2-3z"/><path d="M7 13h10"/>',
   price:'<path d="M3.5 12.5 11 5h8v8l-7.5 7.5z"/><circle cx="15.5" cy="8.5" r="1.3"/>',
   yield:'<path d="M9 3h6v3l2 3v12H7V9l2-3z"/><path d="M7 15h10"/><path d="M10 18h4"/>',
+  ice:'<rect x="5" y="7" width="11" height="11" rx="2"/><path d="M13 4.5h5.5V10"/><path d="M8 10.5l2 2"/>',
   portion:'<path d="M6 4h12l-1.5 16h-9z"/><path d="M6.6 10h10.8"/>',
 };
 const ico = k => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICO[k]}</svg>`;
@@ -563,7 +576,7 @@ const famOf = name => { const low = name.toLowerCase(); for (const [k,re] of FAM
 function parseIng(s){
   let inPremix = false;
   if (s.startsWith('•')) { inPremix = true; s = s.slice(1); }
-  const m = s.match(/^(.+?)\s*-\s*(~?\d.*)$/);
+  const m = s.match(/^(.+?)\s*-\s*(~?\d.*|дрібка.*)$/);
   const name = m ? m[1].trim() : s.trim();
   const amt = m ? m[2].trim() : '';
   const num = /^\d+([.,]\d+)?$/.test(amt) ? parseFloat(amt.replace(',','.')) : null;
@@ -642,9 +655,11 @@ const GL = {
   wine:{o:'M31 14 Q20 66 32 86 Q44 104 60 104 Q76 104 88 86 Q100 66 89 14 M60 104 L60 145 M36 149 Q60 141 84 149', i:'M34 16 Q24 66 35 84 Q46 100.5 60 100.5 Q74 100.5 85 84 Q96 66 86 16 Z', b:100.5, t:16, cap:360, rx:89, lx:37, hw:26, f:.6},
   flute:{o:'M45 10 Q40 78 51 102 Q60 113 69 102 Q80 78 75 10 M60 109 L60 145 M40 149 Q60 142 80 149', i:'M48 12 Q43.5 78 54 100 Q60 107.5 66 100 Q76.5 78 72 12 Z', b:107, t:12, cap:200, rx:75, lx:51, hw:11, f:.84},
   bottle:{o:'M38 150 L38 72 Q38 56 52 50 L52 20 L68 20 L68 50 Q82 56 82 72 L82 150 Z M50 13 L70 13 L70 20 L50 20 Z', i:'M41.5 146.5 L41.5 73 Q41.5 59 55 53 L55 30 L65 30 L65 53 Q78.5 59 78.5 73 L78.5 146.5 Z', b:146.5, t:30, cap:0, rx:68, lx:46, hw:15, f:.8},
+  mulled:{o:'M28 30 L32 108 Q33 116 41 116 L79 116 Q87 116 88 108 L92 30 M90 50 Q108 52 106 72 Q104 90 87 92 M60 116 L60 142 M38 149 Q60 141 82 149', i:'M31.5 32 L35.4 106 Q36 112.5 42 112.5 L78 112.5 Q84 112.5 84.6 106 L88.5 32 Z', b:112.5, t:32, cap:250, rx:92, lx:38, hw:26, f:.78},
+  goblet:{o:'M18 34 Q18 96 60 100 Q102 96 102 34 M60 100 L60 142 M34 149 Q60 141 86 149', i:'M21.5 36 Q22 93 60 96.5 Q98 93 98.5 36 Z', b:96.5, t:36, cap:260, rx:102, lx:26, hw:36, f:.76},
   cup:{o:'M22 66 L29 130 Q31 142 45 142 L75 142 Q89 142 91 130 L98 66 M95 82 Q114 84 110 102 Q106 118 89 116 M14 148 L106 148', i:'M25.5 68 L32.4 129 Q34 138.5 46 138.5 L74 138.5 Q86 138.5 87.6 129 L94.5 68 Z', b:138.5, t:68, cap:0, rx:98, lx:33, hw:30, f:.8},
 };
-const GLASS_NAMES = {rocks:'Олд Фешн', highball:'Хайбол', coupe:'Купе', nick:'Ніка Нора', wine:'Вінка / винний бокал', flute:'Флюте'};
+const GLASS_NAMES = {rocks:'Олд Фешн', highball:'Хайбол', coupe:'Купе', nick:'Ніка Нора', wine:'Вінка / винний бокал', flute:'Флюте', mulled:'Бокал для глінтвейну', goblet:'Кубок'};
 function glassKeyOf(str){
   const g = (str || '').toLowerCase();
   if (/^олд|фешн/.test(g)) return 'rocks';
@@ -653,6 +668,8 @@ function glassKeyOf(str){
   if (/нік|нора/.test(g)) return 'nick';
   if (/вин|вінк/.test(g)) return 'wine';
   if (/флют/.test(g)) return 'flute';
+  if (/глінтвейн/.test(g)) return 'mulled';
+  if (/кубок/.test(g)) return 'goblet';
   return null;
 }
 function glassKey(it){
@@ -682,6 +699,8 @@ const GAR = {
   bamboo:c => leafP(c.cx+10, c.sy+8, -14, 54, '#4f9a3c', .2),
   raspberry:(c,i) => { const x=c.rx-10-i*16, y=c.t-6; return [[0,0],[-4.5,2],[4.5,2],[-2.3,-3.6],[2.3,-3.6],[0,4.2],[-2.3,5],[2.3,5]].map(([dx,dy]) => `<circle cx="${x+dx}" cy="${y+dy}" r="2.8" fill="#c8304e" stroke="#8e1730" stroke-width=".5"/>`).join(''); },
   sparkle:c => [[c.rx+4,c.t-16,5],[c.rx-24,c.t-12,3.5],[c.cx-14,c.sy-6,3]].map(([x,y,r]) => `<path d="M${x} ${y-r} L${x+r*.28} ${y-r*.28} L${x+r} ${y} L${x+r*.28} ${y+r*.28} L${x} ${y+r} L${x-r*.28} ${y+r*.28} L${x-r} ${y} L${x-r*.28} ${y-r*.28}Z" fill="#f4e3a0"/>`).join(''),
+  flower:c => { const x=c.cx+10, y=c.sy-4; return [0,1,2,3,4].map(k=>`<circle cx="${(x+Math.cos(k*1.2566-1.57)*4.2).toFixed(1)}" cy="${(y+Math.sin(k*1.2566-1.57)*4.2).toFixed(1)}" r="3.4" fill="#f4c3d9"/>`).join('') + `<circle cx="${x}" cy="${y}" r="2.2" fill="#f4d35e"/>`; },
+  dustCinnamon:c => GAR.dust(c,'#9a5a2a'), pepperPink:c => { let s=''; for (let j=0;j<9;j++){ const x=c.cx-10+((j*23)%24), y=c.sy-1+((j*7)%3); s+=`<circle cx="${x}" cy="${y}" r="1.9" fill="#d2506a" stroke="#8e2a40" stroke-width=".5"/>`; } return s; },
   nut:c => `<ellipse cx="${c.cx-6}" cy="${c.sy-1}" rx="5.5" ry="4" fill="#b0783a" stroke="#7a4f22" stroke-width=".8"/><ellipse cx="${c.cx+7}" cy="${c.sy-2}" rx="5" ry="3.6" fill="#c08a48" stroke="#7a4f22" stroke-width=".8"/>`,
   floatLemon:c => wheel(c.cx-12, c.sy+1, 8, '#e2c42a', '#f6e88a'),
   floatLime:c => wheel(c.cx+12, c.sy+2, 7.5, '#5d9b2e', '#b9dc6a'),
@@ -694,7 +713,7 @@ function garnishKeys(it){
   const t = (it.garnish || '').toLowerCase(), out = [];
   const R = [[/цедр\S* апельсин/,'peelOrange'],[/цедр\S* лимон/,'peelLemon'],[/чіпс апельсин/,'chipOrange'],[/чіпс лайм/,'chipLime'],[/сектор лайм|^лайм/,'wedgeLime'],[/огір/,'cucumber'],
     [/м.ятна пудра/,'dustMint'],[/малинова пудра|пудра малинова/,'dustPink'],[/апельсинова пудра/,'dustOrange'],[/мускат|какао/,'dustCocoa'],[/попкорн/,'popcorn'],[/вата/,'floss'],
-    [/бутони|троянд/,'roses'],[/оливк/,'olives'],[/скелет/,'skeleton'],[/бамбук/,'bamboo'],[/малина|сублім/,'raspberry'],[/кандурін/,'sparkle'],[/фундук|мигдал/,'nut'],[/^м.ята$/,'mint']];
+    [/бутони|троянд/,'roses'],[/оливк/,'olives'],[/скелет/,'skeleton'],[/бамбук/,'bamboo'],[/малина|сублім/,'raspberry'],[/кандурін/,'sparkle'],[/квіточ/,'flower'],[/кориц/,'dustCinnamon'],[/рожев\S* перц/,'pepperPink'],[/фундук|мигдал/,'nut'],[/^м.ята$/,'mint']];
   for (const [re,k] of R) if (re.test(t) && !out.includes(k)) out.push(k);
   if (it.cat === 'tea') {
     const has = re => it.ing.some(g => re.test(g.name.toLowerCase()));
@@ -729,6 +748,7 @@ function svgGlass(it, o = {}){
     if (mode === 'look') inner += `<rect x="0" y="${sy.toFixed(1)}" width="120" height="${(H+1).toFixed(1)}" fill="url(#${id}l)"/>`;
     else { let y = G.b; layers.forEach((l,i) => { const h = H*l.v/total; y -= h; inner += `<rect x="0" y="${y.toFixed(2)}" width="120" height="${(h+.6).toFixed(2)}" fill="var(--c-${l.fam})"/>`; if (i < layers.length-1) inner += `<rect x="0" y="${y.toFixed(2)}" width="120" height=".9" fill="var(--bg)" opacity=".5"/>`; }); }
     if (it.ing.some(g => g.fam === 'soda') || it.top) for (let j=0;j<9;j++) { const x = G.lx + 6 + ((j*29) % Math.max(10,(120-2*G.lx-12))); const y = G.b - 4 - ((j*41) % 100)/100 * (H-10); inner += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1.1+(j%3)*.5).toFixed(1)}" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width=".8"/>`; }
+    if (it.ice === 'Глиба' && mode === 'look') inner += `<rect x="${60-H*.42}" y="${(G.b-H*.86).toFixed(1)}" width="${(H*.84).toFixed(1)}" height="${(H*.84).toFixed(1)}" rx="5" fill="#fff" fill-opacity=".22" stroke="#fff" stroke-opacity=".55" stroke-width="1.2"/>`;
     if (hasFoam(it) && mode === 'look') { inner += `<rect x="0" y="${sy.toFixed(1)}" width="120" height="9" fill="var(--c-foam)"/>`; for (let j=0;j<10;j++) inner += `<circle cx="${G.lx+4+j*((120-2*G.lx)/10)}" cy="${(sy+3+(j%3)*1.6).toFixed(1)}" r=".9" fill="#d9d2c2"/>`; }
   }
   if (size !== 'icon') inner += `<rect x="${G.lx}" y="${G.t}" width="3.5" height="${G.b-G.t}" fill="#fff" opacity=".17"/>`;
@@ -799,6 +819,7 @@ function keysHTML(it){
     K.push(keyHTML(gk ? svgGlass(it,{size:'icon', empty:true, garnish:false}) : '', 'Посуд', it.glass || 'не вказано', !it.glass));
     K.push(keyHTML(it.method ? methodIcons(it.method) : '', 'Спосіб', it.method || 'не вказано', !it.method, it.methodNote || (it.method ? tokens(it.method).map(t=>METHODS[t]?.d).filter(Boolean).join('; ') : '')));
     K.push(keyHTML(garnishIcon(it), 'Гарніш', it.garnish || 'не вказано', !it.garnish));
+    if (it.ice) K.push(keyHTML(ico('ice'), 'Лід', it.ice));
     if (hasFoam(it)) K.push(keyHTML(ico('foam'), 'Піна', 'Ізіфоам'));
     if (it.top) K.push(keyHTML(ico('top'), 'Топ', it.top));
     if (it.premix) K.push(keyHTML(ico('bat'), 'Бат', `${BY[it.premix].name} · ${BY[it.premix].portion}`));
@@ -832,9 +853,10 @@ function openDetail(id){
   const dc = dcOf(it);
   let html = `<button class="close" data-act="close" aria-label="Закрити">×</button>
     <div class="hero sheet-in" style="--dc:${dc}"><div class="hero-art">${svgGlass(it,{size:'big'})}</div>
-    <div style="min-width:0"><p class="eyebrow">${CATS[it.cat]}</p><h2 id="sheet-title">${esc(it.name)}</h2>${keysHTML(it)}</div></div>
+    <div style="min-width:0"><p class="eyebrow">${CATS[it.cat]}${it.isNew?' · нове':''}${it.sub?' · '+esc(it.sub):''}</p><h2 id="sheet-title">${esc(it.name)}</h2>${keysHTML(it)}</div></div>
     <div class="sheet-in">`;
   html += `<div class="block"><p class="lbl">${it.cat==='prep'?'Склад заготовки':'Формула'}</p>${ribbon(it)}<ul class="ing-list">${ingRows(it)}</ul></div>`;
+  if (it.desc) html += `<div class="block"><p class="lbl">Легенда для гостя</p><blockquote class="desc">${esc(it.desc)}</blockquote>${it.descNote?`<p class="missing" style="margin:8px 0 0;font-size:13px">${esc(it.descNote)}</p>`:''}</div>`;
   if (it.premix && BY[it.premix]) {
     const pm = BY[it.premix], svc = it.ing.filter(g => !g.inPremix);
     html += `<div class="block"><p class="lbl">Бат + сервіс</p><div class="split">
@@ -879,7 +901,7 @@ function closeDetail(){ sheet.hidden = true; document.body.classList.remove('loc
 const M = {cat:'all', q:''};
 function tileHTML(it){
   return `<button class="tile" data-open="${it.id}" style="--dc:${dcOf(it)}"><div class="tile-art dc-glow">${svgGlass(it,{size:'tile'})}</div>
-    <div style="min-width:0"><div class="tile-name">${esc(it.name)}</div><div class="tile-meta">${tileMeta(it)}</div></div>${ring(it.id)}</button>`;
+    <div style="min-width:0"><div class="tile-name">${esc(it.name)}</div><div class="tile-meta">${tileMeta(it)}</div></div>${ring(it.id)}${it.isNew?'<span class="badge-new">Нове</span>':''}</button>`;
 }
 function renderMenu(){
   const el = document.getElementById('v-menu');
@@ -936,14 +958,14 @@ function renderSchemes(){
   if (SC.mode === 'glass') {
     const groups = {};
     drinks.forEach(d => { const k = glassKeyOf(d.glass) || 'none'; (groups[k] ||= []).push(d); });
-    body = `<div class="board">${['rocks','highball','coupe','nick','wine','flute','none'].filter(k=>groups[k]).map(k => `<div class="board-col">
+    body = `<div class="board">${['rocks','highball','coupe','nick','wine','flute','mulled','goblet','none'].filter(k=>groups[k]).map(k => `<div class="board-col">
       <div class="board-top">${k==='none' ? svgGlass({cat:'cocktail', ing:[]},{size:'icon',empty:true,garnish:false}) : svgGlass({cat:'cocktail', glass:GLASS_NAMES[k], ing:[]},{size:'icon',empty:true,garnish:false,glass:k})}
       <div><h4>${k==='none'?'Посуд не вказано':GLASS_NAMES[k]}</h4><p>${groups[k].length} ${plural(groups[k].length)}</p></div></div>
       <div class="board-list">${groups[k].map(d=>`<button class="pill" style="--dc:${dcOf(d)}" data-open="${d.id}"><i></i>${esc(d.name)}</button>`).join('')}</div></div>`).join('')}</div>`;
   } else if (SC.mode === 'method') {
     const groups = {};
     drinks.forEach(d => { const t = tokens(d.method); (t.length ? t : ['none']).forEach(x => (groups[x] ||= []).push(d)); });
-    body = `<div class="board">${['білд','стір','шейк','драй шейк','ролл','none'].filter(k=>groups[k]).map(k => `<div class="board-col">
+    body = `<div class="board">${['білд','стір','шейк','драй шейк','дабл шейк','дабл стрейн','ролл','none'].filter(k=>groups[k]).map(k => `<div class="board-col">
       <div class="board-top">${k==='none'?'<span></span>':`<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${METHODS[k].i}</svg>`}<div><h4>${k==='none'?'Спосіб не вказано':cap(k)}</h4><p>${k==='none'?'':METHODS[k].d+' · '}${groups[k].length} ${plural(groups[k].length)}</p></div></div>
       <div class="board-list">${groups[k].map(d=>`<button class="pill" style="--dc:${dcOf(d)}" data-open="${d.id}"><i></i>${esc(d.name)}</button>`).join('')}</div></div>`).join('')}</div>`;
   } else if (SC.mode === 'ing') {
@@ -1000,7 +1022,7 @@ function renderCards(){
   else {
     const dc = dcOf(it);
     const mk = [];
-    if (isDrink(it)) { mk.push(it.glass||'посуд —', it.method||'спосіб —', it.garnish||'гарніш —'); if (hasFoam(it)) mk.push('Ізіфоам'); if (it.top) mk.push(it.top); if (it.premix) mk.push(`бат ${BY[it.premix].name} · ${BY[it.premix].portion}`); if (it.price) mk.push('₴ '+it.price); }
+    if (isDrink(it)) { mk.push(it.glass||'посуд —', it.method||'спосіб —', it.garnish||'гарніш —'); if (it.ice) mk.push('лід: '+it.ice); if (hasFoam(it)) mk.push('Ізіфоам'); if (it.top) mk.push(it.top); if (it.premix) mk.push(`бат ${BY[it.premix].name} · ${BY[it.premix].portion}`); if (it.price) mk.push('₴ '+it.price); }
     if (it.cat === 'premix') mk.push('порція '+it.portion);
     if (it.cat === 'prep') mk.push('вихід '+it.yield);
     const prompt = it.cat==='prep' ? 'Склад, вихід і як готувати' : it.cat==='premix' ? 'Склад бату і порція' : it.cat==='tea' ? 'Склад чаю' : 'Склад, спосіб, посуд, гарніш';
