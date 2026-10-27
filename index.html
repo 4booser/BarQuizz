@@ -391,23 +391,23 @@ const RAW = {
 drinks: [
   // ---- Коктейлі
   {id:'negroni', cat:'cocktail', name:'Negroni', ing:['Джин Wan-30','•G.Torino червоний вермут-30','•G.Torino біттер-30'], method:'Стір', glass:'Олд Фешн', garnish:'Цедра апельсину', premix:'americano-mix'},
-  {id:'blood-vial', cat:'cocktail', name:'Blood Vial Negroni', ing:['•Джин на малині-35','•G.Torino червоний вермут-20','•G.Torino біттер-25','•Кордіал малина-10'], method:'Стір', glass:'Олд Фешн', garnish:'Сублім малина + кандурін', premix:'blood-vial-mix'},
+  {id:'blood-vial', cat:'cocktail', name:'Blood Vial Negroni', ing:['•Джин Wan-20','•G.Torino червоний вермут-20','•G.Torino біттер-25','•Кордіал малина-20'], method:'Стір', glass:'Олд Фешн', garnish:'Сублім малина + кандурін', premix:'blood-vial-mix'},
   {id:'boulevardier', cat:'cocktail', name:'Boulevardier', ing:['Дербі Краун-30','•G.Torino червоний вермут-30','•G.Torino біттер-30'], method:'Стір', glass:'Олд Фешн', garnish:'Цедра апельсина', premix:'americano-mix'},
   {id:'mc', cat:'cocktail', name:'MC', ing:['Screwball бурбон-35','•G.Torino червоний вермут-30','•G.Torino біттер-30','Ангостура орандж-1мл'], method:'Стір', glass:'Олд Фешн', garnish:'Фундук? Чіпси мигдалю? (у техкарті під питанням)', premix:'americano-mix'},
   {id:'champloo', cat:'cocktail', name:'Champloo Garden', ing:['•Джин Wan-40','•Монін ківі пюре-15','•Монін лічі-10','Суперджус лайм-20','•Кордіал улун-30','Огірок свіжий-30'], method:'Шейк', methodNote:'Частину огірка — у шейкер', glass:'Олд Фешн', garnish:'Два слайси огірка', premix:'champloo-mix'},
   {id:'aperitivo', cat:'cocktail', name:'Aperetivo Sprits', ing:['G.Torino аперитив-60','Garda Brut-100','Содова-50','Чіпс апельсин-1'], method:'Білд', glass:'Вінка', garnish:'Чіпс апельсин'},
-  {id:'clover', cat:'cocktail', name:'Clover Club +', ing:['•Джин на малині-40','•Санджермен-15','•Кордіал малина-30','•Монін лічі-10','Суперджус лимон-20','Ізіфоам-2','Пудра малинова-0,002','Троянда-0,001'], method:'Шейк, Драй шейк', glass:'Купе', garnish:'Пудра малинова', premix:'clover-mix'},
+  {id:'clover', cat:'cocktail', name:'Clover Club +', ing:['Джин Wan-50','Сироп малина-30','Лимон-15','Ізіфоам-2'], method:'Шейк, Драй шейк', glass:'Купе', garnish:'Пудра малинова'},
   {id:'whiskey-sour', cat:'cocktail', name:'Whiskey Sour', ing:['Дербі Краун-50','Цукровий сироп-20','Суперджус лимон-20','Ізіфоам-2']},
   {id:'pornstar', cat:'cocktail', name:'Pornstar', ing:['•Distil passion fruit-20','•Distil vanilla-20','•Лікер Vedrenne passion fruit-25','•Сироп ваніль-15','Суперджус лайм-15','•Маракуя пюре пф-30','Garda Brut-50','Ізіфоам-1'], method:'Шейк', glass:'Купе', garnish:'Малинова пудра + контрацептив', top:'Ігристе топ', premix:'pornstar-mix'},
-  {id:'bloody', cat:'cocktail', name:'Bloody Mary', ing:['Текіла El Tequleno-40','Сангріта пф-120','Суперджус лайм-10','Оливки-10гр','Паприка копчена мелена-1гр','Сіль селери-1'], method:'Ролл', glass:'Олд Фешн', garnish:'Дві оливки у спеціях'},
   {id:'gin-tonic', cat:'cocktail', name:'Gin-tonic', ing:['Джин Wan-50','Тонік-100','Лайм/лимон/огірок-30'], method:'Білд', glass:'Олд Фешн / Хайбол', garnish:'Лайм / лимон / огірок'},
-  {id:'kafka', cat:'cocktail', name:'Kafka on the Shore', ing:['Премікс-100','Попкорн-5гр'], method:'Стір', glass:'Ніка Нора', garnish:'Попкорн', prep:'kafka-punch'},
+  {id:'kafka', cat:'cocktail', name:'Kafka on the Shore', ing:['•Distil caramel-30','•Kahlua-25','•Монін попкорн-15','•Суперджус лимон-15','•Еспресо-1 порція','•Молоко-50','Попкорн-5гр'], method:'Стір', glass:'Ніка Нора', garnish:'Попкорн', prep:'kafka-punch', portion:'100 мл бату', note:'Склад розраховано з бату Kafka milk punch: 1 л бату → 100 мл у коктейль, тобто 1/10 бату (кількості округлені). Сума інгредієнтів більша за 100 мл, бо молоко згортається й відфільтровується. Монін попкорн додається в бат у кінці, після фільтрації.'},
   {id:'jojo', cat:'cocktail', name:'JoJo Sour', ing:['•Соджу апельсин-40','•Джин Wan-20','•Vedrenne peach-20','Сік ананас-20','•Монін мандарин-20','Суперджус лайм-20','Ізіфоам-2'], method:'Шейк, Драй шейк', glass:'Купе', garnish:'Апельсинова пудра', premix:'jojo-mix'},
   {id:'soju-tonic', cat:'cocktail', name:'Soju-tonic', ing:['Соджу-50','Монін маракуя-15','Тонік-100'], method:'Білд', glass:'Хайбол', garnish:'Сектор лайм'},
   {id:'midori', cat:'cocktail', name:'Midori', ing:['•Vedrenne Green Melon-40','•Джин Wan-20','Суперджус лайм-20','•Цукровий сироп-10','Ізіфоам-2','М’ятна пудра-2гр'], method:'Шейк, Драй шейк', glass:'Олд Фешн', garnish:'М’ятна пудра', premix:'midori-mix'},
   {id:'muzyka', cat:'cocktail', name:'Музика', ing:['•Джин Wan-50','•Vedrenne peach-20','Сік яблуко-50','•Монін яблуко-10','Суперджус лайм-15','Тонік-100','Огірок-20'], method:'Білд', glass:'Хайбол', garnish:'Огірок', premix:'muzyka-mix'},
   {id:'mcfly', cat:'cocktail', name:'McFly', ing:['Soda punch-50','Distil citronata-30','С. лимон-15','Брют Гарда-50','Содова-50','М’ята-3'], method:'Білд', glass:'Винний бокал', garnish:'М’ята'},
   // ---- Коктейлі з текстових техкарт
+  {id:'apple-sour', cat:'cocktail', name:'Apple Sour', ing:['Джин Wan-50','Монін яблуко-30','Лимон-20','Ізіфоам-2 деш']},
   {id:'kabocha', cat:'cocktail', name:'Кабоча', ing:['Текіла-50','Трипл сек-20','Лимон-25','Гарбузовий сироп-20','Ізіфоам-2 деш'], cost:'82,80', price:'310'},
   {id:'monkey', cat:'cocktail', name:'Monkey Business', ing:['Dead Man’s Fingers кокос-50','Лікер банан-50','Монін зелений банан-15','Кокос-10','Лимон-30','Ананас-50','Ізіфоам-2 деш'], cost:'105,07', price:'320'},
   {id:'purple-haze', cat:'cocktail', name:'Purple Haze', ing:['Горілка Курант-50','Монін смородина-20','Лимон-20','Ізіфоам-2 деш'], cost:'33,26', price:'280'},
@@ -444,9 +444,8 @@ drinks: [
 
 premixes: [
   {id:'americano-mix', name:'Амерікано мікс', ing:['G.Torino vermouth Rosso-30','G.Torino Bitter-30'], portion:'60', for:['negroni','boulevardier','mc']},
-  {id:'blood-vial-mix', name:'Blood Vial Negroni', ing:['Джин на малині-35','G.Torino rosso-20','G.Torino Bitter-25','Кордіал малина-10'], portion:'90', for:['blood-vial']},
+  {id:'blood-vial-mix', name:'Blood Vial Negroni', ing:['Gin Wan-20','G.Torino rosso-20','G.Torino Bitter-25','Кордіал малина-20'], portion:'85', for:['blood-vial']},
   {id:'champloo-mix', name:'Champloo Garden', ing:['Gin Wan-40','Monin kiwi pure-15','Monin lychee-10','Кордіал улун-30'], portion:'90', for:['champloo']},
-  {id:'clover-mix', name:'Clover Club +', ing:['Джин на малині-40','St. Germain-15','Кордіал малина-30','Monin lychee-10'], portion:'95', for:['clover']},
   {id:'pornstar-mix', name:'Pornstar', ing:['Distil passion-20','Distil vanilla-20','Vedrenne passion-25','Сироп ваніль-15','Пф маракуя пюре-30'], portion:'110', for:['pornstar']},
   {id:'jojo-mix', name:'JoJo', ing:['Soju-40','Gin Wan-20','Vedrenne peach-20','Monin mandarin-20'], portion:'100', for:['jojo']},
   {id:'midori-mix', name:'Midori', ing:['Vedrenne green melon-40','Gin Wan-20','Цукровий сироп-10'], portion:'70', for:['midori']},
@@ -520,7 +519,7 @@ const DC = {
   'simple-syrup':'#f1ece0','vanilla-syrup':'#efe2c0','sj-lemon':'#f2e27a','sj-lime':'#cfe27a','passion-puree':'#f2b13c',
   'raspberry-cordial':'#c8304e','oblepiha-puree':'#f08a24','oolong-cordial':'#c99a52','lemongrass-cordial':'#e3e2a0',
   'raspberry-gin':'#d23a5c','strawberry-rum':'#e0485a','fresh-ginger':'#e9d58a','kafka-punch':'#ecdcae','pink-punch':'#f2b6c6',
-  'cream-soda-punch':'#efe0bc', shizuku:'#e3e6a6', paradox:'#8e1f3a', 'nine-tails':'#f2a33a', natsu:'#f5a24a',sangrita:'#c0391f',
+  'cream-soda-punch':'#efe0bc', shizuku:'#e3e6a6', 'apple-sour':'#d6df86', paradox:'#8e1f3a', 'nine-tails':'#f2a33a', natsu:'#f5a24a',sangrita:'#c0391f',
 };
 
 /* ============================================================ */
@@ -542,7 +541,7 @@ const FAM = [
 ];
 const FAM_LBL = {spirit:'міцне', liqueur:'лікер', bitter:'вермут / біттер', syrup:'сироп', cordial:'кордіал', citrus:'кисле', juice:'сік / пюре', soda:'газоване', dairy:'молочне', foam:'піна', tea:'чай / кава', premix:'премікс', other:'інше'};
 const FAM_INK = {spirit:'#1d1408', liqueur:'#fff', bitter:'#fff', syrup:'#2a0f18', cordial:'#fff', citrus:'#262005', juice:'#2a1405', soda:'#0d2430', dairy:'#2a2414', foam:'#2a2a24', tea:'#fff', premix:'#1d1408', other:'#fff'};
-const NONLIQ = /ізіфоам|чіпс|бамбук|лист|м.ята|огірок|попкорн|вата|пудра|троянд|оливк|паприк|сіль|сублім|лайм\/|гвоздик|кориц|бадьян/;
+const NONLIQ = /ізіфоам|чіпс|бамбук|лист|м.ята|огірок|^попкорн|вата|пудра|троянд|оливк|паприк|сіль|сублім|лайм\/|гвоздик|кориц|бадьян/;
 const PREP_LINK = [
   [/суперджус\s*лимон|^с\.\s*лимон/i,'sj-lemon'], [/суперджус\s*лайм/i,'sj-lime'],
   [/кордіал\s*малин/i,'raspberry-cordial'], [/кордіал\s*улун/i,'oolong-cordial'], [/кордіал\s*лемонгра/i,'lemongrass-cordial'],
@@ -593,7 +592,7 @@ ITEMS.forEach(it => { if (it.prep) it.ing.forEach(g => { if (g.fam === 'premix')
 /* Порядок у техкарті: спершу основа, далі все інше — як збирають напій */
 const GROUPS = {
   tea: [['base','Основа: сиропи, кордіали, соки, пюре'],['fresh','Цитрус і зелень'],['brew','Заварка і спеції']],
-  drink: [['alc','Алкоголь'],['sweet','Солодке'],['sour','Кисле'],['juice','Соки, пюре, молочне'],['foam','Піна'],['top','Доливка'],['decor','Фрукти, зелень, декор']],
+  drink: [['alc','Алкоголь'],['sweet','Солодке'],['sour','Кисле'],['juice','Соки, пюре, молочне, кава'],['foam','Піна'],['top','Доливка'],['decor','Фрукти, зелень, декор']],
 };
 function groupOf(it, g){
   const n = g.name.toLowerCase();
@@ -603,6 +602,7 @@ function groupOf(it, g){
     return 'base';
   }
   if (g.fam === 'foam') return 'foam';
+  if (g.fam === 'tea' || g.fam === 'dairy') return 'juice';
   if (g.num == null || NONLIQ.test(n)) return 'decor';
   if (['spirit','liqueur','bitter','premix'].includes(g.fam)) return 'alc';
   if (['syrup','cordial'].includes(g.fam)) return 'sweet';
