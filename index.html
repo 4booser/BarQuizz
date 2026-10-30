@@ -65,8 +65,11 @@ button{cursor:pointer}
 .dc-glow{background:radial-gradient(120% 90% at 50% 18%,color-mix(in srgb,var(--dc) 34%,transparent) 0%,transparent 62%)}
 
 /* header */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.top .wrap{display:flex;align-items:center;gap:16px;padding-block:12px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 96%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;padding-block:0;height:56px}
+.sticky-bar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 57px);z-index:15;background:var(--bg);padding-block:8px 10px;margin-bottom:12px}
+.seg-fade{-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
+.seg-fade:has(button:last-child[aria-pressed="true"]){-webkit-mask-image:none;mask-image:none}
 .brand{font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1;margin:0}
 .brand span{color:var(--accent)}
 .top-progress{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
@@ -104,7 +107,7 @@ main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
 .glass{display:block;width:100%;height:auto;overflow:visible}
 
 /* menu */
-.toolbar{display:grid;gap:12px;margin-bottom:22px}
+.toolbar{display:grid;gap:12px;margin-bottom:0}
 .search{position:relative}
 .search input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 14px 13px 42px;font-size:15px}
 .search input::placeholder{color:var(--muted)}
@@ -122,16 +125,19 @@ main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
 .tile-art{height:128px;margin:-10px -12px 0;display:grid;place-items:center;padding-top:10px}
 .tile-art svg{width:auto;height:112px}
 .tile-name{font-family:var(--f-display);font-size:18px;line-height:1.15;overflow-wrap:anywhere}
-.tile-meta{display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:6px;font-size:11.5px;color:var(--muted);font-weight:600}
+.tile-meta{display:grid;gap:1px;margin-top:6px;font-size:12px;color:var(--muted);font-weight:600;line-height:1.3}
+.tile-meta .tm-glass{color:var(--fg);opacity:.85}
 .tile-meta span{display:inline-flex;align-items:center;gap:4px}
 .tile-meta svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.ring{position:absolute;top:10px;right:10px;width:24px;height:24px}
-.ring circle{fill:none;stroke-width:3}
+.lvl{position:absolute;top:12px;right:12px;display:flex;gap:3px;padding:4px 6px;border-radius:99px;background:color-mix(in srgb,var(--surface) 80%,transparent)}
+.lvl i{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.lvl i.on{background:var(--accent)}
 .empty{color:var(--muted);padding:30px 0;text-align:center}
 
 /* sheet */
 .sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center}
 .sheet-bg{position:absolute;inset:0;background:rgba(4,8,6,.62);animation:fade .2s}
+.sheet-panel:focus{outline:none}
 .sheet-panel{position:relative;width:min(820px,100%);max-height:calc(100% - 20px - env(safe-area-inset-top,0px));overflow:auto;background:var(--bg);border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;box-shadow:var(--shadow);padding:0 0 calc(24px + env(safe-area-inset-bottom,0px));animation:rise .26s cubic-bezier(.2,.8,.2,1)}
 @media (min-width:860px){.sheet{align-items:center}.sheet-panel{border-radius:24px;border-bottom:1px solid var(--line);max-height:90vh}}
 @keyframes rise{from{transform:translateY(36px);opacity:.4}to{transform:none;opacity:1}}
@@ -144,7 +150,13 @@ main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
 .hero-art svg{width:200px}
 .hero h2{font-family:var(--f-display);font-weight:400;font-size:clamp(32px,7vw,46px);line-height:1.02;margin:0 0 14px;text-wrap:balance;padding-right:44px}
 @media (max-width:640px){.hero{grid-template-columns:1fr;text-align:left;padding-top:18px}.hero-art svg{width:150px}}
-.keys{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.keys{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (min-width:700px){.keys{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.tech{display:grid;gap:8px}
+.tech-row{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.tech-row svg{width:28px;height:28px;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tech-row b{display:block;font-size:14.5px}
+.tech-row span{color:var(--muted);font-size:13px;line-height:1.35}
 .key{display:flex;gap:10px;align-items:center;background:color-mix(in srgb,var(--surface) 82%,transparent);border:1px solid var(--line);border-radius:14px;padding:8px 10px;min-width:0}
 .key-ic{flex:none;width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background:var(--surface-2)}
 .key-ic svg{width:34px;height:34px}
@@ -309,17 +321,20 @@ main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
 .mist li span{color:var(--good);font-weight:700}
 
 /* builder */
-.bd-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.bd-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;margin-bottom:14px}
+.bd-left{display:grid;gap:12px;min-width:0}
 .bd-head h3{font-family:var(--f-display);font-weight:400;font-size:32px;margin:0;line-height:1.05}
+.bd-head{background:linear-gradient(120deg,color-mix(in srgb,var(--dc) 22%,var(--surface)),var(--surface));border:1px solid var(--line);border-radius:20px;padding:16px}
+.bd-ctrl{display:flex;gap:8px;flex-wrap:wrap}
 .bd-head select,.field select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;max-width:220px}
-.bd-grid{display:grid;grid-template-columns:230px minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
-@media (max-width:960px){.bd-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.bd-live{grid-column:1 / -1}}
+.bd-head .bd-ctrl select{flex:1 1 140px;min-width:0}
+.bd-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
 @media (max-width:640px){.bd-grid{grid-template-columns:1fr}}
 .bd-live{display:grid;gap:10px;justify-items:center;text-align:center}
 .bd-live .pair{display:flex;gap:14px;justify-content:center;width:100%}
 .bd-live figure{margin:0;display:grid;gap:4px;justify-items:center;font-size:12px;color:var(--muted);font-weight:600}
 .bd-live svg{width:120px}
-@media (max-width:960px){.bd-live svg{width:100px}}
+@media (max-width:640px){.bd-live svg{width:84px}.bd-live .pair{gap:10px}.bd-live figcaption{font-size:11px}}
 .pool .chip{cursor:pointer}
 .pool .chip[aria-pressed="true"]::before{content:"✓"}
 .mine{list-style:none;margin:0;padding:0;display:grid;gap:8px}
@@ -776,17 +791,17 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
 /* ---------- shared bits ---------- */
 function ring(id){
-  const b = box(id) + 1, C = 2*Math.PI*9;
-  return `<svg class="ring" viewBox="0 0 24 24" aria-label="Рівень ${b} з 5"><circle cx="12" cy="12" r="9" stroke="var(--surface-2)"/><circle cx="12" cy="12" r="9" stroke="var(--accent)" stroke-dasharray="${(C*b/5).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 12 12)" stroke-linecap="round"/></svg>`;
+  const b = box(id);
+  if (b < 0) return '';
+  return `<span class="lvl" aria-label="Рівень ${b+1} з 5" title="Рівень ${b+1} з 5">${[0,1,2,3,4].map(i=>`<i class="${i<=b?'on':''}"></i>`).join('')}</span>`;
 }
 function tileMeta(it){
   if (it.cat === 'premix') return `<span>${ico('portion').replace('class="ico"','')} порція ${esc(it.portion)}</span>`;
   if (it.cat === 'prep') return `<span>вихід ${esc(it.yield)}</span>`;
   if (it.cat === 'tea') return `<span>${it.ing.length} інгредієнтів</span>`;
   const parts = [];
-  if (it.glass) parts.push(`<span>${esc(it.glass)}</span>`);
-  if (it.method) parts.push(`<span>${methodIcons(it.method).replace('methods-ic','')}${esc(it.method)}</span>`);
-  if (it.price) parts.push(`<span>₴ ${esc(it.price)}</span>`);
+  if (it.glass) parts.push(`<span class="tm-glass">${esc(it.glass)}</span>`);
+  if (it.method) parts.push(`<span class="tm-method">${esc(it.method)}</span>`);
   return parts.join('') || '<span>посуд і спосіб не вказані</span>';
 }
 function ingRows(it, compact){
@@ -819,7 +834,7 @@ function keysHTML(it){
   if (isDrink(it)) {
     const gk = glassKeyOf(it.glass);
     K.push(keyHTML(gk ? svgGlass(it,{size:'icon', empty:true, garnish:false}) : '', 'Посуд', it.glass || 'не вказано', !it.glass));
-    K.push(keyHTML(it.method ? methodIcons(it.method) : '', 'Спосіб', it.method || 'не вказано', !it.method, it.methodNote || (it.method ? tokens(it.method).map(t=>METHODS[t]?.d).filter(Boolean).join('; ') : '')));
+    K.push(keyHTML(it.method && METHODS[tokens(it.method)[0]] ? `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${METHODS[tokens(it.method)[0]].i}</svg>` : '', 'Спосіб', it.method || 'не вказано', !it.method));
     K.push(keyHTML(garnishIcon(it), 'Гарніш', it.garnish || 'не вказано', !it.garnish));
     if (it.ice) K.push(keyHTML(ico('ice'), 'Лід', it.ice));
     if (hasFoam(it)) K.push(keyHTML(ico('foam'), 'Піна', 'Ізіфоам'));
@@ -858,6 +873,7 @@ function openDetail(id){
     <div style="min-width:0"><p class="eyebrow">${CATS[it.cat]}${it.isNew?' · нове':''}${it.sub?' · '+esc(it.sub):''}</p><h2 id="sheet-title">${esc(it.name)}</h2>${keysHTML(it)}</div></div>
     <div class="sheet-in">`;
   html += `<div class="block"><p class="lbl">${it.cat==='prep'?'Склад заготовки':'Формула'}</p>${ribbon(it)}<ul class="ing-list">${ingRows(it)}</ul></div>`;
+  if (isDrink(it) && it.method) html += `<div class="block"><p class="lbl">Техніка</p><div class="tech">${tokens(it.method).map(tk => `<div class="tech-row">${METHODS[tk]?`<svg viewBox="0 0 24 24" aria-hidden="true">${METHODS[tk].i}</svg>`:'<span></span>'}<div><b>${esc(cap(tk))}</b>${METHODS[tk]?`<span>${esc(METHODS[tk].d)}</span>`:''}</div></div>`).join('')}${it.methodNote?`<div class="tech-row">${ico('bat').replace('class="ico"','')}<div><b>Нюанс</b><span>${esc(it.methodNote)}</span></div></div>`:''}</div></div>`;
   if (it.desc) html += `<div class="block"><p class="lbl">Легенда для гостя</p><blockquote class="desc">${esc(it.desc)}</blockquote>${it.descNote?`<p class="missing" style="margin:8px 0 0;font-size:13px">${esc(it.descNote)}</p>`:''}</div>`;
   if (it.premix && BY[it.premix]) {
     const pm = BY[it.premix], svc = it.ing.filter(g => !g.inPremix);
@@ -895,7 +911,7 @@ function openDetail(id){
   panel.innerHTML = html;
   sheet.hidden = false; document.body.classList.add('locked');
   panel.scrollTop = 0;
-  panel.querySelector('.close').focus();
+  panel.setAttribute('tabindex','-1'); panel.focus({preventScroll:true});
 }
 function closeDetail(){ sheet.hidden = true; document.body.classList.remove('locked'); if (lastFocus) { try{lastFocus.focus()}catch(e){} lastFocus = null; } }
 
@@ -911,7 +927,7 @@ function renderMenu(){
     el.innerHTML = `<div class="view-head"><div><h2>Меню бару</h2><p>Колір рідини, посуд і гарніш — як у реальному напої. Відкрий позицію: формула, бат, схожі напої й заготовки.</p></div></div>
       <div class="toolbar"><label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="m-search" type="search" placeholder="Пошук: назва, інгредієнт або гарніш" autocomplete="off"></label>
-      <div class="seg" id="m-cats" role="group" aria-label="Категорія"></div></div><div id="m-list"></div>`;
+      </div><div class="sticky-bar"><div class="seg seg-fade" id="m-cats" role="group" aria-label="Категорія"></div></div><div id="m-list"></div>`;
     el.dataset.ready = 1;
     el.querySelector('#m-search').addEventListener('input', e => { M.q = e.target.value.trim().toLowerCase(); drawMenuList(); });
   }
@@ -1218,12 +1234,12 @@ function renderBuild(){
     extra += `<div class="field"><label for="b-method">Спосіб</label><select id="b-method" data-bsel="method" ${B.checked?'disabled':''}><option value="">—</option>${me.map(g=>`<option ${B.method===g?'selected':''}>${esc(g)}</option>`).join('')}</select>${B.checked?`<span style="font-size:12.5px;color:var(--${ok?'good':'bad'})">${ok?'Так':'Правильно: '+esc(it.method)}</span>`:''}</div>`;
   }
   const pct = Math.max(0, Math.round(pts / max * 100));
-  el.innerHTML = head + `<div class="bd-head"><div><p class="eyebrow">${CATS[it.cat]}</p><h3>${esc(it.name)}</h3></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><select id="b-pick" data-bsel="pick" aria-label="Обрати напій">
+  el.innerHTML = head + `<div class="bd-head" style="--dc:${dcOf(it)}"><div class="bd-left"><div class="bd-title"><p class="eyebrow">${CATS[it.cat]} · збери</p><h3>${esc(it.name)}</h3></div>
+      <div class="bd-ctrl"><select id="b-pick" data-bsel="pick" aria-label="Обрати інший напій">
         ${ITEMS.filter(i=>B.cats.has(i.cat)&&['cocktail','lemonade','premix'].includes(i.cat)).map(i=>`<option value="${i.id}" ${i.id===it.id?'selected':''}>${esc(i.name)}</option>`).join('')}</select>
       <button class="btn" data-act="bnew">Випадковий</button></div></div>
+      <div class="bd-live" id="b-live">${liveGlass()}</div></div>
     <div class="bd-grid">
-      <div class="panel bd-live" id="b-live">${liveGlass()}</div>
       <div class="panel"><p class="lbl">Набір інгредієнтів</p><div class="chips pool">${B.pool.map(n=>`<button class="chip" data-pool="${esc(n)}" aria-pressed="${n in B.picked}" ${B.checked?'disabled':''}><span class="sw" style="--c:var(--c-${famOf(n)})"></span>${esc(n)}</button>`).join('')}</div></div>
       <div class="panel"><p class="lbl">Твій склад</p>${rows?`<ul class="mine">${rows}</ul>`:'<p class="missing" style="margin:0">Торкнись інгредієнтів у наборі, щоб додати.</p>'}
         ${extra}
