@@ -124,6 +124,12 @@ main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
 .tile:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--dc) 70%,var(--line));box-shadow:0 12px 28px color-mix(in srgb,var(--dc) 18%,transparent)}
 .tile-art{height:128px;margin:-10px -12px 0;display:grid;place-items:center;padding-top:10px}
 .tile-art svg{width:auto;height:112px}
+.tile-art.has-photo{height:150px;padding:0;position:relative;overflow:hidden;background:var(--surface-2)}
+.tile-art.has-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.tile:hover .tile-art.has-photo img{transform:scale(1.04)}
+.tile-art.has-photo::after{content:"";position:absolute;inset:auto 0 0;height:40%;background:linear-gradient(transparent,color-mix(in srgb,var(--surface) 55%,transparent));pointer-events:none}
+.tile-glass{position:absolute;right:8px;bottom:8px;z-index:1;width:34px;height:40px;border-radius:10px;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.tile-glass svg{height:32px;width:auto}
 .tile-name{font-family:var(--f-display);font-size:18px;line-height:1.15;overflow-wrap:anywhere}
 .tile-meta{display:grid;gap:1px;margin-top:6px;font-size:12px;color:var(--muted);font-weight:600;line-height:1.3}
 .tile-meta .tm-glass{color:var(--fg);opacity:.85}
@@ -147,9 +153,14 @@ main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
 .close{position:absolute;top:14px;right:14px;z-index:2;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 85%,transparent);display:grid;place-items:center;font-size:22px;line-height:1}
 .hero{display:grid;grid-template-columns:220px minmax(0,1fr);gap:22px;align-items:center;padding-block:26px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,color-mix(in srgb,var(--dc) 20%,var(--bg)) 0%,var(--bg) 100%)}
 .hero-art{display:grid;place-items:center}
+.hero.has-photo{grid-template-columns:minmax(0,340px) minmax(0,1fr)}
+.hero-pic{margin:0;position:relative;border-radius:20px;overflow:hidden;aspect-ratio:4/3;box-shadow:0 14px 34px rgba(0,0,0,.28);background:var(--surface-2)}
+.hero-pic img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-glass{position:absolute;left:10px;bottom:10px;width:58px;height:70px;border-radius:14px;background:color-mix(in srgb,var(--surface) 84%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.hero-glass svg{height:60px;width:auto}
 .hero-art svg{width:200px}
 .hero h2{font-family:var(--f-display);font-weight:400;font-size:clamp(32px,7vw,46px);line-height:1.02;margin:0 0 14px;text-wrap:balance;padding-right:44px}
-@media (max-width:640px){.hero{grid-template-columns:1fr;text-align:left;padding-top:18px}.hero-art svg{width:150px}}
+@media (max-width:640px){.hero,.hero.has-photo{grid-template-columns:1fr;text-align:left;padding-top:18px}.hero.has-photo{padding-top:64px}.hero-art svg{width:150px}}
 .keys{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 @media (min-width:700px){.keys{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .tech{display:grid;gap:8px}
@@ -268,6 +279,11 @@ main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
 .front h3{font-family:var(--f-display);font-weight:400;font-size:clamp(34px,8.4vw,52px);line-height:1.02;margin:0;text-wrap:balance}
 .front p{color:var(--muted);margin:0;font-size:14px}
 .front .silhouette svg{height:150px;width:auto}
+.front .silhouette.photo img{width:min(240px,62vw);height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:16px;display:block;box-shadow:0 10px 26px rgba(0,0,0,.25)}
+.back-pic{width:110px;aspect-ratio:1;border-radius:16px;overflow:hidden;background:var(--surface-2)}
+.back-pic img{width:100%;height:100%;object-fit:cover;display:block}
+.qz-photo{width:min(100%,380px);aspect-ratio:4/3;border-radius:18px;overflow:hidden;margin:0 auto;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.qz-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .front-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .back{transform:rotateY(180deg);overflow:auto}
 .back-hero{display:grid;grid-template-columns:110px minmax(0,1fr);gap:14px;align-items:center;padding:18px 18px 14px;background:linear-gradient(180deg,color-mix(in srgb,var(--dc) 24%,var(--surface)) 0%,var(--surface) 100%)}
@@ -636,6 +652,10 @@ ITEMS.forEach(it => {
 const groupLabel = (it, key) => ((it.cat === 'tea' ? GROUPS.tea : GROUPS.drink).find(x => x[0] === key) || [,''])[1];
 const USED = {};
 ITEMS.forEach(it => it.ing.forEach(g => { if (g.link && g.link !== it.id) (USED[g.link] ||= new Set()).add(it.id); }));
+/* Фото з меню закладу (expz.menu), лежать у папці img/ */
+const PHOTOS = new Set(["aperitivo", "apple-sour", "blood-vial", "clover", "irish-velvet", "jojo", "kabocha", "kiwi-aloe", "lemongrass-lychee", "mc", "midori", "monkey", "muzyka", "oli", "purple-haze", "raspberry-coconut", "soju-tonic"]);
+const photoOf = it => it && PHOTOS.has(it.id) ? `img/${it.id}.jpg` : null;
+const photoHTML = (it, cls='') => `<img class="${cls}" src="${photoOf(it)}" alt="${esc(it.name)}" loading="lazy" decoding="async" width="800" height="600">`;
 const dcOf = it => DC[it.id] || (it.for && DC[it.for[0]]) || '#c9a35a';
 
 const isLiquid = (it,g) => ['cocktail','lemonade','premix'].includes(it.cat) && g.num != null && !NONLIQ.test(g.name.toLowerCase());
@@ -869,7 +889,7 @@ function openDetail(id){
   if (sheet.hidden) lastFocus = document.activeElement;
   const dc = dcOf(it);
   let html = `<button class="close" data-act="close" aria-label="Закрити">×</button>
-    <div class="hero sheet-in" style="--dc:${dc}"><div class="hero-art">${svgGlass(it,{size:'big'})}</div>
+    <div class="hero sheet-in${photoOf(it)?' has-photo':''}" style="--dc:${dc}">${photoOf(it) ? `<figure class="hero-pic">${photoHTML(it)}<span class="hero-glass" title="Схема бокала">${svgGlass(it,{size:'tile'})}</span></figure>` : `<div class="hero-art">${svgGlass(it,{size:'big'})}</div>`}
     <div style="min-width:0"><p class="eyebrow">${CATS[it.cat]}${it.isNew?' · нове':''}${it.sub?' · '+esc(it.sub):''}</p><h2 id="sheet-title">${esc(it.name)}</h2>${keysHTML(it)}</div></div>
     <div class="sheet-in">`;
   html += `<div class="block"><p class="lbl">${it.cat==='prep'?'Склад заготовки':'Формула'}</p>${ribbon(it)}<ul class="ing-list">${ingRows(it)}</ul></div>`;
@@ -918,7 +938,7 @@ function closeDetail(){ sheet.hidden = true; document.body.classList.remove('loc
 /* ---------- MENU ---------- */
 const M = {cat:'all', q:''};
 function tileHTML(it){
-  return `<button class="tile" data-open="${it.id}" style="--dc:${dcOf(it)}"><div class="tile-art dc-glow">${svgGlass(it,{size:'tile'})}</div>
+  return `<button class="tile" data-open="${it.id}" style="--dc:${dcOf(it)}">${photoOf(it) ? `<div class="tile-art has-photo">${photoHTML(it)}<span class="tile-glass" aria-hidden="true">${svgGlass(it,{size:'mini'})}</span></div>` : `<div class="tile-art dc-glow">${svgGlass(it,{size:'tile'})}</div>`}
     <div style="min-width:0"><div class="tile-name">${esc(it.name)}</div><div class="tile-meta">${tileMeta(it)}</div></div>${ring(it.id)}${it.isNew?'<span class="badge-new">Нове</span>':''}</button>`;
 }
 function renderMenu(){
@@ -1046,9 +1066,9 @@ function renderCards(){
     const prompt = it.cat==='prep' ? 'Склад, вихід і як готувати' : it.cat==='premix' ? 'Склад бату і порція' : it.cat==='tea' ? 'Склад чаю' : 'Склад, спосіб, посуд, гарніш';
     body = `<div class="stage"><div class="card ${C.flipped?'flipped':''}" id="card" role="button" tabindex="0" aria-label="Перевернути картку" style="--dc:${dc}">
         <div class="face front"><div class="front-main"><p class="eyebrow">${CATS[it.cat]}</p><h3>${esc(it.name)}</h3><p>Згадай: ${prompt}</p>
-          ${C.hint ? `<div class="silhouette">${svgGlass(it,{size:'tile'})}</div>` : ''}</div>
+          ${C.hint ? (photoOf(it) ? `<div class="silhouette photo">${photoHTML(it)}</div>` : `<div class="silhouette">${svgGlass(it,{size:'tile'})}</div>`) : ''}</div>
           <div class="front-foot"><span>Торкнись — перевернути</span>${C.hint?'':'<button class="btn ghost" data-act="hint" style="text-transform:none;letter-spacing:0;padding:8px 12px">Підказка: вигляд</button>'}</div></div>
-        <div class="face back"><div class="back-hero">${svgGlass(it,{size:'big'})}<div style="min-width:0"><h3>${esc(it.name)}</h3><div class="mini-keys">${mk.map(x=>`<span>${esc(x)}</span>`).join('')}</div></div></div>
+        <div class="face back"><div class="back-hero">${photoOf(it) ? `<div class="back-pic">${photoHTML(it)}</div>` : svgGlass(it,{size:'big'})}<div style="min-width:0"><h3>${esc(it.name)}</h3><div class="mini-keys">${mk.map(x=>`<span>${esc(x)}</span>`).join('')}</div></div></div>
           <div class="back-body">${ribbon(it)}<ul class="ing-list">${ingRows(it,true)}</ul>
           ${it.steps?`<ol class="steps" style="margin-top:12px;font-size:13px">${it.steps.map(s=>`<li><span>${esc(s)}</span></li>`).join('')}</ol>`:''}</div></div>
       </div></div>
@@ -1155,7 +1175,7 @@ function renderQuiz(){
   const q = Z.list[Z.i], done = Z.picked !== null, it = q.img && BY[q.img];
   el.innerHTML = head + `<div class="panel" style="max-width:760px">
     <div class="qz-progress"><span>${Z.i+1} / ${Z.list.length}</span><div class="meter"><i style="width:${(Z.i/Z.list.length*100)}%"></i></div><span>✓ ${Z.score}</span></div>
-    <div class="qz-main ${it?(q.big?'big-art':'has-art'):''}">${it?`<div class="qz-art dc-glow" style="--dc:${dcOf(it)}">${svgGlass(it,{size:q.big?'big':'tile'})}</div>`:''}
+    <div class="qz-main ${it?(q.big?'big-art':'has-art'):''}">${it?(q.big && photoOf(it) ? `<div class="qz-photo">${photoHTML(it)}</div>` : `<div class="qz-art dc-glow" style="--dc:${dcOf(it)}">${svgGlass(it,{size:q.big?'big':'tile'})}</div>`):''}
       <div style="min-width:0;${q.big?'text-align:center':''}"><p class="qz-q">${q.q}</p>${q.sub?`<div class="chips qz-sub">${q.sub.map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>`:''}</div></div>
     <div class="opts">${q.options.map((o,k)=>{
       const cls = done ? (o===q.answer?'right':(o===Z.picked?'wrong':'')) : '';
